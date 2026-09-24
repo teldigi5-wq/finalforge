@@ -35,7 +35,8 @@ document.documentElement.style.colorScheme='dark';
       loadStyle('assets/auth-experience-v4.css'),
       loadStyle('assets/dashboard-modern-v3.css'),
       loadStyle('assets/mobile-modern-v4.css'),
-      loadStyle('assets/product-ui-v4.css')
+      loadStyle('assets/product-ui-v4.css'),
+      loadStyle('assets/product-ui-v5.css')
     ]);
 
     const firebaseSdkReady=(async()=>{
@@ -84,6 +85,7 @@ document.documentElement.style.colorScheme='dark';
     await loadScript('assets/auth.js');
     await loadScript('assets/auth-experience-v4.js');
     await loadScript('assets/mobile-experience-v4.js');
+    await loadScript('assets/product-motion-v5.js');
 
     if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
     window.dispatchEvent(new CustomEvent('finalforge-ready'));
