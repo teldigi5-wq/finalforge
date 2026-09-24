@@ -10,11 +10,16 @@ FinalForge is a responsive academic study platform designed for students across 
 - IT1130 Mathematics for Computing
 - IT1140 Fundamentals of Computing
 
+## Current account flow
+Students sign up using an approved Student ID. FinalForge automatically derives the matching SLIIT mailbox (`studentid@my.sliit.lk`), sends a verification email, and blocks access until the mailbox is verified. Daily login is Student ID + password.
+
+## Mock exam recovery
+Active mock exams autosave answers, selected options and timing state in the browser. Signed-in student progress is included in the cloud-sync snapshot. Students can resume a saved mock or clear saved answers and restart.
+
 ## Core capabilities
-- Secure student registration and login
-- Student roster allowlist
-- SMS OTP verification during signup
-- SLIIT email capture
+- Student-ID allowlist
+- SLIIT email verification
+- Student ID + password login
 - Mock papers and marking guides
 - Quiz/practice center
 - Referral-sheet tools
@@ -23,7 +28,4 @@ FinalForge is a responsive academic study platform designed for students across 
 - Admin console
 
 ## Security
-Private roster and admin provisioning material must never be placed in public browser assets. See `AUTH_AND_DEPLOY_SETUP.md`.
-
-## Public repository safety
-The public repository intentionally does **not** contain the student roster. `students.json`, Firebase service-account credentials, admin provisioning values and real `.env` files must remain private and must never be committed.
+Private roster and admin provisioning material must never be placed in public browser assets. The public repository intentionally excludes `students.json`, Firebase service-account credentials, admin provisioning values and real `.env` files.
