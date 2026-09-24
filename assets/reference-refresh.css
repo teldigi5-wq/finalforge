@@ -172,6 +172,52 @@ body:not(.auth-pending) .fc-ip,body:not(.auth-pending) .fc-fc{animation-delay:-2
 
 /* Phones, including compact and landscape devices. */
 @media(max-width:600px){
+  #authGate{padding:0!important;background:#091426!important}
+  body.auth-pending .auth-shell{
+    display:block!important;width:100%!important;min-height:100dvh!important;
+    border:0!important;border-radius:0!important;overflow:visible!important;
+    background:#091426!important;box-shadow:none!important;
+  }
+  body.auth-pending .auth-brand-panel{
+    min-height:280px!important;height:280px!important;padding:18px 20px 34px!important;
+    justify-content:flex-start!important;border:0!important;
+    background:
+      linear-gradient(180deg,#061326ba 0%,#0b183b59 54%,#091426 100%),
+      url('study-room.webp') 61% 48%/cover!important;
+  }
+  body.auth-pending .ff-auth-brandbar{min-height:34px!important}
+  body.auth-pending .ff-auth-brandlockup{gap:8px!important}
+  body.auth-pending .ff-auth-brandlockup img{display:block!important;width:30px!important;height:30px!important}
+  body.auth-pending .ff-auth-brandlockup span{font-size:16px!important}
+  body.auth-pending .ff-auth-help{display:none!important}
+  body.auth-pending .ff-auth-brandcontent{
+    flex:0 0 auto!important;max-width:100%!important;padding:35px 0 0!important;
+    justify-content:flex-start!important;
+  }
+  body.auth-pending .ff-auth-brandcontent::before{margin-bottom:11px!important;padding:5px 9px!important;font-size:9px!important}
+  body.auth-pending .auth-brand-panel h1{
+    max-width:340px!important;margin:0!important;
+    font-size:clamp(2.35rem,11.2vw,3rem)!important;line-height:.98!important;letter-spacing:-.055em!important;
+  }
+  body.auth-pending .ff-auth-brandcontent>p,
+  body.auth-pending .auth-points,
+  body.auth-pending .auth-privacy,
+  body.auth-pending .ff-auth-foot{display:none!important}
+  body.auth-pending .auth-card{
+    width:calc(100% - 20px)!important;min-height:0!important;margin:-22px 10px 0!important;
+    padding:27px 18px calc(36px + env(safe-area-inset-bottom))!important;
+    border:1px solid #ffffff29!important;border-radius:25px 25px 0 0!important;
+    background:linear-gradient(180deg,#111b36f7,#071426 66%,#06111f)!important;
+    box-shadow:0 -18px 45px #02081766!important;backdrop-filter:blur(18px)!important;
+  }
+  body.auth-pending .ff-auth-intro{margin-bottom:15px!important}
+  body.auth-pending .ff-auth-intro h2{font-size:1.8rem!important}
+  body.auth-pending .ff-auth-intro p{font-size:.88rem!important}
+  body.auth-pending .auth-tabs,body.auth-pending .auth-role-toggle{min-height:52px!important}
+  body.auth-pending .auth-tabs button,body.auth-pending .auth-role-toggle button{min-height:42px!important;font-size:.88rem!important}
+  body.auth-pending .auth-view label{font-size:.8rem!important}
+  body.auth-pending .auth-view input{min-height:50px!important}
+  body.auth-pending .ff-auth-security{margin-top:18px!important}
   body:not(.auth-pending) .topbar{min-height:62px!important;padding:9px 14px!important;gap:8px!important}
   body:not(.auth-pending) .topbar-copy .muted,body:not(.auth-pending) .sync-pill{display:none!important}
   body:not(.auth-pending) .account-copy small{max-width:105px;overflow:hidden;text-overflow:ellipsis}
@@ -199,8 +245,10 @@ body:not(.auth-pending) .fc-ip,body:not(.auth-pending) .fc-fc{animation-delay:-2
   body:not(.auth-pending) .hero-actions .btn:first-child{grid-column:auto}
   body:not(.auth-pending) .quick-dock{grid-template-columns:1fr!important}
   body:not(.auth-pending) .countdown-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-  body.auth-pending .auth-brand-panel{min-height:340px!important;padding:18px!important}
-  body.auth-pending .auth-card{padding:24px 16px 34px!important}
+  body.auth-pending .auth-brand-panel{min-height:250px!important;height:250px!important;padding:15px 17px 30px!important}
+  body.auth-pending .ff-auth-brandcontent{padding-top:25px!important}
+  body.auth-pending .auth-brand-panel h1{font-size:2.2rem!important}
+  body.auth-pending .auth-card{width:calc(100% - 12px)!important;margin:-18px 6px 0!important;padding:24px 14px 32px!important}
 }
 
 @media(max-height:560px) and (orientation:landscape) and (max-width:950px){
