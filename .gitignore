@@ -1,0 +1,15 @@
+# FinalForge private/provisioning material
+firebase/private/
+firebase/.env
+firebase/.env.*
+!firebase/.env.example
+
+# Local dependencies / tooling
+firebase/node_modules/
+node_modules/
+.DS_Store
+Thumbs.db
+
+# Deployment output / archives
+.vercel/
+*.zip
