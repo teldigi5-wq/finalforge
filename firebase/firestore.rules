@@ -5,6 +5,13 @@ service cloud.firestore {
     function isAdmin() { return signedIn() && request.auth.token.admin == true; }
     function own(uid) { return signedIn() && request.auth.uid == uid; }
     function verifiedEmail() { return signedIn() && request.auth.token.email_verified == true; }
+    function approvedStudent(uid) {
+      return verifiedEmail() && own(uid)
+        && exists(/databases/$(database)/documents/profiles/$(uid))
+        && get(/databases/$(database)/documents/profiles/$(uid)).data.role == 'student'
+        && get(/databases/$(database)/documents/profiles/$(uid)).data.disabled == false
+        && get(/databases/$(database)/documents/profiles/$(uid)).data.sliitEmail == request.auth.token.email;
+    }
 
     match /student_allowlist/{studentId} {
       allow read, write: if isAdmin();
@@ -20,7 +27,7 @@ service cloud.firestore {
         && request.resource.data.studentId == studentId
         && request.resource.data.uid == request.auth.uid;
       allow update: if false;
-      allow delete: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow delete: if isAdmin();
     }
 
     match /profiles/{uid} {
@@ -33,18 +40,21 @@ service cloud.firestore {
         && request.resource.data.emailVerified == true
         && request.resource.data.disabled == false
         && exists(/databases/$(database)/documents/student_allowlist/$(request.resource.data.studentId))
+        && get(/databases/$(database)/documents/student_allowlist/$(request.resource.data.studentId)).data.active == true
         && get(/databases/$(database)/documents/student_allowlist/$(request.resource.data.studentId)).data.sliitEmail == request.auth.token.email
         && getAfter(/databases/$(database)/documents/student_claims/$(request.resource.data.studentId)).data.uid == uid;
-      allow update: if isAdmin() || (own(uid)
+      allow update: if isAdmin() || (approvedStudent(uid)
         && request.resource.data.role == resource.data.role
         && request.resource.data.studentId == resource.data.studentId
         && request.resource.data.sliitEmail == resource.data.sliitEmail
-        && request.resource.data.disabled == resource.data.disabled);
-      allow delete: if isAdmin() || own(uid);
+        && request.resource.data.disabled == resource.data.disabled
+        && request.resource.data.emailVerified == resource.data.emailVerified
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastLoginAt']));
+      allow delete: if isAdmin();
     }
 
     match /progress/{uid} {
-      allow read, write: if isAdmin() || own(uid);
+      allow read, write: if isAdmin() || approvedStudent(uid);
     }
   }
 }

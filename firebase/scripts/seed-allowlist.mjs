@@ -8,13 +8,19 @@ const cred = process.env.FIREBASE_SERVICE_ACCOUNT_JSON ? cert(JSON.parse(process
 initializeApp({credential:cred});
 const db=getFirestore();
 const entries=Object.entries(roster);
+const seen=new Set();
+for(const [rawId] of entries){
+  const id=rawId.trim().toUpperCase();
+  if(!/^IT\d{8}$/.test(id)||seen.has(id)) throw new Error('Roster contains an invalid or duplicate Student ID. No documents were written.');
+  seen.add(id);
+}
 for(let i=0;i<entries.length;i+=400){
   const batch=db.batch();
   for(const [studentId,meta] of entries.slice(i,i+400)){
-    const normalizedId=studentId.toUpperCase();
+    const normalizedId=studentId.trim().toUpperCase();
     batch.set(db.collection('student_allowlist').doc(normalizedId),{
       studentId:normalizedId,
-      sliitEmail:`${studentId.toLowerCase()}@my.sliit.lk`,
+      sliitEmail:`${normalizedId.toLowerCase()}@my.sliit.lk`,
       name:meta.name||'',
       timetableGroup:meta.timetable_group||'',
       subGroup:meta.sub_group||'',

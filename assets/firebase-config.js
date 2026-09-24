@@ -3,11 +3,11 @@
 window.FINALFORGE_FIREBASE = {
   enabled: false,
   config: {
-    apiKey: "REPLACE_ME",
-    authDomain: "REPLACE_ME.firebaseapp.com",
-    projectId: "REPLACE_ME",
-    storageBucket: "REPLACE_ME.appspot.com",
-    messagingSenderId: "REPLACE_ME",
-    appId: "REPLACE_ME"
+    apiKey: "AIzaSyCuPjrWWEfBV36jXB14fenKXxO431brx0A",
+    authDomain: "finalforge-dd1cf.firebaseapp.com",
+    projectId: "finalforge-dd1cf",
+    storageBucket: "finalforge-dd1cf.firebasestorage.app",
+    messagingSenderId: "954266816069",
+    appId: "1:954266816069:web:89c9d6ba12ae1e7913dd2c"
   }
 };

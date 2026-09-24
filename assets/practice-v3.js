@@ -52,20 +52,22 @@
 
   function buildState(paper='random'){
     const cfg = paper==='random' ? mockConfig(practiceMod) : seededConfig(practiceMod,paper);
-    return {...cfg,module:practiceMod,paperId:paper,paperLabel:paper==='random'?'Random Paper':`Paper ${paper}`,generatedAt:Date.now(),end:Date.now()+120*60*1000,finished:false,answers:{},selections:{},historySaved:false};
+    const now=Date.now();
+    return {...cfg,module:practiceMod,paperId:paper,paperLabel:paper==='random'?'Random Paper':`Paper ${paper}`,generatedAt:now,updatedAt:now,end:now+120*60*1000,finished:false,answers:{},selections:{},historySaved:false};
   }
   function saveActive(){ if(mockState&&!mockState.finished)localStorage.setItem(ACTIVE_KEY,JSON.stringify(mockState)); }
-  function clearActive(){ localStorage.removeItem(ACTIVE_KEY); }
+  function clearActive(){ localStorage.setItem('finalforge_mock_clear_at',String(Date.now())); localStorage.removeItem(ACTIVE_KEY); }
   function activeMock(){ try{return JSON.parse(localStorage.getItem(ACTIVE_KEY)||'null')}catch{return null} }
 
   startMock = function(paper='random'){
-    stopMock(); mockState=buildState(paper); saveActive(); renderMock(); mockTick=setInterval(()=>{updateMockTimer();saveActive()},1000); updateMockTimer();
+    if(activeMock() && !confirm('Clear saved answers and start a new mock?'))return;
+    stopMock(); mockState=buildState(paper); saveActive(); renderMock(); mockTick=setInterval(updateMockTimer,1000); updateMockTimer();
     window.logStudyActivity?.('mock-start');
   };
 
   window.resumeActiveMock = function(){
-    const st=activeMock(); if(!st){toast('No saved mock to resume');return} if(st.end<=Date.now()){localStorage.removeItem(ACTIVE_KEY);toast('Saved mock has expired');renderMockLibrary();return}
-    practiceMod=st.module; mockState=st; renderPractice(); renderMock(); stopMock(); mockTick=setInterval(()=>{updateMockTimer();saveActive()},1000); updateMockTimer();
+    const st=activeMock(); if(!st){toast('No saved mock to resume');return} if(st.end<=Date.now()){clearActive();toast('Saved mock has expired');renderMockLibrary();return}
+    practiceMod=st.module; mockState=st; renderPractice(); renderMock(); stopMock(); mockTick=setInterval(updateMockTimer,1000); updateMockTimer();
   };
 
   window.startPresetMock = p => startMock(p);
@@ -91,8 +93,8 @@
     }
     html+=`<div class="exam-actions"><button class="btn primary" onclick="finishMock()">Finish & reveal guide</button><button class="btn" onclick="startMock(mockState.paperId)">Restart this paper</button><button class="btn" onclick="renderPracticeStart();stopMock();saveActive()">Exit mock</button></div></div>`;
     $('#practiceWorkbench').innerHTML=html;
-    $$('[data-mq]').forEach(el=>el.addEventListener('change',e=>{mockState.selections[e.target.dataset.mq]=Number(e.target.value);saveActive();updateCompletion()}));
-    $$('[data-ma]').forEach(el=>el.addEventListener('input',e=>{mockState.answers[e.target.dataset.ma]=e.target.value;saveActive();updateCompletion()}));
+    $$('[data-mq]').forEach(el=>el.addEventListener('change',e=>{mockState.selections[e.target.dataset.mq]=Number(e.target.value);mockState.updatedAt=Date.now();saveActive();updateCompletion()}));
+    $$('[data-ma]').forEach(el=>el.addEventListener('input',e=>{mockState.answers[e.target.dataset.ma]=e.target.value;mockState.updatedAt=Date.now();saveActive();updateCompletion()}));
     updateCompletion(); scrollTo({top:0,behavior:'smooth'}); window.finalforgeRefreshEffects?.();
   };
 
@@ -126,7 +128,7 @@
   window.printMarkingGuide = () => { if(mockState) printPaperState(mockState,true); };
   window.printPresetPaper = p => printPaperState({...seededConfig(practiceMod,p),module:practiceMod,paperLabel:`Paper ${p}`},false);
 
-  window.discardActiveMock = () => {stopMock();mockState=null;clearActive();renderPracticeStart();renderMockLibrary();toast('Saved mock cleared. Start again when ready.');};
+  window.discardActiveMock = () => {if(!confirm('Clear saved answers and restart? This removes the unfinished attempt.'))return;stopMock();mockState=null;clearActive();renderPracticeStart();renderMockLibrary();toast('Saved mock cleared. Start again when ready.');};
   window.clearMockHistory = () => {localStorage.removeItem(HISTORY_KEY);renderMockLibrary();toast('Mock history cleared')};
   window.clearWeakness = () => {const a=weakness();delete a[practiceMod];localStorage.setItem(WEAK_KEY,JSON.stringify(a));renderWeakness();toast('Weak-area insights cleared')};
 

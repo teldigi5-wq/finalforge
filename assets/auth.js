@@ -39,7 +39,17 @@
   }
 
   function snapshotLocal(){const out={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k?.startsWith('finalforge_') && k!=='finalforge_cloud_meta') out[k]=localStorage.getItem(k)}return out;}
-  function applySnapshot(snap){if(!snap)return;Object.entries(snap).forEach(([k,v])=>{if(k.startsWith('finalforge_')&&typeof v==='string')originalSetItem(k,v)});try{renderModules?.();renderHome?.();renderPlanner?.();renderPractice?.()}catch{}}
+  function mockVersion(snap){try{const m=JSON.parse(snap.finalforge_active_mock_v3||'null');return Math.max(Number(m?.updatedAt||m?.generatedAt||0),Number(snap.finalforge_mock_clear_at||0))}catch{return Number(snap.finalforge_mock_clear_at||0)}}
+  function mergeSnapshot(local,remote){
+    const merged={...remote,...local};
+    const preferred=mockVersion(remote)>mockVersion(local)?remote:local;
+    for(const k of ['finalforge_active_mock_v3','finalforge_mock_clear_at']){
+      if(k in preferred)merged[k]=preferred[k];else delete merged[k];
+    }
+    if(Number(merged.finalforge_mock_clear_at||0)>=mockVersion({finalforge_active_mock_v3:merged.finalforge_active_mock_v3}))delete merged.finalforge_active_mock_v3;
+    return merged;
+  }
+  function applySnapshot(snap){if(!snap)return;const merged=mergeSnapshot(snapshotLocal(),snap);for(const [k,v] of Object.entries(merged))if(k.startsWith('finalforge_')&&typeof v==='string')originalSetItem(k,v);if(!('finalforge_active_mock_v3' in merged))localStorage.removeItem('finalforge_active_mock_v3');try{renderModules?.();renderHome?.();renderPlanner?.();renderPractice?.()}catch{}}
   async function pullOrPush(){
     if(!auth?.currentUser||currentProfile?.role!=='student')return;
     const ref=db.collection('progress').doc(auth.currentUser.uid),doc=await ref.get();
@@ -47,7 +57,7 @@
   }
   async function pushCloud(){
     if(!auth?.currentUser||currentProfile?.role!=='student')return;
-    try{await db.collection('progress').doc(auth.currentUser.uid).set({snapshot:snapshotLocal(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});$('#syncState').textContent='☁️ Synced'}catch{$('#syncState').textContent='☁️ Offline'}
+    try{const ref=db.collection('progress').doc(auth.currentUser.uid);const snapshot=await db.runTransaction(async tx=>{const previous=await tx.get(ref);const merged=mergeSnapshot(snapshotLocal(),previous.data()?.snapshot||{});tx.set(ref,{snapshot:merged,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});return merged});applySnapshot(snapshot);$('#syncState').textContent='☁️ Synced'}catch{$('#syncState').textContent='☁️ Offline'}
   }
   function scheduleSync(delay=700){if(!auth?.currentUser||currentProfile?.role!=='student')return;$('#syncState').textContent='☁️ Saving…';clearTimeout(syncTimer);syncTimer=setTimeout(pushCloud,delay)}
   localStorage.setItem=function(k,v){originalSetItem(k,v);if(String(k).startsWith('finalforge_'))scheduleSync();};
