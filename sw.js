@@ -1,4 +1,4 @@
-const C='finalforge-2026-v5-logo-email-auth';
+const C='finalforge-v5-firebase-live-1';
 const CORE=['./','./index.html','./assets/core-loader.js','./assets/core/chunk-00.txt','./assets/core/chunk-01.txt','./assets/core/chunk-02.txt','./assets/core/chunk-03.txt','./assets/core/chunk-04.txt','./assets/core/chunk-05a.txt','./assets/core/chunk-05b.txt','./assets/core/chunk-05c.txt','./assets/core/chunk-05d.txt','./assets/core/chunk-06.txt','./assets/app.js','./assets/practice-v3.js','./assets/firebase-config.js','./assets/auth.js','./assets/finalforge-logo-256.webp','./assets/icon-192.png','./assets/icon-512.png','./manifest.webmanifest'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.addAll(C))));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k))))));
