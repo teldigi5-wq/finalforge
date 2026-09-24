@@ -6,6 +6,7 @@
     if(gate){const n=document.getElementById('authConfigNote');if(n){n.hidden=false;n.innerHTML=`<b>FinalForge could not start.</b><br>${msg}`;}}
   };
   const loadScript=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s)});
+  const loadStyle=href=>new Promise((resolve,reject)=>{const l=document.createElement('link');l.rel='stylesheet';l.href=href;l.onload=resolve;l.onerror=()=>reject(new Error(`Could not load ${href}`));document.head.appendChild(l)});
   try{
     if(!('DecompressionStream' in window)) throw new Error('This browser is too old for the optimized FinalForge bundle. Please update your browser.');
     const paths=['00','01','02','03','04','05a','05b','05c','05d','06'].map(x=>`assets/core/chunk-${x}.txt`);
@@ -26,6 +27,7 @@
     authTabsFix.dataset.finalforgeAuthTabsFix='1';
     authTabsFix.textContent=`#authGate .auth-card .auth-tabs{display:grid!important;grid-template-columns:1fr 1fr!important;visibility:visible!important;opacity:1!important;height:auto!important;max-height:none!important;overflow:visible!important;margin-bottom:18px!important}#authGate .auth-card .auth-tabs>button{display:flex!important;align-items:center!important;justify-content:center!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}`;
     document.head.appendChild(authTabsFix);
+    await loadStyle('assets/ui-responsive-v2.css');
     (0,eval)(b['data.js']);
     if(!window.FINALFORGE_DATA&&window.EXAMHUB_DATA)window.FINALFORGE_DATA=window.EXAMHUB_DATA;
     (0,eval)(b['practice-data.js']);
