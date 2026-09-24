@@ -24,7 +24,9 @@ export default async function handler(req, res) {
     const registered = Math.max(0, Number(data.registered || 0));
     const ratingCount = Math.max(0, Number(data.ratingCount || 0));
     const ratingSum = Math.max(0, Number(data.ratingSum || 0));
-    const studyingNow = Number.isFinite(Number(data.studyingNow)) ? Math.max(0, Number(data.studyingNow)) : null;
+    const studyingNow = data.studyingNow != null && Number.isFinite(Number(data.studyingNow))
+      ? Math.max(0, Number(data.studyingNow))
+      : null;
     return res.status(200).json({
       registered,
       studyingNow,
@@ -32,6 +34,6 @@ export default async function handler(req, res) {
       ratingAverage: ratingCount ? ratingSum / ratingCount : null
     });
   } catch {
-    return res.status(200).json({ registered: 0, studyingNow: null, ratingCount: 0, ratingAverage: null });
+    return res.status(200).json({ registered: null, studyingNow: null, ratingCount: 0, ratingAverage: null });
   }
 }
