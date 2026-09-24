@@ -1,8 +1,23 @@
 import { createHash } from 'node:crypto';
-import { keylessServices } from './keyless.js';
+import { initializeApp, cert, getApps } from 'firebase-admin/app';
+import { getAuth } from 'firebase-admin/auth';
+import { getFirestore } from 'firebase-admin/firestore';
 
 // Firebase end-user account creation must remain disabled in Authentication
 // settings so direct browser SDK calls cannot bypass this allowlist check.
+function services() {
+  const raw = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+  if (!raw) throw new Error('FinalForge server credential is not configured');
+  if (!getApps().length) {
+    const account = JSON.parse(raw);
+    if (account.type !== 'service_account' || account.project_id !== 'finalforge-dd1cf' ||
+        !/^finalforge-signup@finalforge-dd1cf\.iam\.gserviceaccount\.com$/.test(account.client_email || '')) {
+      throw new Error('Unexpected FinalForge service account');
+    }
+    initializeApp({ credential: cert(account), projectId: 'finalforge-dd1cf' });
+  }
+  return { auth: getAuth(), db: getFirestore() };
+}
 
 export async function registerStudent({ studentId, password, ip }, { auth, db }) {
   const id = String(studentId || '').trim().toUpperCase();
@@ -42,13 +57,10 @@ export default async function handler(req, res) {
   if (Number(req.headers['content-length'] || 0) > 2048) return res.status(413).json({ error: 'Request too large.' });
   try {
     if (!process.env.SIGNUP_RATE_SECRET) throw new Error('Signup rate limit is not configured');
-    const services = await keylessServices();
-    try {
     const { studentId, password } = req.body || {};
     const ip = String(req.headers['x-vercel-forwarded-for'] || req.socket.remoteAddress || 'unknown').split(',')[0];
-    const result = await registerStudent({ studentId, password, ip }, services);
+    const result = await registerStudent({ studentId, password, ip }, services());
     return res.status(result.status).json(result.status === 201 ? { message: result.message } : { error: result.message });
-    } finally { await services.close(); }
   } catch {
     return res.status(503).json({ error: 'Signup is temporarily unavailable.' });
   }

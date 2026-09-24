@@ -3,6 +3,14 @@ firebase/private/
 firebase/.env
 firebase/.env.*
 !firebase/.env.example
+**/students.json
+**/*service-account*.json
+**/*serviceAccount*.json
+**/*adminsdk*.json
+**/*private-key*.json
+**/*credentials*.json
+.env*
+!.env.example
 
 # Local dependencies / tooling
 firebase/node_modules/

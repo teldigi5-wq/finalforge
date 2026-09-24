@@ -5,5 +5,9 @@ firebase/node_modules
 firebase/.env*
 **/students.json
 **/*service-account*.json
+**/*serviceAccount*.json
+**/*adminsdk*.json
+**/*private-key*.json
+**/*credentials*.json
 **/.env*
 *.zip
