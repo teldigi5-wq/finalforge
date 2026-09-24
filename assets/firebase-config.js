@@ -1,8 +1,7 @@
-// FinalForge V5 Firebase public client configuration.
-// Firebase web config values are identifiers, not your admin/service-account secrets.
+// FinalForge Firebase public client configuration.
+// Firebase web config values are public identifiers. Never place service-account keys or passwords here.
 window.FINALFORGE_FIREBASE = {
   enabled: false,
-  adminEmail: "SellahewaPK@my.sliit.lk",
   config: {
     apiKey: "REPLACE_ME",
     authDomain: "REPLACE_ME.firebaseapp.com",
