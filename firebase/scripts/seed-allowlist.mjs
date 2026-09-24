@@ -11,8 +11,16 @@ const entries=Object.entries(roster);
 for(let i=0;i<entries.length;i+=400){
   const batch=db.batch();
   for(const [studentId,meta] of entries.slice(i,i+400)){
-    batch.set(db.collection('student_allowlist').doc(studentId.toUpperCase()),{
-      studentId:studentId.toUpperCase(), name:meta.name||'', timetableGroup:meta.timetable_group||'', subGroup:meta.sub_group||'', projectGroup:meta.project_group||'', active:true, seededAt:FieldValue.serverTimestamp()
+    const normalizedId=studentId.toUpperCase();
+    batch.set(db.collection('student_allowlist').doc(normalizedId),{
+      studentId:normalizedId,
+      sliitEmail:`${studentId.toLowerCase()}@my.sliit.lk`,
+      name:meta.name||'',
+      timetableGroup:meta.timetable_group||'',
+      subGroup:meta.sub_group||'',
+      projectGroup:meta.project_group||'',
+      active:true,
+      seededAt:FieldValue.serverTimestamp()
     },{merge:true});
   }
   await batch.commit();
