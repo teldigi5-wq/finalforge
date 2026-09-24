@@ -29,8 +29,12 @@ not only setting one administrator's claim.
 
 The `FIREBASE_SERVICE_ACCOUNT_JSON` server environment secret must contain
 only the new account's JSON (the endpoint checks its project and exact email).
-Add it to the **Production server environment only**, never a public Vercel
-variable, source file, build artifact, or frontend config. Add a separate
+Add it as a **Sensitive** project variable scoped to **Production** only,
+never a public Vercel variable, source file, build artifact, or frontend
+config. Vercel project environment variables are available during builds and
+to server functions in that environment, so the Vercel project must have only
+trusted build steps and server functions; Vercel does not make this secret
+exclusive to the signup function. Add a separate
 random `SIGNUP_RATE_SECRET` production environment secret. Restrict deployment
 access to trusted project administrators. Verify the secret is unavailable in
 client assets and Vercel build logs. Remove temporary local key copies after
