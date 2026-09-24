@@ -1,4 +1,4 @@
-/* FinalForge production bundle loader — reconstructs the optimized UI/practice bundle from Git-friendly chunks. */
+/* FinalForge production bundle loader — reconstructs the optimized UI/practice bundle from verified Git-friendly chunks. */
 (async()=>{
   const fail=(msg)=>{
     console.error('[FinalForge]',msg);
@@ -8,7 +8,7 @@
   const loadScript=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s)});
   try{
     if(!('DecompressionStream' in window)) throw new Error('This browser is too old for the optimized FinalForge bundle. Please update your browser.');
-    const paths=[0,1,2,3,4,5,6].map(i=>`assets/core/chunk-${String(i).padStart(2,'0')}.txt`);
+    const paths=['00','01','02','03','04','05a','05b','05c','05d','06'].map(x=>`assets/core/chunk-${x}.txt`);
     const parts=await Promise.all(paths.map(async p=>{
       const r=await fetch(p,{cache:'no-cache'});
       if(!r.ok) throw new Error(`Core bundle chunk failed (${p}, ${r.status}).`);
