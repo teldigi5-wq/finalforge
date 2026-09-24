@@ -1,6 +1,6 @@
-const C='finalforge-v5-firebase-live-3';
-const CORE=['./','./index.html','./assets/core-loader.js','./assets/ui-responsive-v2.css','./assets/core/chunk-00.txt','./assets/core/chunk-01.txt','./assets/core/chunk-02.txt','./assets/core/chunk-03.txt','./assets/core/chunk-04.txt','./assets/core/chunk-05a.txt','./assets/core/chunk-05b.txt','./assets/core/chunk-05c.txt','./assets/core/chunk-05d.txt','./assets/core/chunk-06.txt','./assets/app.js','./assets/practice-v3.js','./assets/firebase-config.js','./assets/auth.js','./assets/finalforge-logo-256.webp','./assets/icon-192.png','./assets/icon-512.png','./manifest.webmanifest'];
-const NETWORK_FIRST=new Set(['/','/index.html','/assets/core-loader.js','/assets/ui-responsive-v2.css','/assets/firebase-config.js','/assets/auth.js']);
+const C='finalforge-v5-firebase-live-4';
+const CORE=['./','./index.html','./assets/core-loader.js','./assets/ui-responsive-v2.css','./assets/auth-premium-v3.css','./assets/auth-motion-v3.js','./assets/core/chunk-00.txt','./assets/core/chunk-01.txt','./assets/core/chunk-02.txt','./assets/core/chunk-03.txt','./assets/core/chunk-04.txt','./assets/core/chunk-05a.txt','./assets/core/chunk-05b.txt','./assets/core/chunk-05c.txt','./assets/core/chunk-05d.txt','./assets/core/chunk-06.txt','./assets/app.js','./assets/practice-v3.js','./assets/firebase-config.js','./assets/auth.js','./assets/finalforge-logo-256.webp','./assets/icon-192.png','./assets/icon-512.png','./manifest.webmanifest'];
+const NETWORK_FIRST=new Set(['/','/index.html','/assets/core-loader.js','/assets/ui-responsive-v2.css','/assets/auth-premium-v3.css','/assets/auth-motion-v3.js','/assets/firebase-config.js','/assets/auth.js']);
 
 self.addEventListener('install',e=>e.waitUntil(
   caches.open(C).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())
