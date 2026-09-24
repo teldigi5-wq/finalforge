@@ -1,0 +1,210 @@
+/* FinalForge dashboard responsive v3
+   Fixes desktop overflow at 100% zoom and refines the post-login study experience. */
+:root{
+  --ff-side-w:clamp(214px,14vw,252px);
+  --ff-content-pad:clamp(18px,2.15vw,34px);
+  --ff-dash-line:rgba(125,211,252,.14);
+  --ff-dash-card:rgba(10,28,48,.82);
+}
+
+html,body{max-width:100%;overflow-x:hidden!important}
+body:not(.auth-pending){background:#06111f!important}
+body:not(.auth-pending) .app{
+  display:grid!important;
+  grid-template-columns:var(--ff-side-w) minmax(0,1fr)!important;
+  width:100vw!important;
+  max-width:100vw!important;
+  min-height:100vh!important;
+  min-height:100dvh!important;
+  overflow-x:clip!important;
+  background:linear-gradient(180deg,#06111f 0%,#071522 100%)!important;
+}
+body:not(.auth-pending) .sidebar{
+  position:sticky!important;
+  inset:0 auto auto 0!important;
+  grid-column:1!important;
+  align-self:start!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:100vh!important;
+  height:100dvh!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  box-sizing:border-box!important;
+  border-right:1px solid rgba(125,211,252,.10)!important;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(125,211,252,.22) transparent;
+}
+body:not(.auth-pending) .main{
+  grid-column:2!important;
+  width:auto!important;
+  min-width:0!important;
+  max-width:none!important;
+  margin-left:0!important;
+  overflow-x:clip!important;
+}
+body:not(.auth-pending) .topbar{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  padding-inline:var(--ff-content-pad)!important;
+  background:rgba(5,17,31,.78)!important;
+  box-sizing:border-box!important;
+}
+body:not(.auth-pending) .section{
+  width:100%!important;
+  min-width:0!important;
+  max-width:1540px!important;
+  margin-inline:auto!important;
+  padding-inline:var(--ff-content-pad)!important;
+  box-sizing:border-box!important;
+}
+body:not(.auth-pending) .section>*{min-width:0}
+
+/* Hero composition */
+body:not(.auth-pending) .hero-v3{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.48fr) minmax(300px,.62fr)!important;
+  gap:clamp(14px,1.5vw,22px)!important;
+  width:100%!important;
+  min-width:0!important;
+}
+body:not(.auth-pending) .hero-main,
+body:not(.auth-pending) .hero-side{
+  min-width:0!important;
+  width:auto!important;
+  max-width:none!important;
+  overflow:hidden!important;
+  border:1px solid var(--ff-dash-line)!important;
+  background:linear-gradient(145deg,rgba(15,38,64,.92),rgba(8,24,42,.92))!important;
+}
+body:not(.auth-pending) .hero-main{padding:clamp(24px,2.5vw,40px)!important}
+body:not(.auth-pending) .hero-main h1{
+  max-width:850px!important;
+  font-size:clamp(3rem,4.25vw,5.15rem)!important;
+  line-height:.94!important;
+}
+body:not(.auth-pending) .hero-copy>p{max-width:850px!important}
+body:not(.auth-pending) .hero-actions{display:flex!important;flex-wrap:wrap!important;gap:10px!important}
+body:not(.auth-pending) .hero-side{
+  padding:clamp(20px,2vw,30px)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:space-between!important;
+  gap:18px!important;
+}
+body:not(.auth-pending) .scene3d{min-height:clamp(180px,20vw,270px)!important;max-height:290px!important}
+body:not(.auth-pending) .countdown-grid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:8px!important;
+  width:100%!important;
+}
+body:not(.auth-pending) .timebox{min-width:0!important;padding:14px 8px!important}
+body:not(.auth-pending) .timebox b{font-size:clamp(1.45rem,2vw,2rem)!important}
+body:not(.auth-pending) .official-link{width:100%!important;justify-content:flex-start!important;box-sizing:border-box!important}
+
+/* Dense, adaptive dashboard grids */
+body:not(.auth-pending) .quick-dock{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:clamp(10px,1.1vw,16px)!important;
+  width:100%!important;
+}
+body:not(.auth-pending) .quick-dock>button{min-width:0!important;width:100%!important}
+body:not(.auth-pending) .grid4{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:clamp(10px,1.1vw,16px)!important;
+  width:100%!important;
+}
+body:not(.auth-pending) .module-grid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:clamp(12px,1.25vw,18px)!important;
+  width:100%!important;
+}
+body:not(.auth-pending) .resource-grid,
+body:not(.auth-pending) .exam-grid,
+body:not(.auth-pending) .feature-grid{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr))!important;
+  gap:clamp(12px,1.25vw,18px)!important;
+  width:100%!important;
+}
+body:not(.auth-pending) .card,
+body:not(.auth-pending) .quick-dock>button{
+  min-width:0!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+body:not(.auth-pending) .module-card h3,
+body:not(.auth-pending) .resource b,
+body:not(.auth-pending) .exam-card h3{overflow-wrap:anywhere}
+
+/* Cleaner visual density inspired by modern study products */
+body:not(.auth-pending) .card{
+  border-color:var(--ff-dash-line)!important;
+  background:linear-gradient(145deg,rgba(14,37,62,.82),rgba(8,25,43,.86))!important;
+  box-shadow:0 10px 28px rgba(0,0,0,.12)!important;
+}
+body:not(.auth-pending) .quick-dock>button{
+  border:1px solid var(--ff-dash-line)!important;
+  background:rgba(9,29,49,.72)!important;
+  box-shadow:none!important;
+}
+body:not(.auth-pending) .stat{padding:clamp(17px,1.5vw,24px)!important}
+body:not(.auth-pending) .stat strong{font-size:clamp(1.8rem,2.3vw,2.5rem)!important}
+body:not(.auth-pending) .section-head{margin-top:clamp(20px,2.2vw,34px)!important}
+body:not(.auth-pending) .section-head h2{font-size:clamp(1.8rem,2.6vw,2.6rem)!important;letter-spacing:-.035em!important}
+
+@media (hover:hover){
+  body:not(.auth-pending) .card:hover{transform:translateY(-2px)!important;border-color:rgba(103,232,249,.26)!important;box-shadow:0 16px 38px rgba(0,0,0,.16)!important}
+  body:not(.auth-pending) .quick-dock>button:hover{transform:translateY(-2px)!important;border-color:rgba(103,232,249,.25)!important;background:rgba(12,38,62,.88)!important}
+}
+
+/* Standard 1366/1440 laptop widths */
+@media (max-width:1480px){
+  :root{--ff-side-w:220px;--ff-content-pad:clamp(16px,1.6vw,24px)}
+  body:not(.auth-pending) .hero-v3{grid-template-columns:minmax(0,1.42fr) minmax(290px,.58fr)!important}
+  body:not(.auth-pending) .module-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body:not(.auth-pending) .hero-main h1{font-size:clamp(2.8rem,4.1vw,4.45rem)!important}
+}
+
+@media (max-width:1220px){
+  body:not(.auth-pending) .hero-v3{grid-template-columns:1fr!important}
+  body:not(.auth-pending) .hero-side{display:grid!important;grid-template-columns:minmax(220px,.7fr) minmax(0,1.3fr)!important;align-items:center!important}
+  body:not(.auth-pending) .hero-side .official-link{grid-column:1/-1!important}
+  body:not(.auth-pending) .scene3d{min-height:190px!important}
+  body:not(.auth-pending) .quick-dock,
+  body:not(.auth-pending) .grid4{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+
+@media (max-width:900px){
+  body:not(.auth-pending) .app{display:block!important;width:100%!important;max-width:100%!important}
+  body:not(.auth-pending) .sidebar{display:none!important}
+  body:not(.auth-pending) .main{display:block!important;width:100%!important;max-width:100%!important;margin:0!important}
+  body:not(.auth-pending) .hero-side{grid-template-columns:1fr!important}
+  body:not(.auth-pending) .hero-side .official-link{grid-column:auto!important}
+  body:not(.auth-pending) .module-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+
+@media (max-width:620px){
+  :root{--ff-content-pad:14px}
+  body:not(.auth-pending) .quick-dock,
+  body:not(.auth-pending) .grid4,
+  body:not(.auth-pending) .module-grid,
+  body:not(.auth-pending) .resource-grid,
+  body:not(.auth-pending) .exam-grid,
+  body:not(.auth-pending) .feature-grid{grid-template-columns:1fr!important}
+  body:not(.auth-pending) .countdown-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body:not(.auth-pending) .hero-main{padding:20px!important}
+  body:not(.auth-pending) .hero-main h1{font-size:clamp(2.35rem,12vw,3.25rem)!important}
+  body:not(.auth-pending) .hero-actions .btn{width:100%!important;justify-content:center!important}
+}
+
+@media (prefers-reduced-motion:reduce){
+  body:not(.auth-pending) .card,
+  body:not(.auth-pending) .quick-dock>button{transition:none!important;transform:none!important}
+}
