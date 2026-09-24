@@ -31,11 +31,12 @@ document.documentElement.style.colorScheme='dark';
   try{
     if(!('DecompressionStream' in window)) throw new Error('This browser is too old for the optimized FinalForge bundle. Please update your browser.');
 
-    /* Final auth and dashboard styles + Firebase SDK begin loading immediately, in parallel with the local app bundle. */
+    /* Final auth, dashboard and mobile styles + Firebase SDK begin loading immediately, in parallel with the local app bundle. */
     const stylesReady=Promise.all([
       loadStyle('assets/ui-responsive-v2.css'),
       loadStyle('assets/auth-experience-v4.css'),
-      loadStyle('assets/dashboard-modern-v3.css')
+      loadStyle('assets/dashboard-modern-v3.css'),
+      loadStyle('assets/mobile-modern-v4.css')
     ]);
 
     const firebaseSdkReady=(async()=>{
@@ -83,6 +84,7 @@ document.documentElement.style.colorScheme='dark';
     await firebaseSdkReady;
     await loadScript('assets/auth.js');
     await loadScript('assets/auth-experience-v4.js');
+    await loadScript('assets/mobile-experience-v4.js');
 
     if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
     window.dispatchEvent(new CustomEvent('finalforge-ready'));
