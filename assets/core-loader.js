@@ -1,4 +1,4 @@
-/* FinalForge production bundle loader — keeps the public repo compact while preserving the full UI/practice source. */
+/* FinalForge production bundle loader — reconstructs the optimized UI/practice bundle from Git-friendly chunks. */
 (async()=>{
   const fail=(msg)=>{
     console.error('[FinalForge]',msg);
@@ -8,14 +8,21 @@
   const loadScript=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s)});
   try{
     if(!('DecompressionStream' in window)) throw new Error('This browser is too old for the optimized FinalForge bundle. Please update your browser.');
-    const res=await fetch('assets/core.bundle.gz',{cache:'no-cache'});
-    if(!res.ok) throw new Error(`Core bundle request failed (${res.status}).`);
-    const stream=res.body.pipeThrough(new DecompressionStream('gzip'));
+    const paths=[0,1,2,3,4,5,6].map(i=>`assets/core/chunk-${String(i).padStart(2,'0')}.txt`);
+    const parts=await Promise.all(paths.map(async p=>{
+      const r=await fetch(p,{cache:'no-cache'});
+      if(!r.ok) throw new Error(`Core bundle chunk failed (${p}, ${r.status}).`);
+      return r.text();
+    }));
+    const b64=parts.join('');
+    const bin=atob(b64);
+    const bytes=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+    const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
     const text=await new Response(stream).text();
     const b=JSON.parse(text);
     const style=document.createElement('style');style.dataset.finalforgeCore='1';style.textContent=b['styles.css'];document.head.appendChild(style);
     (0,eval)(b['data.js']);
-    // V5 code expects FINALFORGE_DATA. Older generated datasets used EXAMHUB_DATA; bridge safely during the rebrand.
     if(!window.FINALFORGE_DATA&&window.EXAMHUB_DATA)window.FINALFORGE_DATA=window.EXAMHUB_DATA;
     (0,eval)(b['practice-data.js']);
     await loadScript('assets/app.js');
