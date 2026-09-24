@@ -74,8 +74,10 @@ document.documentElement.style.colorScheme='dark';
     (0,eval)(b['practice-data.js']);
     await loadScript('assets/app.js');
 
+    /* Base practice engine remains in the verified bundle; the live V3 layer is loaded from the maintained source file. */
     (0,eval)(b['practice.js']);
-    (0,eval)(b['practice-v3.js']);
+    await loadScript('assets/practice-v3.js');
+    await loadScript('assets/practice-runtime-bridge.js');
     (0,eval)(b['experience.js']);
 
     await firebaseSdkReady;
