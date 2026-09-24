@@ -22,6 +22,10 @@
     const text=await new Response(stream).text();
     const b=JSON.parse(text);
     const style=document.createElement('style');style.dataset.finalforgeCore='1';style.textContent=b['styles.css'];document.head.appendChild(style);
+    const authTabsFix=document.createElement('style');
+    authTabsFix.dataset.finalforgeAuthTabsFix='1';
+    authTabsFix.textContent=`#authGate .auth-card .auth-tabs{display:grid!important;grid-template-columns:1fr 1fr!important;visibility:visible!important;opacity:1!important;height:auto!important;max-height:none!important;overflow:visible!important;margin-bottom:18px!important}#authGate .auth-card .auth-tabs>button{display:flex!important;align-items:center!important;justify-content:center!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}`;
+    document.head.appendChild(authTabsFix);
     (0,eval)(b['data.js']);
     if(!window.FINALFORGE_DATA&&window.EXAMHUB_DATA)window.FINALFORGE_DATA=window.EXAMHUB_DATA;
     (0,eval)(b['practice-data.js']);
