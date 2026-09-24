@@ -1,0 +1,5 @@
+firebase/private
+firebase/scripts
+firebase/node_modules
+firebase/.env*
+*.zip
