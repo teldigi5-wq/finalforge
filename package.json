@@ -3,6 +3,9 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "firebase-admin": "^13.0.0"
+    "@google-cloud/firestore": "^9.2.0",
+    "@vercel/oidc": "^3.8.9",
+    "firebase-admin": "^13.0.0",
+    "google-auth-library": "^11.1.0"
   }
 }

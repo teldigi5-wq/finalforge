@@ -1,11 +1,10 @@
 import { readFile } from 'node:fs/promises';
-import { initializeApp, cert, applicationDefault } from 'firebase-admin/app';
+import { initializeApp, applicationDefault } from 'firebase-admin/app';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 
 const rosterPath = new URL('../private/students.json', import.meta.url);
 const roster = JSON.parse(await readFile(rosterPath,'utf8'));
-const cred = process.env.FIREBASE_SERVICE_ACCOUNT_JSON ? cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON)) : applicationDefault();
-initializeApp({credential:cred});
+initializeApp({credential:applicationDefault(),projectId:'finalforge-dd1cf'});
 const db=getFirestore();
 const entries=Object.entries(roster);
 const seen=new Set();
