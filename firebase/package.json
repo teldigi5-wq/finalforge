@@ -1,0 +1,12 @@
+{
+  "name": "finalforge-firebase-setup",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "seed:students": "node scripts/seed-allowlist.mjs",
+    "seed:admin": "node scripts/seed-admin.mjs"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0"
+  }
+}
