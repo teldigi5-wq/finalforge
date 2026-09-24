@@ -28,6 +28,7 @@
     authTabsFix.textContent=`#authGate .auth-card .auth-tabs{display:grid!important;grid-template-columns:1fr 1fr!important;visibility:visible!important;opacity:1!important;height:auto!important;max-height:none!important;overflow:visible!important;margin-bottom:18px!important}#authGate .auth-card .auth-tabs>button{display:flex!important;align-items:center!important;justify-content:center!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}`;
     document.head.appendChild(authTabsFix);
     await loadStyle('assets/ui-responsive-v2.css');
+    await loadStyle('assets/auth-premium-v3.css');
     (0,eval)(b['data.js']);
     if(!window.FINALFORGE_DATA&&window.EXAMHUB_DATA)window.FINALFORGE_DATA=window.EXAMHUB_DATA;
     (0,eval)(b['practice-data.js']);
@@ -40,6 +41,7 @@
     await loadScript('https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js');
     await loadScript('https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js');
     await loadScript('assets/auth.js');
+    await loadScript('assets/auth-motion-v3.js');
     if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
     window.dispatchEvent(new CustomEvent('finalforge-ready'));
   }catch(err){fail(err?.message||String(err));}
