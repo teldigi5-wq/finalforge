@@ -1,4 +1,4 @@
-/* FinalForge Auth Premium v6 — presentation-only DOM refinement; auth logic unchanged. */
+/* FinalForge Auth Premium v7 — presentation-only DOM refinement; auth logic unchanged. */
 (()=>{
   const gate=document.getElementById('authGate');
   if(!gate)return;
@@ -15,7 +15,6 @@
     lock:'<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>'
   };
 
-  /* Remove the previous decorative dashboard mockup. It competed with the actual auth flow. */
   brand.querySelector('.ff-auth-preview')?.remove();
 
   if(!brand.querySelector('.ff-auth-brandbar')){
@@ -40,6 +39,14 @@
     const icon=[icons.shield,icons.mail,icons.cloud,icons.lock][i]||icons.check;
     el.innerHTML=`${svg(icon)}<span>${label}</span>`;
   });
+
+  if(!brand.querySelector('.ff-forge-core')){
+    const core=document.createElement('div');
+    core.className='ff-forge-core';
+    core.setAttribute('aria-hidden','true');
+    core.innerHTML=`<div class="ff-forge-ring"></div><div class="ff-forge-ring r2"></div><div class="ff-forge-ring r3"></div><div class="ff-forge-node"><img src="assets/finalforge-logo-256.webp" alt=""></div><div class="ff-forge-label"><i></i><span>Forge core online</span></div>`;
+    brand.appendChild(core);
+  }
 
   if(!brand.querySelector('.ff-auth-foot')){
     const foot=document.createElement('div');
@@ -73,5 +80,20 @@
     syncCopy();
   }
 
-  document.documentElement.classList.add('ff-auth-premium-v6');
+  /* Rare, low-amplitude parallax only on the decorative core. */
+  const core=brand.querySelector('.ff-forge-core');
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(core&&!reduced&&matchMedia('(hover:hover) and (pointer:fine)').matches){
+    let raf=0,x=0,y=0;
+    brand.addEventListener('pointermove',e=>{
+      const r=brand.getBoundingClientRect();
+      x=((e.clientX-r.left)/r.width-.5)*8;
+      y=((e.clientY-r.top)/r.height-.5)*8;
+      if(raf)return;
+      raf=requestAnimationFrame(()=>{core.style.setProperty('--mx',`${x}px`);core.style.setProperty('--my',`${y}px`);raf=0});
+    },{passive:true});
+    brand.addEventListener('pointerleave',()=>{core.style.setProperty('--mx','0px');core.style.setProperty('--my','0px')},{passive:true});
+  }
+
+  document.documentElement.classList.add('ff-auth-premium-v7');
 })();
