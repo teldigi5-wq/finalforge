@@ -91,6 +91,7 @@ document.documentElement.style.colorScheme='dark';
     await loadScript('assets/tailwind-runtime-v6.js');
     await loadScript('assets/product-motion-v5.js');
     await loadStyle('assets/reference-refresh.css');
+    await loadScript('assets/reference-enhancements.js');
 
     if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
     window.dispatchEvent(new CustomEvent('finalforge-ready'));
