@@ -1,4 +1,4 @@
-/* FinalForge Auth Premium v5 — presentation-only DOM refinement; auth logic unchanged. */
+/* FinalForge Auth Premium v6 — presentation-only DOM refinement; auth logic unchanged. */
 (()=>{
   const gate=document.getElementById('authGate');
   if(!gate)return;
@@ -15,6 +15,9 @@
     lock:'<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>'
   };
 
+  /* Remove the previous decorative dashboard mockup. It competed with the actual auth flow. */
+  brand.querySelector('.ff-auth-preview')?.remove();
+
   if(!brand.querySelector('.ff-auth-brandbar')){
     const bar=document.createElement('div');
     bar.className='ff-auth-brandbar';
@@ -29,8 +32,7 @@
     const para=[...brand.children].find(x=>x.tagName==='P');
     const points=brand.querySelector('.auth-points');
     [headline,para,points].filter(Boolean).forEach(el=>wrap.appendChild(el));
-    const bar=brand.querySelector('.ff-auth-brandbar');
-    bar?.insertAdjacentElement('afterend',wrap);
+    brand.querySelector('.ff-auth-brandbar')?.insertAdjacentElement('afterend',wrap);
   }
 
   brand.querySelectorAll('.auth-points span').forEach((el,i)=>{
@@ -39,25 +41,17 @@
     el.innerHTML=`${svg(icon)}<span>${label}</span>`;
   });
 
-  if(!brand.querySelector('.ff-auth-preview')){
-    const preview=document.createElement('div');
-    preview.className='ff-auth-preview';
-    preview.setAttribute('aria-hidden','true');
-    preview.innerHTML=`<div class="ff-preview-top"><i></i><i></i><i></i><span class="ff-preview-title">Study workspace</span></div><div class="ff-preview-body"><div class="ff-preview-eyebrow">Today's focus</div><div class="ff-preview-headline">Final exam readiness</div><div class="ff-preview-progress"><i></i></div><div class="ff-preview-grid"><div><b>4</b><span>Modules</span></div><div><b>93</b><span>Resources</span></div><div><b>2h</b><span>Mock exam</span></div></div></div>`;
-    brand.appendChild(preview);
-  }
-
   if(!brand.querySelector('.ff-auth-foot')){
     const foot=document.createElement('div');
     foot.className='ff-auth-foot';
-    foot.innerHTML='<span><strong>Built for focused revision.</strong> Fast, private, student-first.</span><span>FinalForge</span>';
+    foot.innerHTML='<span><strong>Focused revision.</strong> Fast, private, student-first.</span><span>Forge Your Academic Edge.</span>';
     brand.appendChild(foot);
   }
 
   if(!card.querySelector('.ff-auth-security')){
     const security=document.createElement('div');
     security.className='ff-auth-security';
-    security.innerHTML=`${svg(icons.shield)}<span>Student access is verified through your SLIIT mailbox.</span>`;
+    security.innerHTML=`${svg(icons.shield)}<span>Verified through your SLIIT mailbox.</span>`;
     card.appendChild(security);
   }
 
@@ -65,9 +59,9 @@
   if(intro){
     const copy={
       login:['Secure student access','Welcome back','Continue exactly where you left off.'],
-      signup:['Approved students only','Create your account','One account for resources, practice and progress.'],
+      signup:['Approved students only','Create your account','One secure account for resources, practice and progress.'],
       verify:['Email verification','Check your SLIIT inbox','Open the verification link, then return here.'],
-      reset:['Account recovery','Reset your password','We will send a secure reset link to your SLIIT mailbox.']
+      reset:['Account recovery','Reset your password','We will send the reset link to your SLIIT mailbox.']
     };
     const syncCopy=()=>{
       const mode=card.dataset.mode||'login';
@@ -79,5 +73,5 @@
     syncCopy();
   }
 
-  document.documentElement.classList.add('ff-auth-premium-v5');
+  document.documentElement.classList.add('ff-auth-premium-v6');
 })();
