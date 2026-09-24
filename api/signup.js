@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { initializeApp, cert, getApps } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
-import { getFirestore } from 'firebase-admin/firestore';
+import { FieldValue, getFirestore } from 'firebase-admin/firestore';
 
 // Firebase end-user account creation must remain disabled in Authentication
 // settings so direct browser SDK calls cannot bypass this allowlist check.
@@ -43,6 +43,13 @@ export async function registerStudent({ studentId, password, ip }, { auth, db })
   if (claimed.exists) return { status: 409, message: 'Account already registered. Sign in or reset the password.' };
   try {
     await auth.createUser({ email, password, emailVerified: false, displayName: id });
+    // Social-proof telemetry is aggregate only. Never block signup if this cosmetic counter fails.
+    try {
+      await db.collection('platform_stats').doc('public').set({
+        registered: FieldValue.increment(1),
+        updatedAt: FieldValue.serverTimestamp()
+      }, { merge: true });
+    } catch {}
     return { status: 201, message: 'Account created. Verify the SLIIT email before accessing FinalForge.' };
   } catch (error) {
     if (error.code === 'auth/email-already-exists') return { status: 409, message: 'Account already registered. Sign in or reset the password.' };
