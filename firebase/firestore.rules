@@ -6,11 +6,17 @@ service cloud.firestore {
     function own(uid) { return signedIn() && request.auth.uid == uid; }
     function verifiedEmail() { return signedIn() && request.auth.token.email_verified == true; }
     function approvedStudent(uid) {
+      let profile = get(/databases/$(database)/documents/profiles/$(uid)).data;
+      let studentId = profile.studentId;
       return verifiedEmail() && own(uid)
         && exists(/databases/$(database)/documents/profiles/$(uid))
-        && get(/databases/$(database)/documents/profiles/$(uid)).data.role == 'student'
-        && get(/databases/$(database)/documents/profiles/$(uid)).data.disabled == false
-        && get(/databases/$(database)/documents/profiles/$(uid)).data.sliitEmail == request.auth.token.email;
+        && profile.role == 'student'
+        && profile.disabled == false
+        && profile.sliitEmail == request.auth.token.email
+        && exists(/databases/$(database)/documents/student_allowlist/$(studentId))
+        && get(/databases/$(database)/documents/student_allowlist/$(studentId)).data.active == true
+        && get(/databases/$(database)/documents/student_allowlist/$(studentId)).data.sliitEmail == request.auth.token.email
+        && get(/databases/$(database)/documents/student_claims/$(studentId)).data.uid == uid;
     }
 
     match /student_allowlist/{studentId} {
@@ -18,7 +24,7 @@ service cloud.firestore {
     }
 
     match /student_claims/{studentId} {
-      allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow read: if isAdmin() || (verifiedEmail() && resource.data.uid == request.auth.uid);
       allow create: if verifiedEmail()
         && !exists(/databases/$(database)/documents/student_claims/$(studentId))
         && exists(/databases/$(database)/documents/student_allowlist/$(studentId))
@@ -31,7 +37,7 @@ service cloud.firestore {
     }
 
     match /profiles/{uid} {
-      allow read: if isAdmin() || own(uid);
+      allow read: if isAdmin() || (verifiedEmail() && own(uid));
       allow create: if own(uid)
         && verifiedEmail()
         && request.resource.data.role == 'student'

@@ -75,7 +75,9 @@
   async function finalizeVerifiedStudent(user){
     await user.reload();
     if(!user.emailVerified) throw new Error('Verify your SLIIT email before continuing.');
-    const email=(user.email||'').toLowerCase();
+    const token=await user.getIdTokenResult(true);
+    if(token.claims.email_verified!==true) throw new Error('Verify your SLIIT email before continuing.');
+    const email=user.email||'';
     const local=email.split('@')[0];
     const id=normalizeStudentId(local);
     if(!validStudentId(id)||email!==studentEmail(id)) throw new Error('This account is not linked to a valid Student ID email.');
@@ -87,7 +89,12 @@
       batch.set(profile,{role:'student',studentId:id,sliitEmail:email,emailVerified:true,disabled:false,createdAt:firebase.firestore.FieldValue.serverTimestamp(),lastLoginAt:firebase.firestore.FieldValue.serverTimestamp()});
       await batch.commit();
     } else {
-      await profile.set({emailVerified:true,lastLoginAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+      const data=existing.data();
+      if(data.role!=='student'||data.studentId!==id||data.sliitEmail!==email||data.emailVerified!==true||data.disabled===true)
+        throw new Error('Student account profile is invalid or disabled.');
+      const existingClaim=await claim.get();
+      if(!existingClaim.exists||existingClaim.data().uid!==user.uid)throw new Error('Student ID claim is invalid.');
+      await profile.set({lastLoginAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
     }
     const p=(await profile.get()).data();
     if(p?.disabled){await auth.signOut();throw new Error('This student account is disabled. Contact the administrator.');}
