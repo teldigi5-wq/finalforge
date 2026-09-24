@@ -1,7 +1,7 @@
 // FinalForge Firebase public client configuration.
 // Firebase web config values are public identifiers. Never place service-account keys or passwords here.
 window.FINALFORGE_FIREBASE = {
-  enabled: false,
+  enabled: true,
   config: {
     apiKey: "AIzaSyCuPjrWWEfBV36jXB14fenKXxO431brx0A",
     authDomain: "finalforge-dd1cf.firebaseapp.com",
