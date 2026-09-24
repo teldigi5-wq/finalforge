@@ -5,6 +5,7 @@ document.documentElement.style.colorScheme='dark';
 (async()=>{
   const fail=(msg)=>{
     console.error('[FinalForge]',msg);
+    const status=document.getElementById('authBootStatus');if(status){status.textContent='Secure sign-in could not load.';status.classList.add('is-error');}
     const gate=document.getElementById('authGate');
     if(gate){const n=document.getElementById('authConfigNote');if(n){n.hidden=false;n.innerHTML=`<b>FinalForge could not start.</b><br>${msg}`;}}
   };
@@ -92,6 +93,7 @@ document.documentElement.style.colorScheme='dark';
     await loadScript('assets/product-motion-v5.js');
     await loadStyle('assets/reference-refresh.css');
     await loadScript('assets/reference-enhancements.js');
+    const status=document.getElementById('authBootStatus');if(status)status.hidden=true;
 
     if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
     window.dispatchEvent(new CustomEvent('finalforge-ready'));

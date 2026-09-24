@@ -12,7 +12,7 @@
   const validStudentId = id => /^IT\d{8}$/.test(normalizeStudentId(id));
   const studentEmail = id => `${normalizeStudentId(id).toLowerCase()}@my.sliit.lk`;
   const setAlert=(msg,type='error')=>{const a=$('#authAlert'); if(!a)return; a.hidden=!msg; a.className=`auth-alert ${type}`; a.textContent=msg||'';};
-  const busy=(form,on)=>form?.querySelectorAll('button,input').forEach(el=>el.disabled=!!on);
+  const busy=(form,on)=>{if(!form)return;form.classList.toggle('is-loading',!!on);form.setAttribute('aria-busy',String(!!on));form.querySelectorAll('button,input').forEach(el=>el.disabled=!!on);};
   const fmtDate=v=>{try{const d=v?.toDate?v.toDate():new Date(v);return isNaN(d)?'—':new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeStyle:'short'}).format(d)}catch{return '—'}};
 
   window.togglePassword=(id,b)=>{const x=document.getElementById(id);if(!x)return;x.type=x.type==='password'?'text':'password';b.textContent=x.type==='password'?'👁':'🙈'};

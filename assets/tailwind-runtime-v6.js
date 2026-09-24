@@ -76,7 +76,7 @@
       const label=clean(text);b.innerHTML=`${svg(iconForText(label))}<span>${label}</span>`;
     });
     qa('.module-icon',root).forEach(el=>{if(!q('svg',el))el.innerHTML=svg('book','ff-icon ff-icon-lg')});
-    qa('.otp-icon',root).forEach(el=>{el.innerHTML=svg('mail','ff-icon ff-icon-lg')});
+    qa('.otp-icon',root).forEach(el=>{if(!q('svg',el))el.innerHTML=svg('mail','ff-icon ff-icon-lg')});
     const sync=q('#syncState',root);if(sync&&emoji.test(sync.textContent||'')){const label=clean(sync.textContent);sync.innerHTML=`${svg('cloud','ff-icon ff-icon-sm')}<span>${label}</span>`;sync.style.display='inline-flex';sync.style.alignItems='center';sync.style.gap='6px'}
     qa('.password-wrap button',root).forEach(b=>{if(!q('svg',b))b.innerHTML=svg('eye')});
     const account=q('#accountChip',root);if(account){const spans=[...account.children].filter(x=>x.tagName==='SPAN');const last=spans[spans.length-1];if(last&&/⌄|▼|▾/.test(last.textContent||''))last.innerHTML=svg('chevronDown','ff-icon ff-icon-sm')}
@@ -129,8 +129,12 @@
   }
 
   function refresh(root=document){applyComponents(root);upgradeNav(q('#nav'));upgradeNav(q('#mobileNav'));cleanFunctionalEmoji(root);installPasswordOverride();installTrust();}
-  const observer=new MutationObserver(list=>{if(list.some(m=>m.addedNodes.length))requestAnimationFrame(()=>refresh())});
-  function boot(){document.documentElement.classList.add('ff-tailwind-v6');refresh();if(document.body&&!observer._on){observer.observe(document.body,{subtree:true,childList:true});observer._on=true}}
+  let queued=false;
+  const observer=new MutationObserver(list=>{
+    if(document.body.classList.contains('auth-pending')||queued||!list.some(m=>m.addedNodes.length))return;
+    queued=true;requestAnimationFrame(()=>{queued=false;refresh()});
+  });
+  function boot(){document.documentElement.classList.add('ff-tailwind-v6');refresh();const app=q('.app');if(app&&!observer._on){observer.observe(app,{subtree:true,childList:true});observer._on=true}}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
   addEventListener('finalforge-ready',boot);
   document.addEventListener('click',e=>{if(e.target.closest('[data-go]'))requestAnimationFrame(()=>{upgradeNav(q('#nav'));upgradeNav(q('#mobileNav'))})});

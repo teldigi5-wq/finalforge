@@ -267,3 +267,14 @@ body:not(.auth-pending) .fc-ip,body:not(.auth-pending) .fc-fc{animation-delay:-2
   body:not(.auth-pending) .core3d,body:not(.auth-pending) .float-chip{animation:none!important}
   body:not(.auth-pending) .hero-copy,body:not(.auth-pending) .compact-notice{transform:none!important}
 }
+
+/* Neon stays on small, static surfaces so keyboard input remains smooth. */
+body.auth-pending .auth-card{border-color:#87a8ff55!important;box-shadow:0 20px 70px #02081788,0 0 0 1px #6c7dff25,0 0 28px #527eff20!important}
+body.auth-pending .auth-view input:focus-visible{outline:2px solid #6be4ff!important;outline-offset:2px;box-shadow:0 0 0 4px #53cfff22,0 0 16px #54dfff40!important}
+body.auth-pending .auth-submit{transition:filter .18s ease,transform .18s ease,box-shadow .18s ease!important}
+body.auth-pending .auth-submit:hover{box-shadow:0 8px 24px #5368ed66,0 0 18px #4dbaff44!important}
+body.auth-pending .auth-view.is-loading .auth-submit{cursor:progress;opacity:.9}
+body.auth-pending .auth-view.is-loading .auth-submit::after{content:"";display:inline-block;width:14px;height:14px;margin-left:10px;vertical-align:-2px;border:2px solid #ffffff80;border-top-color:#fff;border-radius:50%;animation:ffLoadingSpin .8s linear infinite}
+@keyframes ffLoadingSpin{to{transform:rotate(360deg)}}
+@media(max-width:820px){body.auth-pending .auth-card{backdrop-filter:none!important;box-shadow:0 -12px 32px #02081755,0 0 0 1px #6c7dff28!important}}
+@media(prefers-reduced-motion:reduce){body.auth-pending .auth-view.is-loading .auth-submit::after{animation:none;border-color:#fff}}

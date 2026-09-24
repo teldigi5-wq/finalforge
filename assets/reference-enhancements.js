@@ -67,7 +67,9 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',refresh,{once:true});
   else refresh();
   addEventListener('finalforge-ready',refresh,{once:true});
+  let queued=false;
   new MutationObserver(mutations=>{
-    if(mutations.some(item=>item.addedNodes.length))requestAnimationFrame(enhanceCards);
-  }).observe(document.body,{childList:true,subtree:true});
+    if(document.body.classList.contains('auth-pending')||queued||!mutations.some(item=>item.addedNodes.length))return;
+    queued=true;requestAnimationFrame(()=>{queued=false;enhanceCards()});
+  }).observe(q('.app'),{childList:true,subtree:true});
 })();

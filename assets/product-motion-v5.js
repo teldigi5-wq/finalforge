@@ -46,6 +46,7 @@
   function upgradeNav(root){
     if(!root)return;
     qa('button[data-go]',root).forEach(b=>{
+      if(q('svg',b))return;
       const label=q('span',b)?.textContent||cleanLeadingEmoji(b.textContent);
       b.innerHTML=`${svg(iconNameFor(b))}<span>${label}</span>`;
     });
@@ -67,7 +68,7 @@
   function upgradeQuickActions(){
     qa('.quick-dock>button').forEach(b=>{
       const slot=b.firstElementChild;
-      if(slot){slot.className='ff-icon-wrap';slot.innerHTML=svg(iconNameFor(b));}
+      if(slot&&!q('svg',slot)){slot.className='ff-icon-wrap';slot.innerHTML=svg(iconNameFor(b));}
     });
     qa('.hero-actions .btn').forEach(b=>{
       if(q('svg',b))return;
@@ -144,8 +145,13 @@
     const b=e.target.closest('[data-go]');if(b)requestAnimationFrame(()=>{ensureSlidingIndicator(q('#nav'));refresh()});
   });
 
-  const mo=new MutationObserver(muts=>{if(muts.some(m=>m.addedNodes.length))requestAnimationFrame(refresh)});
-  addEventListener('finalforge-ready',()=>{refresh();mo.observe(document.body,{childList:true,subtree:true});});
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',refresh,{once:true});else refresh();
+  let queued=false;
+  const mo=new MutationObserver(muts=>{
+    if(document.body.classList.contains('auth-pending')||queued||!muts.some(m=>m.addedNodes.length))return;
+    queued=true;requestAnimationFrame(()=>{queued=false;refresh()});
+  });
+  addEventListener('finalforge-ready',()=>{if(!document.body.classList.contains('auth-pending'))refresh();mo.observe(q('.app'),{childList:true,subtree:true});});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{if(!document.body.classList.contains('auth-pending'))refresh()},{once:true});
+  else if(!document.body.classList.contains('auth-pending'))refresh();
   addEventListener('resize',()=>requestAnimationFrame(()=>{upgradeNav(q('#nav'));upgradeNav(q('#mobileNav'));ensureSlidingIndicator(q('#nav'))}),{passive:true});
 })();
