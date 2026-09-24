@@ -67,7 +67,7 @@
 
   async function loadProfile(user){
     const token=await user.getIdTokenResult(true);
-    if(token.claims.admin)return {role:'admin',email:user.email};
+    if(token.claims.admin && token.claims.email_verified===true)return {role:'admin',email:user.email};
     const doc=await db.collection('profiles').doc(user.uid).get();return doc.exists?doc.data():null;
   }
   async function touchLogin(user,profile){if(profile?.role!=='student')return;try{await db.collection('profiles').doc(user.uid).set({lastLoginAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true})}catch{}}
@@ -109,7 +109,7 @@
   }
   async function loginAdmin(email,password){
     const cred=await auth.signInWithEmailAndPassword(String(email||'').trim(),password);const profile=await loadProfile(cred.user);
-    if(profile?.role!=='admin'){await auth.signOut();throw new Error('This account does not have administrator access.');}return {user:cred.user,profile};
+    if(profile?.role!=='admin'){await auth.signOut();throw new Error('This account needs a verified administrator email and admin access.');}return {user:cred.user,profile};
   }
 
   $('#loginForm')?.addEventListener('submit',async e=>{e.preventDefault();setAlert('');busy(e.currentTarget,true);try{const id=$('#loginIdentity').value,p=$('#loginPassword').value;const r=loginRole==='admin'?await loginAdmin(id,p):await loginStudent(id,p);await touchLogin(r.user,r.profile);showApp(r.profile,r.user);await pullOrPush()}catch(err){if(!err?.silent)setAlert(humanError(err))}finally{busy(e.currentTarget,false)}});
@@ -123,8 +123,10 @@
     if(pw!==pw2)return setAlert('Passwords do not match.');
     busy(e.currentTarget,true);
     try{
-      const cred=await auth.createUserWithEmailAndPassword(studentEmail(id),pw);
-      await cred.user.updateProfile({displayName:id});
+      const response=await fetch('/api/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({studentId:id,password:pw})});
+      const result=await response.json();
+      if(!response.ok)throw new Error(result.error||'Signup is temporarily unavailable.');
+      const cred=await auth.signInWithEmailAndPassword(studentEmail(id),pw);
       await cred.user.sendEmailVerification({url:location.origin+location.pathname+'?verified=1',handleCodeInApp:false});
       localStorage.setItem('finalforge_pending_student',id);
       showVerification(cred.user);
@@ -161,7 +163,7 @@
       if(!user){document.body.classList.add('auth-pending');gate?.classList.remove('hidden');return;}
       try{
         const token=await user.getIdTokenResult(true);
-        if(token.claims.admin){showApp({role:'admin',email:user.email},user);return;}
+        if(token.claims.admin){if(token.claims.email_verified!==true)throw new Error('Verify your administrator email before accessing FinalForge.');showApp({role:'admin',email:user.email},user);return;}
         if(!user.emailVerified){showVerification(user);return;}
         const p=await finalizeVerifiedStudent(user);showApp(p,user);await pullOrPush();
       }catch(err){setAlert(humanError(err));try{await auth.signOut()}catch{}}

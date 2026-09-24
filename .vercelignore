@@ -1,5 +1,9 @@
 firebase/private
+firebase/private/**
 firebase/scripts
 firebase/node_modules
 firebase/.env*
+**/students.json
+**/*service-account*.json
+**/.env*
 *.zip
