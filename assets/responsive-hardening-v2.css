@@ -9,10 +9,7 @@ body.auth-pending #authGate{padding:clamp(.45rem,1.6vw,1.25rem)!important}
 body.auth-pending .auth-shell{width:min(100%,90rem)!important;max-width:90rem!important}
 body.auth-pending .auth-card{padding-inline:clamp(1rem,3.25vw,3rem)!important}
 
-/* Desktop auth geometry must remain one continuous surface at browser zoom.
-   A later legacy layer switches the shell back to height:auto + min-height,
-   which lets the right grid item finish above the shell bottom. Lock the
-   desktop shell to the usable viewport and force both columns to stretch. */
+/* Desktop auth geometry stays one continuous surface at browser zoom. */
 @media(min-width:981px){
   body.auth-pending{
     height:100dvh!important;
@@ -45,9 +42,11 @@ body.auth-pending .auth-card{padding-inline:clamp(1rem,3.25vw,3rem)!important}
   }
 }
 
-/* Keep the auth-card neon perimeter stable at 80–150% browser zoom.
-   Animate the conic-gradient angle directly instead of rotating an oversized
-   rasterized layer, which can produce clipped/over-bright seams at 100%. */
+/* Zoom-safe neon perimeter.
+   Do not use mask / mask-composite here: Chromium can leak the conic fill
+   into the card interior at non-identical raster scales. A border-image
+   paints only the physical border, so browser zoom cannot expose a filled
+   band inside the login panel. */
 @property --ff-auth-border-angle{
   syntax:"<angle>";
   inherits:false;
@@ -56,28 +55,40 @@ body.auth-pending .auth-card{padding-inline:clamp(1rem,3.25vw,3rem)!important}
 body.auth-pending .ff-auth-card-border{
   --ff-auth-border-angle:30deg;
   position:absolute!important;
-  z-index:0!important;
+  z-index:1!important;
   inset:0!important;
   width:auto!important;
   max-width:none!important;
   height:auto!important;
-  border:0!important;
-  border-radius:inherit!important;
+  padding:0!important;
+  border:1px solid transparent!important;
+  border-image-source:conic-gradient(from var(--ff-auth-border-angle),transparent 0 22%,rgba(91,207,255,.76) 29%,rgba(139,114,255,.82) 38%,transparent 47% 72%,rgba(76,173,255,.56) 80%,transparent 89%)!important;
+  border-image-slice:1!important;
+  border-image-width:1!important;
+  border-image-outset:0!important;
+  background:none!important;
+  -webkit-mask:none!important;
+  mask:none!important;
+  -webkit-mask-image:none!important;
+  mask-image:none!important;
+  -webkit-mask-composite:initial!important;
+  mask-composite:initial!important;
   box-shadow:none!important;
-  overflow:hidden!important;
+  filter:none!important;
+  overflow:visible!important;
   contain:none!important;
-  padding:.85px!important;
   transform:none!important;
   backface-visibility:visible!important;
   pointer-events:none!important;
-  background:conic-gradient(from var(--ff-auth-border-angle),transparent 0 22%,rgba(91,207,255,.72) 29%,rgba(139,114,255,.78) 38%,transparent 47% 72%,rgba(76,173,255,.50) 80%,transparent 89%)!important;
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;
-  -webkit-mask-composite:xor!important;
-  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;
-  mask-composite:exclude!important;
   animation:ffStableBorderOrbit 18s linear infinite!important;
 }
-body.auth-pending .ff-auth-card-border::before{display:none!important;border:0!important;box-shadow:none!important;animation:none!important}
+body.auth-pending .ff-auth-card-border::before,
+body.auth-pending .ff-auth-card-border::after{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+  animation:none!important;
+}
 @keyframes ffStableBorderOrbit{to{--ff-auth-border-angle:390deg}}
 
 body.auth-pending .auth-view.is-loading .auth-submit::after{display:none!important}
