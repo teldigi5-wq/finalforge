@@ -9,6 +9,42 @@ body.auth-pending #authGate{padding:clamp(.45rem,1.6vw,1.25rem)!important}
 body.auth-pending .auth-shell{width:min(100%,90rem)!important;max-width:90rem!important}
 body.auth-pending .auth-card{padding-inline:clamp(1rem,3.25vw,3rem)!important}
 
+/* Desktop auth geometry must remain one continuous surface at browser zoom.
+   A later legacy layer switches the shell back to height:auto + min-height,
+   which lets the right grid item finish above the shell bottom. Lock the
+   desktop shell to the usable viewport and force both columns to stretch. */
+@media(min-width:981px){
+  body.auth-pending{
+    height:100dvh!important;
+    min-height:100dvh!important;
+    overflow:hidden!important;
+  }
+  body.auth-pending #authGate{
+    height:100dvh!important;
+    min-height:100dvh!important;
+    overflow:hidden!important;
+    place-items:center!important;
+  }
+  body.auth-pending .auth-shell{
+    height:min(46.875rem,calc(100dvh - 2.5rem))!important;
+    min-height:0!important;
+    max-height:calc(100dvh - .9rem)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    align-items:stretch!important;
+    align-content:stretch!important;
+  }
+  body.auth-pending .auth-brand-panel,
+  body.auth-pending .auth-card{
+    height:100%!important;
+    min-height:0!important;
+    align-self:stretch!important;
+  }
+  body.auth-pending .auth-card{
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+  }
+}
+
 /* Keep the auth-card neon perimeter stable at 80–150% browser zoom.
    Animate the conic-gradient angle directly instead of rotating an oversized
    rasterized layer, which can produce clipped/over-bright seams at 100%. */
@@ -19,6 +55,8 @@ body.auth-pending .auth-card{padding-inline:clamp(1rem,3.25vw,3rem)!important}
 }
 body.auth-pending .ff-auth-card-border{
   --ff-auth-border-angle:30deg;
+  position:absolute!important;
+  z-index:0!important;
   inset:0!important;
   width:auto!important;
   max-width:none!important;
@@ -31,6 +69,7 @@ body.auth-pending .ff-auth-card-border{
   padding:.85px!important;
   transform:none!important;
   backface-visibility:visible!important;
+  pointer-events:none!important;
   background:conic-gradient(from var(--ff-auth-border-angle),transparent 0 22%,rgba(91,207,255,.72) 29%,rgba(139,114,255,.78) 38%,transparent 47% 72%,rgba(76,173,255,.50) 80%,transparent 89%)!important;
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;
   -webkit-mask-composite:xor!important;
