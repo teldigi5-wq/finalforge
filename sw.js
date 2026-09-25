@@ -1,4 +1,4 @@
-const C='finalforge-v7-smooth-login';
+const C='finalforge-v8-single-surface';
 // Cache the shell at install; feature assets are cached as the page requests them.
 const CORE=['./','./index.html','./assets/core-loader.js','./assets/ui-responsive-v2.css','./assets/auth-experience-v4.css','./assets/finalforge-logo-256.webp'];
 const INSTANT=new Set(['/','/index.html','/assets/core-loader.js','/assets/ui-responsive-v2.css','/assets/auth-experience-v4.css','/assets/auth-experience-v4.js','/assets/auth-premium-v5.css','/assets/auth-premium-v5.js','/assets/dashboard-modern-v3.css','/assets/mobile-modern-v4.css','/assets/mobile-experience-v4.js','/assets/product-ui-v4.css','/assets/product-ui-v4.js','/assets/product-ui-v5.css','/assets/product-motion-v5.js','/assets/reference-refresh.css','/assets/reference-enhancements.js','/assets/study-room.webp','/assets/campus-banner.webp','/assets/tailwind.generated.css','/assets/tailwind-runtime-v6.js','/assets/practice-v3.js','/assets/practice-runtime-bridge.js','/assets/firebase-config.js','/assets/auth.js','/assets/finalforge-logo-256.webp']);
@@ -27,13 +27,22 @@ async function staleWhileRevalidate(request, fallback){
   return Response.error();
 }
 
+async function freshNavigation(request){
+  const cache=await caches.open(C);
+  try{
+    const response=await fetch(request,{cache:'no-cache',signal:AbortSignal.timeout(8000)});
+    if(response.ok){await cache.put(request,response.clone());return response;}
+  }catch{}
+  return await cache.match(request)||await cache.match('./index.html')||Response.error();
+}
+
 self.addEventListener('fetch',e=>{
   if(e.request.method!=='GET')return;
   const url=new URL(e.request.url);
   if(url.origin!==location.origin)return;
 
   if(e.request.mode==='navigate'){
-    e.respondWith(staleWhileRevalidate(e.request,'./index.html'));
+    e.respondWith(freshNavigation(e.request));
     return;
   }
 

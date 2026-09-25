@@ -5,13 +5,13 @@
   const tabs=gate?.querySelector('.auth-tabs');
   if(!gate||!card||!tabs)return;
 
-  const intro=document.createElement('div');
+  const intro=card.querySelector('.ff-auth-intro')||document.createElement('div');
   intro.className='ff-auth-intro';
-  intro.innerHTML='<div class="ff-auth-eyebrow">Secure student access</div><h2>Welcome back</h2><p>Pick up your revision exactly where you left it.</p>';
-  tabs.before(intro);
+  if(!intro.children.length)intro.innerHTML='<div class="ff-auth-eyebrow">Secure student access</div><h2>Welcome back</h2><p>Continue exactly where you left off.</p>';
+  if(!intro.isConnected)tabs.before(intro);
 
   const copy={
-    login:{eyebrow:'Secure student access',title:'Welcome back',text:'Pick up your revision exactly where you left it.'},
+    login:{eyebrow:'Secure student access',title:'Welcome back',text:'Continue exactly where you left off.'},
     signup:{eyebrow:'Approved students only',title:'Create your FinalForge account',text:'Use your Student ID. Your SLIIT mailbox is generated automatically for verification.'},
     verify:{eyebrow:'One last step',title:'Verify your SLIIT email',text:'Open the verification link in your SLIIT inbox, then return here.'},
     reset:{eyebrow:'Account recovery',title:'Reset your password',text:'We will send the reset link to the SLIIT mailbox tied to your Student ID.'}

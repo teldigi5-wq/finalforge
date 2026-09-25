@@ -1,4 +1,13 @@
 /* FinalForge reference refresh: visual layer over the existing working app. */
+/* Auth is removed from layout after sign-in, never an invisible full-height spacer. */
+#authGate.hidden,#authGate[hidden],body:not(.auth-pending) #authGate{display:none!important}
+body.auth-pending .app{display:none!important}
+body:not(.auth-pending) .app{visibility:visible!important}
+.auth-boot-status{display:flex;align-items:center;gap:8px;margin:0 0 12px;color:#a9b9d2;font-size:12px;font-weight:650}
+.auth-boot-status[hidden]{display:none}
+.auth-boot-dot{width:8px;height:8px;border-radius:50%;background:#62eac1;animation:ffBootPulse 1.5s ease-in-out infinite}
+@keyframes ffBootPulse{50%{opacity:.35;transform:scale(.75)}}
+@media(prefers-reduced-motion:reduce){.auth-boot-dot{animation:none}}
 :root{--ff-ink:#17233a;--ff-sub:#617189;--ff-paper:#f5f8ff;--ff-border:#dfe7f4;--ff-brand:#6054ed;--ff-blue:#2d9fe9;--ff-gradient:linear-gradient(110deg,#6551ef,#3a80ed 58%,#26b5df);--ff-ease:cubic-bezier(.22,1,.36,1)}
 
 /* The access screen keeps its own dusk palette. */
@@ -28,7 +37,8 @@ body.auth-pending .auth-view label{color:#fff!important;font-size:14px!important
 body.auth-pending .auth-view input{background:#f7f8ff22!important;color:#fff!important;border:1px solid #ffffff60!important;box-shadow:0 1px 2px #0002 inset!important}
 body.auth-pending .auth-view input::placeholder{color:#d0d7e9!important}
 body.auth-pending .auth-view input:focus{border-color:#d7e8ff!important;box-shadow:0 0 0 3px #b0c7ff55!important}
-body.auth-pending .auth-view input[readonly]{background:#f5f6ffbb!important;color:#23324b!important}
+body.auth-pending .auth-view input[readonly]{background:#edf2ff!important;color:#23324b!important}
+body.auth-pending .auth-view input[readonly]::placeholder{color:#53627a!important;opacity:1!important}
 body.auth-pending .auth-submit{background:var(--ff-gradient)!important;color:#fff!important;border:0!important;box-shadow:0 10px 20px #4d50d055!important}
 body.auth-pending .ff-auth-intro h2,body.auth-pending .auth-view h2{color:#fff!important}
 body.auth-pending .ff-auth-intro p,body.auth-pending .password-hint,body.auth-pending .ff-auth-security{color:#e3e7f2!important}

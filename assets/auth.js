@@ -22,7 +22,8 @@
   addEventListener('click',e=>{if(!e.target.closest('.top-account-wrap'))$('#accountMenu')?.classList.remove('open')});
 
   function showApp(profile,user,preview=false){
-    document.body.classList.remove('auth-pending'); gate?.classList.add('hidden'); currentProfile=profile;
+    document.body.classList.remove('auth-pending'); gate?.classList.add('hidden'); if(gate)gate.hidden=true; currentProfile=profile;
+    window.scrollTo({top:0,left:0,behavior:'instant'});
     const primary=preview?'Preview Mode':profile?.role==='admin'?'Administrator':profile?.studentId||'Student';
     const secondary=preview?'Auth not connected':profile?.role==='admin'?(user?.email||'Admin'):(profile?.sliitEmail||user?.email||'');
     $('#accountPrimary').textContent=primary; $('#accountSecondary').textContent=secondary;
@@ -119,16 +120,16 @@
     if(profile?.role!=='admin'){await auth.signOut();throw new Error('This account needs a verified administrator email and admin access.');}return {user:cred.user,profile};
   }
 
-  $('#loginForm')?.addEventListener('submit',async e=>{e.preventDefault();setAlert('');busy(e.currentTarget,true);try{const id=$('#loginIdentity').value,p=$('#loginPassword').value;const r=loginRole==='admin'?await loginAdmin(id,p):await loginStudent(id,p);await touchLogin(r.user,r.profile);showApp(r.profile,r.user);await pullOrPush()}catch(err){if(!err?.silent)setAlert(humanError(err))}finally{busy(e.currentTarget,false)}});
+  $('#loginForm')?.addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;setAlert('');busy(form,true);try{const id=$('#loginIdentity').value,p=$('#loginPassword').value;const r=loginRole==='admin'?await loginAdmin(id,p):await loginStudent(id,p);await touchLogin(r.user,r.profile);showApp(r.profile,r.user);await pullOrPush()}catch(err){if(!err?.silent)setAlert(humanError(err))}finally{busy(form,false)}});
 
   $('#signupStudentId')?.addEventListener('input',e=>{const id=normalizeStudentId(e.target.value);const out=$('#derivedEmail');if(out)out.value=validStudentId(id)?studentEmail(id):'';});
   $('#signupForm')?.addEventListener('submit',async e=>{
-    e.preventDefault();setAlert('');
+    e.preventDefault();const form=e.currentTarget;setAlert('');
     const id=normalizeStudentId($('#signupStudentId').value),pw=$('#signupPassword').value,pw2=$('#signupPassword2').value;
     if(!validStudentId(id))return setAlert('Student ID format is invalid.');
     if(pw.length<8)return setAlert('Password must contain at least 8 characters.');
     if(pw!==pw2)return setAlert('Passwords do not match.');
-    busy(e.currentTarget,true);
+    busy(form,true);
     try{
       const response=await fetch('/api/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({studentId:id,password:pw})});
       const result=await response.json();
@@ -138,7 +139,7 @@
       localStorage.setItem('finalforge_pending_student',id);
       showVerification(cred.user);
       setAlert(`Verification email sent to ${studentEmail(id)}. Open that SLIIT mailbox and verify the account.`, 'success');
-    }catch(err){setAlert(humanError(err))}finally{busy(e.currentTarget,false)}
+    }catch(err){setAlert(humanError(err))}finally{busy(form,false)}
   });
 
   $('#verifyCheckBtn')?.addEventListener('click',async()=>{
@@ -147,7 +148,7 @@
   });
   $('#verifyResendBtn')?.addEventListener('click',async()=>{const u=auth.currentUser||pendingVerificationUser;if(!u)return;try{await u.sendEmailVerification({url:location.origin+location.pathname+'?verified=1',handleCodeInApp:false});setAlert(`Verification email resent to ${u.email}.`,'success')}catch(err){setAlert(humanError(err))}});
 
-  $('#resetForm')?.addEventListener('submit',async e=>{e.preventDefault();setAlert('');const id=normalizeStudentId($('#resetStudentId').value);if(!validStudentId(id))return setAlert('Enter a valid Student ID.');busy(e.currentTarget,true);try{await auth.sendPasswordResetEmail(studentEmail(id),{url:location.origin+location.pathname});setAlert(`Password reset email sent to ${studentEmail(id)}.`,'success')}catch(err){setAlert(humanError(err))}finally{busy(e.currentTarget,false)}});
+  $('#resetForm')?.addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;setAlert('');const id=normalizeStudentId($('#resetStudentId').value);if(!validStudentId(id))return setAlert('Enter a valid Student ID.');busy(form,true);try{await auth.sendPasswordResetEmail(studentEmail(id),{url:location.origin+location.pathname});setAlert(`Password reset email sent to ${studentEmail(id)}.`,'success')}catch(err){setAlert(humanError(err))}finally{busy(form,false)}});
 
   window.finalforgeSignOut=async()=>{try{await pushCloud()}catch{}await auth.signOut();location.reload()};
 
@@ -167,7 +168,7 @@
     }
     firebase.initializeApp(cfg.config);auth=firebase.auth();db=firebase.firestore();
     auth.onAuthStateChanged(async user=>{
-      if(!user){document.body.classList.add('auth-pending');gate?.classList.remove('hidden');return;}
+      if(!user){document.body.classList.add('auth-pending');gate?.classList.remove('hidden');if(gate)gate.hidden=false;return;}
       try{
         const token=await user.getIdTokenResult(true);
         if(token.claims.admin){if(token.claims.email_verified!==true)throw new Error('Verify your administrator email before accessing FinalForge.');showApp({role:'admin',email:user.email},user);return;}
