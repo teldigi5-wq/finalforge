@@ -15,6 +15,9 @@
   aurora.className='ff-auth-aurora';
   aurora.setAttribute('aria-hidden','true');
   aurora.innerHTML='<i></i><i></i>';
+  // Keep the upper blue ambience, but remove the lower violet orb. The lower
+  // orb was visible through a small zoom-dependent strip beneath the auth card.
+  aurora.lastElementChild.style.display='none';
   shell.prepend(aurora);
 
   const photo=document.createElement('div');
