@@ -8,8 +8,39 @@ input,button,select,textarea,.card,.section,.auth-shell,.auth-card{min-width:0}
 body.auth-pending #authGate{padding:clamp(.45rem,1.6vw,1.25rem)!important}
 body.auth-pending .auth-shell{width:min(100%,90rem)!important;max-width:90rem!important}
 body.auth-pending .auth-card{padding-inline:clamp(1rem,3.25vw,3rem)!important}
-body.auth-pending .ff-auth-card-border{inset:0!important;width:auto!important;max-width:none!important;height:auto!important;border:0!important;box-shadow:none!important;overflow:hidden!important;contain:paint!important;border-radius:inherit!important}
-body.auth-pending .ff-auth-card-border::before{border:0!important;box-shadow:none!important}
+
+/* Keep the auth-card neon perimeter stable at 80–150% browser zoom.
+   Animate the conic-gradient angle directly instead of rotating an oversized
+   rasterized layer, which can produce clipped/over-bright seams at 100%. */
+@property --ff-auth-border-angle{
+  syntax:"<angle>";
+  inherits:false;
+  initial-value:30deg;
+}
+body.auth-pending .ff-auth-card-border{
+  --ff-auth-border-angle:30deg;
+  inset:0!important;
+  width:auto!important;
+  max-width:none!important;
+  height:auto!important;
+  border:0!important;
+  border-radius:inherit!important;
+  box-shadow:none!important;
+  overflow:hidden!important;
+  contain:none!important;
+  padding:.85px!important;
+  transform:none!important;
+  backface-visibility:visible!important;
+  background:conic-gradient(from var(--ff-auth-border-angle),transparent 0 22%,rgba(91,207,255,.72) 29%,rgba(139,114,255,.78) 38%,transparent 47% 72%,rgba(76,173,255,.50) 80%,transparent 89%)!important;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;
+  -webkit-mask-composite:xor!important;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;
+  mask-composite:exclude!important;
+  animation:ffStableBorderOrbit 18s linear infinite!important;
+}
+body.auth-pending .ff-auth-card-border::before{display:none!important;border:0!important;box-shadow:none!important;animation:none!important}
+@keyframes ffStableBorderOrbit{to{--ff-auth-border-angle:390deg}}
+
 body.auth-pending .auth-view.is-loading .auth-submit::after{display:none!important}
 
 .ff-field-feedback{display:block;min-height:1.05rem;margin-top:.25rem;color:#91a7bd;font-size:.72rem;font-weight:650;line-height:1.35}
@@ -66,6 +97,7 @@ body:not(.auth-pending) .hero-main,body:not(.auth-pending) .hero-side{min-width:
   body:not(.auth-pending) .section{max-width:105rem!important}
 }
 @media(prefers-reduced-motion:reduce){
+  body.auth-pending .ff-auth-card-border{animation:none!important}
   .ff-skeleton-card::after,.ff-skeleton-row i::after{animation:none!important}
   .ff-password-strength>i{transition:none!important}
 }
