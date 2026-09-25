@@ -12,7 +12,7 @@ document.documentElement.style.colorScheme='dark';
   const loadScript=src=>new Promise((resolve,reject)=>{
     const existing=[...document.scripts].find(s=>s.src&&s.src.includes(src));
     if(existing){if(existing.dataset.ffLoaded==='1'||existing.readyState==='complete')return resolve();existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',()=>reject(new Error(`Could not load ${src}`)),{once:true});return;}
-    const s=document.createElement('script');s.src=src.startsWith('assets/')?`${src}?v=auth-polish-10`:src;s.async=true;s.onload=()=>{s.dataset.ffLoaded='1';resolve()};s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s);
+    const s=document.createElement('script');s.src=src.startsWith('assets/')?`${src}?v=auth-polish-11`:src;s.async=true;s.onload=()=>{s.dataset.ffLoaded='1';resolve()};s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s);
   });
   const loadStyle=href=>new Promise((resolve,reject)=>{
     const existing=[...document.querySelectorAll('link[rel="stylesheet"]')].find(l=>l.href&&l.href.includes(href));
@@ -82,11 +82,11 @@ document.documentElement.style.colorScheme='dark';
     await firebaseSdkReady;
     await loadScript('assets/auth.js');
     await loadScript('assets/auth-experience-v4.js');
-    await loadScript('assets/auth-world-v1.js');
     await loadScript('assets/mobile-experience-v4.js');
     await loadScript('assets/tailwind-runtime-v6.js');
     await loadScript('assets/product-motion-v5.js');
     await loadScript('assets/reference-enhancements.js');
+    await loadScript('assets/auth-world-v1.js');
     const status=document.getElementById('authBootStatus');if(status)status.hidden=true;
 
     if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
