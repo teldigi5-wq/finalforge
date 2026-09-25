@@ -78,3 +78,14 @@
     queued=true;requestAnimationFrame(()=>{queued=false;enhanceCards()});
   }).observe(q('.app'),{childList:true,subtree:true});
 })();
+
+/* Load the optional 2024-pattern DCN paper after the canonical practice runner exists. */
+(()=>{
+  if(document.querySelector('script[data-finalforge-dcn-2024]'))return;
+  const s=document.createElement('script');
+  s.src='assets/dcn-2024-pattern-v1.js?v=1';
+  s.async=true;
+  s.dataset.finalforgeDcn2024='1';
+  s.onerror=()=>console.warn('[FinalForge] DCN 2024 pattern paper could not be loaded.');
+  document.body.appendChild(s);
+})();
