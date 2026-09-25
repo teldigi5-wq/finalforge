@@ -1,0 +1,71 @@
+/* FinalForge auth neon perimeter — rounded-corner-safe final override.
+   Uses layered backgrounds instead of mask-composite or border-image so the
+   animated 1px ring follows the shell radius cleanly at browser zoom. */
+@property --ff-auth-rounded-angle{
+  syntax:"<angle>";
+  inherits:false;
+  initial-value:30deg;
+}
+
+html body.auth-pending #authGate .auth-card > .ff-auth-card-border{
+  --ff-auth-rounded-angle:30deg;
+  position:absolute!important;
+  z-index:1!important;
+  inset:0!important;
+  width:auto!important;
+  max-width:none!important;
+  height:auto!important;
+  padding:0!important;
+  border:1px solid transparent!important;
+  border-image:none!important;
+  border-radius:inherit!important;
+  background:
+    linear-gradient(#071222,#071222) padding-box,
+    conic-gradient(
+      from var(--ff-auth-rounded-angle),
+      transparent 0 22%,
+      rgba(91,207,255,.76) 29%,
+      rgba(139,114,255,.82) 38%,
+      transparent 47% 72%,
+      rgba(76,173,255,.56) 80%,
+      transparent 89%
+    ) border-box!important;
+  -webkit-mask:none!important;
+  mask:none!important;
+  -webkit-mask-image:none!important;
+  mask-image:none!important;
+  -webkit-mask-composite:initial!important;
+  mask-composite:initial!important;
+  box-shadow:none!important;
+  filter:none!important;
+  overflow:hidden!important;
+  contain:none!important;
+  transform:none!important;
+  backface-visibility:visible!important;
+  pointer-events:none!important;
+  animation:ffAuthRoundedRing 18s linear infinite!important;
+}
+
+html body.auth-pending #authGate .auth-card > .ff-auth-card-border::before,
+html body.auth-pending #authGate .auth-card > .ff-auth-card-border::after{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+  animation:none!important;
+}
+
+@media(min-width:981px){
+  html body.auth-pending #authGate .auth-card > .ff-auth-card-border{
+    border-radius:0 clamp(24px,2.2vw,34px) clamp(24px,2.2vw,34px) 0!important;
+  }
+}
+
+@keyframes ffAuthRoundedRing{
+  to{--ff-auth-rounded-angle:390deg}
+}
+
+@media(prefers-reduced-motion:reduce){
+  html body.auth-pending #authGate .auth-card > .ff-auth-card-border{
+    animation:none!important;
+  }
+}
