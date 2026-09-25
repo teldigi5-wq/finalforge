@@ -151,3 +151,21 @@ body:not(.auth-pending) .hero-main,body:not(.auth-pending) .hero-side{min-width:
   .ff-skeleton-card::after,.ff-skeleton-row i::after{animation:none!important}
   .ff-password-strength>i{transition:none!important}
 }
+
+/* Final auth-surface normalization.
+   The previous layered diagonal gradients/backdrop blur created a visible
+   violet band below the form at 100%+ zoom. The shell and right panel now
+   share one opaque surface; the animated color is restricted to the 1px
+   perimeter element above. */
+body.auth-pending .auth-shell{
+  background:#071222!important;
+}
+body.auth-pending .auth-card{
+  background:#071222!important;
+  background-image:none!important;
+  border-radius:0!important;
+  box-shadow:-1px 0 rgba(255,255,255,.045) inset!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  background-clip:border-box!important;
+}
