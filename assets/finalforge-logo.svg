@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">FinalForge</title>
+  <defs>
+    <linearGradient id="forge" x1="30" y1="20" x2="220" y2="235" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#20d7f2"/>
+      <stop offset=".48" stop-color="#397bff"/>
+      <stop offset="1" stop-color="#8a4dff"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="60" y1="30" x2="190" y2="200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7cf4ff"/>
+      <stop offset="1" stop-color="#6156ff"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#forge)" d="M47 48c42-22 94-31 162-26-10 24-30 41-60 51L83 94l-10 51c-17-6-29-19-34-38L47 48Z"/>
+  <path fill="url(#edge)" d="M82 105l95-30c-5 25-23 43-55 54l-51 18 11-42Z"/>
+  <path fill="url(#forge)" d="M69 153l76-25c-7 23-24 40-50 50l-37 15 11-40Z"/>
+  <path fill="url(#edge)" d="M56 199l45-17c-8 22-24 39-49 52l4-35Z"/>
+</svg>

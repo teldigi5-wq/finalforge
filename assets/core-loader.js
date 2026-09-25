@@ -1,5 +1,5 @@
 /* FinalForge production loader — stable dark first paint, parallel auth boot, cached app reconstruction. */
-document.documentElement.style.background='#101727';
+document.documentElement.style.background='#020304';
 document.documentElement.style.colorScheme='dark';
 
 (async()=>{
@@ -12,7 +12,7 @@ document.documentElement.style.colorScheme='dark';
   const loadScript=src=>new Promise((resolve,reject)=>{
     const existing=[...document.scripts].find(s=>s.src&&s.src.includes(src));
     if(existing){if(existing.dataset.ffLoaded==='1'||existing.readyState==='complete')return resolve();existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',()=>reject(new Error(`Could not load ${src}`)),{once:true});return;}
-    const s=document.createElement('script');s.src=src.startsWith('assets/')?`${src}?v=single-surface-8`:src;s.async=true;s.onload=()=>{s.dataset.ffLoaded='1';resolve()};s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s);
+    const s=document.createElement('script');s.src=src.startsWith('assets/')?`${src}?v=exam-studio-9`:src;s.async=true;s.onload=()=>{s.dataset.ffLoaded='1';resolve()};s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s);
   });
   const loadStyle=href=>new Promise((resolve,reject)=>{
     const existing=[...document.querySelectorAll('link[rel="stylesheet"]')].find(l=>l.href&&l.href.includes(href));
@@ -35,7 +35,8 @@ document.documentElement.style.colorScheme='dark';
       loadStyle('assets/product-ui-v5.css'),
       loadStyle('assets/tailwind.generated.css'),
       loadStyle('assets/auth-premium-v5.css'),
-      loadStyle('assets/reference-refresh.css')
+      loadStyle('assets/reference-refresh.css'),
+      loadStyle('assets/experience-v9.css')
     ]);
 
     const firebaseSdkReady=(async()=>{
@@ -73,10 +74,8 @@ document.documentElement.style.colorScheme='dark';
     (0,eval)(b['practice-data.js']);
     await loadScript('assets/app.js');
     await loadScript('assets/product-ui-v4.js');
-
-    (0,eval)(b['practice.js']);
-    await loadScript('assets/practice-v3.js');
-    await loadScript('assets/practice-runtime-bridge.js');
+    await loadScript('assets/appearance-v1.js');
+    await loadScript('assets/practice-exam-v4.js');
     await loadScript('assets/study-experience.js');
 
     await firebaseSdkReady;
