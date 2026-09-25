@@ -39,7 +39,8 @@ document.documentElement.style.colorScheme='dark';
       loadStyle('assets/experience-v9.css'),
       loadStyle('assets/auth-world-v1.css'),
       loadStyle('assets/theme-coherence-v1.css'),
-      loadStyle('assets/responsive-hardening-v2.css')
+      loadStyle('assets/responsive-hardening-v2.css'),
+      loadStyle('assets/auth-neon-rounded-v1.css')
     ]);
 
     const firebaseSdkReady=(async()=>{
