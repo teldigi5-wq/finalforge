@@ -1,4 +1,5 @@
-/* FinalForge Auth World v1 — visual hooks around existing auth state; no auth calls. */
+/* FinalForge Auth World v1 — visual hooks around existing auth state; no auth calls.
+   Performance pass: remove pointer-follow photo parallax and keep motion event-driven. */
 (() => {
   const gate=document.getElementById('authGate');
   const shell=gate?.querySelector('.auth-shell');
@@ -7,7 +8,6 @@
   if(!gate||!shell||!brand||!card)return;
 
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const finePointer=matchMedia('(hover:hover) and (pointer:fine)').matches;
   let attempted=false;
   let activeSubmit=null;
 
@@ -15,9 +15,6 @@
   aurora.className='ff-auth-aurora';
   aurora.setAttribute('aria-hidden','true');
   aurora.innerHTML='<i></i><i></i>';
-  // Keep the upper blue ambience, but remove the lower violet orb. The lower
-  // orb was visible through a small zoom-dependent strip beneath the auth card.
-  aurora.lastElementChild.style.display='none';
   shell.prepend(aurora);
 
   const photo=document.createElement('div');
@@ -94,17 +91,10 @@
   }
   new MutationObserver(()=>{if(!document.body.classList.contains('auth-pending')&&gate.hidden)playSuccess()}).observe(document.body,{attributes:true,attributeFilter:['class']});
 
-  if(!reduced&&finePointer){
-    let raf=0,px=0,py=0;
-    gate.addEventListener('pointermove',e=>{
-      const r=shell.getBoundingClientRect();
-      px=Math.max(-8,Math.min(8,((e.clientX-r.left)/r.width-.5)*16));
-      py=Math.max(-7,Math.min(7,((e.clientY-r.top)/r.height-.5)*14));
-      if(raf)return;
-      raf=requestAnimationFrame(()=>{photo.style.setProperty('--ff-photo-x',`${px.toFixed(2)}px`);photo.style.setProperty('--ff-photo-y',`${py.toFixed(2)}px`);raf=0});
-    },{passive:true});
-    gate.addEventListener('pointerleave',()=>{photo.style.setProperty('--ff-photo-x','0px');photo.style.setProperty('--ff-photo-y','0px')},{passive:true});
-  }
+  /* Pause decorative animation in background tabs to save CPU/GPU. */
+  const syncVisibility=()=>gate.classList.toggle('ff-auth-tab-hidden',document.hidden);
+  document.addEventListener('visibilitychange',syncVisibility,{passive:true});
+  syncVisibility();
 
   document.body.classList.add('ff-auth-polish-ready');
 })();
