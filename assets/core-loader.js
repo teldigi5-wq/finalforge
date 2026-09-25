@@ -12,7 +12,7 @@ document.documentElement.style.colorScheme='dark';
   const loadScript=src=>new Promise((resolve,reject)=>{
     const existing=[...document.scripts].find(s=>s.src&&s.src.includes(src));
     if(existing){if(existing.dataset.ffLoaded==='1'||existing.readyState==='complete')return resolve();existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',()=>reject(new Error(`Could not load ${src}`)),{once:true});return;}
-    const s=document.createElement('script');s.src=src.startsWith('assets/')?`${src}?v=theme-coherence-12`:src;s.async=true;s.onload=()=>{s.dataset.ffLoaded='1';resolve()};s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s);
+    const s=document.createElement('script');s.src=src.startsWith('assets/')?`${src}?v=theme-coherence-13`:src;s.async=true;s.onload=()=>{s.dataset.ffLoaded='1';resolve()};s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s);
   });
   const loadStyle=href=>new Promise((resolve,reject)=>{
     const existing=[...document.querySelectorAll('link[rel="stylesheet"]')].find(l=>l.href&&l.href.includes(href));

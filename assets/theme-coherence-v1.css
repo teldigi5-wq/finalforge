@@ -3,6 +3,7 @@
 
 /* Keep the auth palette calm and consistent after all legacy layers load. */
 body.auth-pending .auth-card{background:linear-gradient(155deg,rgba(8,18,33,.94),rgba(8,12,27,.92))!important;border-color:rgba(129,151,255,.16)!important;box-shadow:0 26px 80px rgba(0,0,0,.45),0 0 45px rgba(73,93,255,.08)!important}
+body.auth-pending .ff-auth-card-border{width:auto!important;max-width:none!important;height:auto!important}
 body.auth-pending .auth-tabs,body.auth-pending .auth-role-toggle{background:rgba(3,9,19,.55)!important;border-color:rgba(137,166,211,.14)!important}
 body.auth-pending .auth-tabs button.active,body.auth-pending .auth-role-toggle button.active{color:#f7f9ff!important}
 body.auth-pending .auth-view input{background:rgba(3,10,20,.74)!important;border-color:rgba(137,166,211,.18)!important;color:#f6f9ff!important}
