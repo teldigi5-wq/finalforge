@@ -37,25 +37,24 @@ async function freshNavigation(request){
 }
 
 self.addEventListener('fetch',e=>{
-  if(e.request.method==='GET'){
-    const url=new URL(e.request.url);
-    if(url.origin!==location.origin)return;
+  if(e.request.method!=='GET')return;
+  const url=new URL(e.request.url);
+  if(url.origin!==location.origin)return;
 
-    if(e.request.mode==='navigate'){
-      e.respondWith(freshNavigation(e.request));
-      return;
-    }
-
-    if(INSTANT.has(url.pathname)){
-      e.respondWith(staleWhileRevalidate(e.request));
-      return;
-    }
-
-    e.respondWith(
-      caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{
-        if(res&&res.ok)caches.open(C).then(c=>c.put(e.request,res.clone()));
-        return res;
-      }))
-    );
+  if(e.request.mode==='navigate'){
+    e.respondWith(freshNavigation(e.request));
+    return;
   }
+
+  if(INSTANT.has(url.pathname)){
+    e.respondWith(staleWhileRevalidate(e.request));
+    return;
+  }
+
+  e.respondWith(
+    caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{
+      if(res&&res.ok)caches.open(C).then(c=>c.put(e.request,res.clone()));
+      return res;
+    }))
+  );
 });
