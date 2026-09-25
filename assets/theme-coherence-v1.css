@@ -1,0 +1,55 @@
+/* FinalForge theme coherence — final cascade layer for auth and OLED dashboard. */
+:root{--ff-oled:#020407;--ff-surface:#070d14;--ff-surface-2:#0a121d;--ff-surface-3:#0d1724;--ff-line:#1c2c3d;--ff-text:#edf4ff;--ff-muted:#8fa3b8;--ff-violet:#7c6cff;--ff-cyan:#26bde2}
+
+/* Keep the auth palette calm and consistent after all legacy layers load. */
+body.auth-pending .auth-card{background:linear-gradient(155deg,rgba(8,18,33,.94),rgba(8,12,27,.92))!important;border-color:rgba(129,151,255,.16)!important;box-shadow:0 26px 80px rgba(0,0,0,.45),0 0 45px rgba(73,93,255,.08)!important}
+body.auth-pending .auth-tabs,body.auth-pending .auth-role-toggle{background:rgba(3,9,19,.55)!important;border-color:rgba(137,166,211,.14)!important}
+body.auth-pending .auth-tabs button.active,body.auth-pending .auth-role-toggle button.active{color:#f7f9ff!important}
+body.auth-pending .auth-view input{background:rgba(3,10,20,.74)!important;border-color:rgba(137,166,211,.18)!important;color:#f6f9ff!important}
+body.auth-pending .auth-view input::placeholder{color:#6f8299!important}
+body.auth-pending .auth-view label{color:#dce7f4!important}
+body.auth-pending .auth-submit{background:linear-gradient(112deg,#7058f5 0%,#3479ed 52%,#19b7dc 100%)!important;box-shadow:0 12px 32px rgba(45,102,236,.28)!important}
+
+/* OLED dark dashboard: prevent light component rules from leaking through. */
+html[data-theme="dark"] body:not(.auth-pending),html[data-theme="dark"] body:not(.auth-pending) .app,html[data-theme="dark"] body:not(.auth-pending) .main{background:var(--ff-oled)!important;color:var(--ff-text)!important}
+html[data-theme="dark"] body:not(.auth-pending) .sidebar,html[data-theme="dark"] body:not(.auth-pending) .topbar{background:rgba(3,7,11,.97)!important;border-color:#172330!important}
+html[data-theme="dark"] body:not(.auth-pending) .side-card{background:linear-gradient(145deg,#080f17,#0a121c)!important;border:1px solid var(--ff-line)!important;color:var(--ff-muted)!important;box-shadow:none!important}
+html[data-theme="dark"] body:not(.auth-pending) .side-card b{color:#dfe9f5!important}
+
+html[data-theme="dark"] body:not(.auth-pending) .card,
+html[data-theme="dark"] body:not(.auth-pending) .planner-card,
+html[data-theme="dark"] body:not(.auth-pending) .admin-panel,
+html[data-theme="dark"] body:not(.auth-pending) .module-card,
+html[data-theme="dark"] body:not(.auth-pending) .exam-card{background:linear-gradient(155deg,var(--ff-surface),#080f17)!important;border-color:var(--ff-line)!important;color:var(--ff-text)!important}
+
+html[data-theme="dark"] body:not(.auth-pending) .task,
+html[data-theme="dark"] body:not(.auth-pending) .security-list>div{background:var(--ff-surface-2)!important;border:1px solid #203246!important;color:var(--ff-text)!important;box-shadow:none!important}
+html[data-theme="dark"] body:not(.auth-pending) .task:hover,
+html[data-theme="dark"] body:not(.auth-pending) .security-list>div:hover{background:var(--ff-surface-3)!important;border-color:#31516d!important}
+html[data-theme="dark"] body:not(.auth-pending) .task b,
+html[data-theme="dark"] body:not(.auth-pending) .security-list b{color:#dfeaff!important}
+html[data-theme="dark"] body:not(.auth-pending) .task .muted,
+html[data-theme="dark"] body:not(.auth-pending) .security-list span{color:var(--ff-muted)!important}
+
+html[data-theme="dark"] body:not(.auth-pending) .admin-table-wrap{background:var(--ff-surface)!important;border-color:var(--ff-line)!important}
+html[data-theme="dark"] body:not(.auth-pending) .admin-table{background:var(--ff-surface)!important;color:#dce7f3!important}
+html[data-theme="dark"] body:not(.auth-pending) .admin-table th{background:#0d1825!important;color:#a8bad0!important;border-color:#23364a!important}
+html[data-theme="dark"] body:not(.auth-pending) .admin-table td{background:#080f17!important;color:#cedae7!important;border-color:#182737!important}
+
+html[data-theme="dark"] body:not(.auth-pending) .chip,
+html[data-theme="dark"] body:not(.auth-pending) .pill{background:#101a28!important;color:#aebfd2!important;border-color:#26394d!important}
+html[data-theme="dark"] body:not(.auth-pending) .module-icon{background:linear-gradient(145deg,#171b3b,#0a3040)!important;color:#9f98ff!important;border-color:#2a4157!important}
+html[data-theme="dark"] body:not(.auth-pending) .progressbar{background:#15212e!important}
+html[data-theme="dark"] body:not(.auth-pending) .disclaimer{background:#060c12!important;color:var(--ff-muted)!important;border-color:#23405a!important}
+html[data-theme="dark"] body:not(.auth-pending) .account-menu{background:#08111b!important;color:var(--ff-text)!important;border-color:#22364a!important;box-shadow:0 22px 60px #000c!important}
+
+html[data-theme="dark"] body:not(.auth-pending) .study-focus-head .live-dot{background:#09271f!important;color:#75e2bf!important;border-color:#185a48!important}
+html[data-theme="dark"] body:not(.auth-pending) .ff-global-search kbd{background:#101925!important;color:#9fb0c3!important;border-color:#293b4e!important}
+
+@media(max-width:900px){
+  html[data-theme="dark"] body:not(.auth-pending) .mobile-nav{background:rgba(5,10,16,.97)!important;border-color:#1b2a3a!important;box-shadow:0 -10px 32px rgba(0,0,0,.45)!important}
+  html[data-theme="dark"] body:not(.auth-pending) .mobile-nav button{color:#8ea2b8!important}
+  html[data-theme="dark"] body:not(.auth-pending) .mobile-nav button.active{background:#111936!important;color:#b8b2ff!important}
+}
+
+@media(prefers-reduced-motion:reduce){body.auth-pending .auth-card,body:not(.auth-pending) .task,body:not(.auth-pending) .security-list>div{transition:none!important}}
