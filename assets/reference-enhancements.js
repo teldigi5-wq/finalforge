@@ -31,14 +31,19 @@
     wired.add(card);
     card.classList.add('ff-depth-card');
     card.style.setProperty('--ff-depth-delay',`${Math.min(index,8)*35}ms`);
+    let moveQueued=false,moveEvent=null;
     card.addEventListener('pointermove',event=>{
-      const rect=card.getBoundingClientRect();
-      const x=(event.clientX-rect.left)/rect.width;
-      const y=(event.clientY-rect.top)/rect.height;
-      card.style.setProperty('--ff-rx',`${((.5-y)*4).toFixed(2)}deg`);
-      card.style.setProperty('--ff-ry',`${((x-.5)*5).toFixed(2)}deg`);
-      card.style.setProperty('--ff-glow-x',`${(x*100).toFixed(1)}%`);
-      card.style.setProperty('--ff-glow-y',`${(y*100).toFixed(1)}%`);
+      moveEvent=event;if(moveQueued)return;moveQueued=true;
+      requestAnimationFrame(()=>{
+        moveQueued=false;
+        const rect=card.getBoundingClientRect();
+        const x=(moveEvent.clientX-rect.left)/rect.width;
+        const y=(moveEvent.clientY-rect.top)/rect.height;
+        card.style.setProperty('--ff-rx',`${((.5-y)*4).toFixed(2)}deg`);
+        card.style.setProperty('--ff-ry',`${((x-.5)*5).toFixed(2)}deg`);
+        card.style.setProperty('--ff-glow-x',`${(x*100).toFixed(1)}%`);
+        card.style.setProperty('--ff-glow-y',`${(y*100).toFixed(1)}%`);
+      });
     },{passive:true});
     card.addEventListener('pointerleave',()=>{
       card.style.removeProperty('--ff-rx');

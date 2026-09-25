@@ -261,7 +261,7 @@ body:not(.auth-pending) .fc-ip,body:not(.auth-pending) .fc-fc{animation-delay:-2
   body.auth-pending .auth-card{width:calc(100% - 12px)!important;margin:-18px 6px 0!important;padding:24px 14px 32px!important}
 }
 
-@media(max-height:560px) and (orientation:landscape) and (max-width:950px){
+@media(max-height:560px) and (orientation:landscape) and (max-width:950px) and (hover:none) and (pointer:coarse){
   body.auth-pending .auth-shell{display:block!important;width:min(680px,100%)!important}
   body.auth-pending .auth-brand-panel{min-height:320px!important}
   body.auth-pending .auth-card{min-height:440px!important}

@@ -46,8 +46,8 @@ body.auth-pending .auth-card{
   backdrop-filter:blur(28px) saturate(132%)!important;
   -webkit-backdrop-filter:blur(28px) saturate(132%)!important;
 }
-.ff-auth-card-border{position:absolute!important;inset:0!important;z-index:0!important;overflow:hidden!important;border-radius:inherit!important;pointer-events:none!important;padding:1px!important;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
-.ff-auth-card-border::before{content:"";position:absolute;left:-60%;top:-40%;width:220%;height:180%;background:conic-gradient(from 30deg,transparent 0 22%,rgba(91,207,255,.72) 29%,rgba(139,114,255,.78) 38%,transparent 47% 72%,rgba(76,173,255,.50) 80%,transparent 89%);animation:ffBorderOrbit 18s linear infinite;will-change:transform}
+.ff-auth-card-border{position:absolute!important;inset:0!important;width:auto!important;max-width:none!important;height:auto!important;z-index:0!important;overflow:hidden!important;contain:paint!important;border:0!important;border-radius:inherit!important;box-shadow:none!important;pointer-events:none!important;padding:1px!important;transform:translateZ(0);backface-visibility:hidden;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
+.ff-auth-card-border::before{content:"";position:absolute;left:-60%;top:-40%;width:220%;height:180%;border:0!important;box-shadow:none!important;background:conic-gradient(from 30deg,transparent 0 22%,rgba(91,207,255,.72) 29%,rgba(139,114,255,.78) 38%,transparent 47% 72%,rgba(76,173,255,.50) 80%,transparent 89%);animation:ffBorderOrbit 18s linear infinite;will-change:transform}
 @keyframes ffBorderOrbit{to{transform:rotate(360deg)}}
 body.auth-pending .auth-card>*:not(.ff-auth-card-border){position:relative;z-index:2}
 
@@ -140,14 +140,14 @@ body:not(.auth-pending) #authGate.ff-auth-success[hidden]{display:grid!important
 }
 
 /* Short landscape phones: use both columns and avoid the long stacked page seen in the recording. */
-@media(max-height:560px) and (orientation:landscape) and (max-width:950px){
+@media(max-height:560px) and (orientation:landscape) and (max-width:950px) and (hover:none) and (pointer:coarse){
   body.auth-pending{height:100dvh!important;min-height:0!important;overflow:hidden!important}
   body.auth-pending #authGate{height:100dvh!important;min-height:0!important;padding:6px!important;overflow:hidden!important;place-items:center!important}
   body.auth-pending .auth-shell{display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(360px,1.18fr)!important;width:100%!important;height:calc(100dvh - 12px)!important;min-height:0!important;border:1px solid rgba(153,181,224,.18)!important;border-radius:18px!important;overflow:hidden!important}
   body.auth-pending .auth-brand-panel{height:auto!important;min-height:0!important;padding:18px 24px!important;border-right:1px solid rgba(148,203,255,.12)!important;border-bottom:0!important;justify-content:center!important}
   body.auth-pending .ff-auth-brandbar{position:absolute!important;left:22px;right:22px;top:17px}
   body.auth-pending .ff-auth-help{display:none!important}
-  body.auth-pending .ff-auth-brandcontent{padding:35px 0 0!important}
+  body.auth-pending .ff-auth-brandcontent{padding:clamp(5.25rem,22dvh,7rem) 0 0!important}
   body.auth-pending .auth-brand-panel h1{font-size:clamp(2rem,5.2vw,3rem)!important}
   body.auth-pending .ff-auth-brandcontent>p{display:block!important;margin-top:12px!important;font-size:.78rem!important;line-height:1.45!important}
   body.auth-pending .auth-points,body.auth-pending .ff-auth-foot{display:none!important}
@@ -160,6 +160,20 @@ body:not(.auth-pending) #authGate.ff-auth-success[hidden]{display:grid!important
   body.auth-pending .auth-submit{min-height:42px!important}
   body.auth-pending .text-btn{min-height:32px!important;margin-top:4px!important}
   body.auth-pending .ff-auth-security{display:none!important}
+}
+
+/* High desktop zoom can report a phone-sized CSS viewport. Keep it scroll-safe without
+   applying the touch-only, fixed-height landscape composition. */
+@media(max-height:560px) and (orientation:landscape) and (max-width:950px) and (hover:hover) and (pointer:fine){
+  body.auth-pending{height:auto!important;min-height:100dvh!important;overflow:auto!important}
+  body.auth-pending #authGate{height:auto!important;min-height:100dvh!important;overflow:visible!important;padding:clamp(.4rem,1.4vw,.85rem)!important;place-items:start center!important}
+  body.auth-pending .auth-shell{display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:min(100%,46rem)!important;height:auto!important;min-height:0!important;overflow:hidden!important}
+  body.auth-pending .auth-brand-panel{height:auto!important;min-height:clamp(12rem,44dvh,17rem)!important;padding:clamp(1rem,3vw,1.5rem)!important;border-right:0!important;border-bottom:1px solid rgba(148,203,255,.12)!important;justify-content:flex-start!important}
+  body.auth-pending .ff-auth-brandbar{position:relative!important;inset:auto!important;min-height:2.5rem!important}
+  body.auth-pending .ff-auth-brandcontent{padding:clamp(2.75rem,10dvh,4.75rem) 0 0!important}
+  body.auth-pending .auth-brand-panel h1{font-size:clamp(2rem,8vw,3.25rem)!important}
+  body.auth-pending .ff-auth-brandcontent>p,body.auth-pending .auth-points,body.auth-pending .ff-auth-foot{display:none!important}
+  body.auth-pending .auth-card{width:100%!important;height:auto!important;min-height:0!important;margin:0!important;padding:clamp(1.15rem,4vw,2rem)!important;border-radius:0 0 1.25rem 1.25rem!important;overflow:visible!important}
 }
 
 /* Dashboard mobile header/account menu repair from the supplied recording. */
@@ -177,7 +191,7 @@ body:not(.auth-pending) #authGate.ff-auth-success[hidden]{display:grid!important
   body:not(.auth-pending) .account-menu{position:fixed!important;z-index:1200!important;left:12px!important;right:12px!important;top:calc(66px + env(safe-area-inset-top))!important;width:auto!important;max-width:none!important;max-height:calc(100dvh - 82px - env(safe-area-inset-top))!important;overflow-y:auto!important;border-radius:16px!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;transform:translate3d(0,-8px,0) scale(.985)!important;transform-origin:top right!important;transition:opacity .18s ease,transform .22s var(--ff-auth-ease),visibility 0s linear .22s!important}
   body:not(.auth-pending) .account-menu.open{opacity:1!important;visibility:visible!important;pointer-events:auto!important;transform:translate3d(0,0,0) scale(1)!important;transition-delay:0s!important}
 }
-@media(max-height:560px) and (orientation:landscape) and (max-width:950px){
+@media(max-height:560px) and (orientation:landscape) and (max-width:950px) and (hover:none) and (pointer:coarse){
   body:not(.auth-pending) .topbar{position:sticky!important;min-height:54px!important;padding:6px 14px!important;padding-top:max(6px,env(safe-area-inset-top))!important}
   body:not(.auth-pending) .theme-toggle{width:38px!important;height:38px!important;min-width:38px!important}
   body:not(.auth-pending) .account-chip{min-height:40px!important}.account-avatar{width:32px!important;height:32px!important}

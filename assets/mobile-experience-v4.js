@@ -89,7 +89,8 @@
     observer.observe(desktopNav,{childList:true});
   }
 
-  addEventListener('resize',()=>{if(innerWidth>900)closeMore()},{passive:true});
+  let resizeQueued=false;
+  addEventListener('resize',()=>{if(resizeQueued)return;resizeQueued=true;requestAnimationFrame(()=>{resizeQueued=false;if(innerWidth>900)closeMore()})},{passive:true});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMore()});
 
   build();

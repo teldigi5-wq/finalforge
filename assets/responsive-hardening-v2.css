@@ -1,0 +1,71 @@
+/* FinalForge responsive QA layer — fluid sizing, accessible feedback, clean loading/empty states. */
+html,body{max-width:100%;overflow-x:hidden;overflow-x:clip}
+img,svg,video,canvas{max-width:100%}
+input,button,select,textarea,.card,.section,.auth-shell,.auth-card{min-width:0}
+.auth-brand-panel h1,.ff-auth-brandlockup,.section h1,.section h2,.section h3,.card,.account-copy{overflow-wrap:anywhere}
+:where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:3px solid #64d7ff!important;outline-offset:3px!important}
+
+body.auth-pending #authGate{padding:clamp(.45rem,1.6vw,1.25rem)!important}
+body.auth-pending .auth-shell{width:min(100%,90rem)!important;max-width:90rem!important}
+body.auth-pending .auth-card{padding-inline:clamp(1rem,3.25vw,3rem)!important}
+body.auth-pending .ff-auth-card-border{inset:0!important;width:auto!important;max-width:none!important;height:auto!important;border:0!important;box-shadow:none!important;overflow:hidden!important;contain:paint!important;border-radius:inherit!important}
+body.auth-pending .ff-auth-card-border::before{border:0!important;box-shadow:none!important}
+body.auth-pending .auth-view.is-loading .auth-submit::after{display:none!important}
+
+.ff-field-feedback{display:block;min-height:1.05rem;margin-top:.25rem;color:#91a7bd;font-size:.72rem;font-weight:650;line-height:1.35}
+.ff-field-feedback[data-state="error"]{color:#ffabb8}
+.ff-field-feedback[data-state="valid"]{color:#76e2bf}
+body.auth-pending input[aria-invalid="true"]{border-color:#ff7890!important;box-shadow:0 0 0 3px rgba(255,90,120,.12)!important}
+.ff-remember{display:flex!important;align-items:center!important;gap:.65rem!important;margin:.25rem 0 .85rem!important;color:#b8c7d8!important;font-size:.8rem!important;cursor:pointer}
+.ff-remember input{width:1.05rem!important;height:1.05rem!important;min-height:0!important;flex:0 0 auto;accent-color:#6278ff}
+.ff-password-strength{display:grid;grid-template-columns:minmax(4rem,1fr) auto;align-items:center;gap:.55rem;min-height:1.1rem;margin-top:.35rem;color:#99abc0;font-size:.72rem;font-weight:700}
+.ff-password-strength>i{height:.3rem;border-radius:999px;background:linear-gradient(90deg,#ff7189 0 25%,rgba(135,158,187,.2) 25%);transition:background .2s ease}
+.ff-password-strength[data-level="2"]>i{background:linear-gradient(90deg,#ffbb55 0 50%,rgba(135,158,187,.2) 50%)}
+.ff-password-strength[data-level="3"]>i{background:linear-gradient(90deg,#59c9f1 0 75%,rgba(135,158,187,.2) 75%)}
+.ff-password-strength[data-level="4"]>i{background:#5ed6aa}
+.ff-password-strength[data-level="4"]{color:#75e2bf}
+
+.ff-empty-state,.ff-table-empty{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:.6rem;min-height:11rem;padding:clamp(1.1rem,3vw,2rem)!important;color:var(--muted,#8fa3b8)}
+.ff-empty-state{grid-column:1/-1}
+.ff-empty-state h3,.ff-table-empty b{margin:0;color:var(--text,#edf4ff)}
+.ff-empty-state p,.ff-table-empty span{margin:0;line-height:1.55}
+.ff-table-empty{min-height:9rem;align-items:center;text-align:center}
+.ff-skeleton-card,.ff-skeleton-row i{overflow:hidden;position:relative}
+.ff-skeleton-card i,.ff-skeleton-row i{display:block;border-radius:.45rem;background:#172536}
+.ff-skeleton-card i:nth-child(1){width:48%;height:.75rem}.ff-skeleton-card i:nth-child(2){width:30%;height:2.2rem}.ff-skeleton-card i:nth-child(3){width:62%;height:.7rem}
+.ff-skeleton-row i{height:2.65rem;margin:.35rem}
+.ff-skeleton-card::after,.ff-skeleton-row i::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 15%,rgba(119,164,210,.14) 45%,transparent 75%);transform:translate3d(-100%,0,0);animation:ffSkeletonSweep 1.45s ease-in-out infinite}
+@keyframes ffSkeletonSweep{to{transform:translate3d(100%,0,0)}}
+
+body:not(.auth-pending) .section{width:min(100%,100rem);padding-inline:clamp(1rem,3vw,3rem)!important}
+body:not(.auth-pending) .grid4,body:not(.auth-pending) .module-grid,body:not(.auth-pending) .resource-grid,body:not(.auth-pending) .exam-grid,body:not(.auth-pending) .feature-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,17.5rem),1fr))}
+body:not(.auth-pending) .admin-grid,body:not(.auth-pending) .planner-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,27rem),1fr))}
+body:not(.auth-pending) .admin-table-wrap{max-width:100%;overflow:auto}
+body:not(.auth-pending) .admin-table{min-width:38rem}
+body:not(.auth-pending) .hero-main,body:not(.auth-pending) .hero-side{min-width:0}
+
+@media(max-width:1100px){
+  body:not(.auth-pending) .hero-v3{grid-template-columns:minmax(0,1fr)!important}
+  body:not(.auth-pending) .hero-side{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr))!important}
+}
+@media(max-width:700px){
+  body.auth-pending #authGate{padding:0!important}
+  body.auth-pending .auth-card{padding-inline:clamp(.9rem,4.5vw,1.35rem)!important}
+  body:not(.auth-pending) .section{padding-inline:clamp(.75rem,4vw,1rem)!important}
+  body:not(.auth-pending) .section-head{flex-wrap:wrap}
+  body:not(.auth-pending) .section-head>.search,body:not(.auth-pending) .section-head>div:last-child{max-width:100%}
+  body:not(.auth-pending) .admin-table{min-width:34rem}
+}
+@media(max-width:400px){
+  .ff-auth-brandlockup span{font-size:.96rem}
+  body.auth-pending .auth-card{padding-inline:.875rem!important}
+  body:not(.auth-pending) .section{padding-inline:.7rem!important}
+}
+@media(min-width:1920px){
+  body.auth-pending .auth-shell{max-width:96rem!important}
+  body:not(.auth-pending) .section{max-width:105rem!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .ff-skeleton-card::after,.ff-skeleton-row i::after{animation:none!important}
+  .ff-password-strength>i{transition:none!important}
+}

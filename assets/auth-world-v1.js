@@ -71,8 +71,7 @@
     attempted=false;
     activeSubmit?.classList.remove('is-success');
     card.classList.remove('ff-auth-failure');
-    void card.offsetWidth;
-    card.classList.add('ff-auth-failure');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>card.classList.add('ff-auth-failure')));
     setTimeout(()=>card.classList.remove('ff-auth-failure'),340);
   }
   const alert=gate.querySelector('#authAlert');

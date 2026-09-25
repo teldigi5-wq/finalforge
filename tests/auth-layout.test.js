@@ -37,7 +37,8 @@ test('final login structure and styles exist before application boot',()=>{
   assert.equal((html.match(/class="ff-auth-intro"/g)||[]).length,1);
   assert.ok(html.includes('class="ff-auth-brandbar"'));
   assert.ok(html.includes('class="ff-auth-brandcontent"'));
-  assert.ok(head.includes('assets/reference-refresh.css?v=single-surface-8'));
+  assert.ok(head.includes('assets/reference-refresh.css?v=responsive-qa-15'));
+  assert.ok(head.includes('assets/responsive-hardening-v2.css?v=1'));
   assert.ok(!html.includes('class="auth-backdrop"'));
   assert.ok(!loader.includes("loadScript('assets/auth-premium-v5.js')"));
   assert.ok(!loader.includes("b['experience.js']"));
