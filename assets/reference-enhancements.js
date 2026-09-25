@@ -1,10 +1,11 @@
 /* FinalForge reference experience enhancements.
-   Visual motion only: existing navigation, authentication and study logic stay authoritative. */
+   Performance pass: preserve atmosphere/reveal styling, remove duplicate pointer-follow depth work. */
 (()=>{
   const q=(selector,root=document)=>root.querySelector(selector);
   const qa=(selector,root=document)=>[...root.querySelectorAll(selector)];
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const precise=matchMedia('(hover:hover) and (pointer:fine)').matches;
+  /* Depth-card pointer tracking duplicated the main motion layer and caused extra RAF work. */
+  const precise=false;
   const wired=new WeakSet();
 
   function addAtmosphere(){
@@ -31,26 +32,6 @@
     wired.add(card);
     card.classList.add('ff-depth-card');
     card.style.setProperty('--ff-depth-delay',`${Math.min(index,8)*35}ms`);
-    let moveQueued=false,moveEvent=null;
-    card.addEventListener('pointermove',event=>{
-      moveEvent=event;if(moveQueued)return;moveQueued=true;
-      requestAnimationFrame(()=>{
-        moveQueued=false;
-        const rect=card.getBoundingClientRect();
-        const x=(moveEvent.clientX-rect.left)/rect.width;
-        const y=(moveEvent.clientY-rect.top)/rect.height;
-        card.style.setProperty('--ff-rx',`${((.5-y)*4).toFixed(2)}deg`);
-        card.style.setProperty('--ff-ry',`${((x-.5)*5).toFixed(2)}deg`);
-        card.style.setProperty('--ff-glow-x',`${(x*100).toFixed(1)}%`);
-        card.style.setProperty('--ff-glow-y',`${(y*100).toFixed(1)}%`);
-      });
-    },{passive:true});
-    card.addEventListener('pointerleave',()=>{
-      card.style.removeProperty('--ff-rx');
-      card.style.removeProperty('--ff-ry');
-      card.style.removeProperty('--ff-glow-x');
-      card.style.removeProperty('--ff-glow-y');
-    },{passive:true});
   }
 
   function enhanceCards(){
@@ -72,10 +53,15 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',refresh,{once:true});
   else refresh();
   addEventListener('finalforge-ready',refresh,{once:true});
+
+  /* Keep dynamic content support but collapse bursts into one idle refresh. */
   let queued=false;
   new MutationObserver(mutations=>{
     if(document.body.classList.contains('auth-pending')||queued||!mutations.some(item=>item.addedNodes.length))return;
-    queued=true;requestAnimationFrame(()=>{queued=false;enhanceCards()});
+    queued=true;
+    const run=()=>{queued=false;enhanceCards()};
+    if('requestIdleCallback' in window)requestIdleCallback(run,{timeout:180});
+    else setTimeout(run,80);
   }).observe(q('.app'),{childList:true,subtree:true});
 })();
 

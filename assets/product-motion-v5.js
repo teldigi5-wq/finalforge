@@ -1,4 +1,4 @@
-/* FinalForge Product Motion v5 — restrained interaction layer; no feature/data changes. */
+/* FinalForge Product Motion v5 — restrained interaction layer; performance-hardened. */
 (()=>{
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -54,6 +54,7 @@
   }
 
   function ensureSlidingIndicator(nav){
+    if(!nav)return;
     let ind=q('.ff-nav-indicator',nav);
     if(!ind){
       ind=document.createElement('i');ind.className='ff-nav-indicator';
@@ -90,11 +91,11 @@
     if(reduce)return;
     const nodes=qa('.card,.quick-dock>button,.timeline-row,.task,.section-head',root).filter(n=>!seen.has(n));
     nodes.forEach((el,i)=>{
-      seen.add(el);el.classList.add('ff-enter');el.style.transitionDelay=`${Math.min(i%5,4)*55}ms`;
+      seen.add(el);el.classList.add('ff-enter');el.style.transitionDelay=`${Math.min(i%5,4)*40}ms`;
       entranceObserver.observe(el);
     });
   }
-  const entranceObserver=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('ff-entered');entranceObserver.unobserve(e.target)}}),{threshold:.08,rootMargin:'0px 0px -4% 0px'});
+  const entranceObserver=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('ff-entered');entranceObserver.unobserve(e.target)}}),{threshold:.06,rootMargin:'0px 0px -2% 0px'});
 
   function animateProgress(root=document){
     if(reduce)return;
@@ -111,28 +112,11 @@
     if(reduce||numberSeen.has(el))return;numberSeen.add(el);
     const raw=(el.textContent||'').trim(),m=raw.match(/^([\d,.]+)(%?)$/);if(!m)return;
     const target=Number(m[1].replace(/,/g,''));if(!Number.isFinite(target)||target>5000)return;
-    const suffix=m[2]||'',start=performance.now(),dur=760;
+    const suffix=m[2]||'',start=performance.now(),dur=560;
     const step=now=>{const p=Math.min(1,(now-start)/dur),ease=1-Math.pow(1-p,3),v=Math.round(target*ease);el.textContent=v.toLocaleString()+suffix;if(p<1)requestAnimationFrame(step)};
     requestAnimationFrame(step);
   }
   function animateNumbers(root=document){qa('.stat strong,#overall,#resCount,#moduleCount,#examCount',root).forEach(animateStat)}
-
-  function installTilt(){
-    if(reduce||matchMedia('(hover:none)').matches)return;
-    qa('.hero-main,.practice-hero').forEach(card=>{
-      if(card.dataset.ffTilt==='1')return;card.dataset.ffTilt='1';card.classList.add('ff-tilt');
-      let tiltQueued=false,tiltEvent=null;
-      card.addEventListener('pointermove',e=>{tiltEvent=e;if(tiltQueued)return;tiltQueued=true;requestAnimationFrame(()=>{tiltQueued=false;const r=card.getBoundingClientRect(),x=(tiltEvent.clientX-r.left)/r.width-.5,y=(tiltEvent.clientY-r.top)/r.height-.5;card.style.transform=`perspective(1100px) rotateX(${(-y*3).toFixed(2)}deg) rotateY(${(x*3).toFixed(2)}deg) translateY(-1px)`})},{passive:true});
-      card.addEventListener('pointerleave',()=>card.style.transform='');
-    });
-  }
-
-  function parallax(){
-    if(reduce||innerWidth<901)return;
-    const hero=q('.hero-main');if(!hero||hero.dataset.ffParallax==='1')return;hero.dataset.ffParallax='1';
-    let parallaxQueued=false,parallaxEvent=null;
-    addEventListener('pointermove',e=>{parallaxEvent=e;if(parallaxQueued)return;parallaxQueued=true;requestAnimationFrame(()=>{parallaxQueued=false;const x=(parallaxEvent.clientX/innerWidth-.5)*10,y=(parallaxEvent.clientY/innerHeight-.5)*8;hero.style.setProperty('--ff-px',`${x}px`);hero.style.setProperty('--ff-py',`${y}px`)})},{passive:true});
-  }
 
   function installSkeletonHooks(){
     const body=q('#adminUsersBody');if(!body||body.dataset.ffSkeletonHook)return;body.dataset.ffSkeletonHook='1';
@@ -140,21 +124,32 @@
   }
 
   function refresh(){
-    upgradeNav(q('#nav'));upgradeNav(q('#mobileNav'));upgradeQuickActions();installSearchIcon();revealScan();animateProgress();animateNumbers();installTilt();parallax();installSkeletonHooks();
+    upgradeNav(q('#nav'));upgradeNav(q('#mobileNav'));upgradeQuickActions();installSearchIcon();revealScan();animateProgress();animateNumbers();installSkeletonHooks();
   }
+
+  /* Removed continuous hero tilt + global pointer parallax. They duplicated another
+     interaction layer and forced style work every pointer frame at 100% zoom. */
 
   document.addEventListener('click',e=>{
     const b=e.target.closest('[data-go]');if(b)requestAnimationFrame(()=>{ensureSlidingIndicator(q('#nav'));refresh()});
   });
 
   let queued=false;
+  const scheduleRefresh=()=>{
+    if(queued)return;
+    queued=true;
+    const run=()=>{queued=false;if(!document.body.classList.contains('auth-pending'))refresh()};
+    if('requestIdleCallback' in window)requestIdleCallback(run,{timeout:160});
+    else setTimeout(run,70);
+  };
   const mo=new MutationObserver(muts=>{
-    if(document.body.classList.contains('auth-pending')||queued||!muts.some(m=>m.addedNodes.length))return;
-    queued=true;requestAnimationFrame(()=>{queued=false;refresh()});
+    if(document.body.classList.contains('auth-pending')||!muts.some(m=>m.addedNodes.length))return;
+    scheduleRefresh();
   });
-  addEventListener('finalforge-ready',()=>{if(!document.body.classList.contains('auth-pending'))refresh();mo.observe(q('.app'),{childList:true,subtree:true});});
+  addEventListener('finalforge-ready',()=>{if(!document.body.classList.contains('auth-pending'))refresh();const app=q('.app');if(app)mo.observe(app,{childList:true,subtree:true});});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{if(!document.body.classList.contains('auth-pending'))refresh()},{once:true});
   else if(!document.body.classList.contains('auth-pending'))refresh();
+
   let resizeQueued=false;
   addEventListener('resize',()=>{if(resizeQueued)return;resizeQueued=true;requestAnimationFrame(()=>{resizeQueued=false;upgradeNav(q('#nav'));upgradeNav(q('#mobileNav'));ensureSlidingIndicator(q('#nav'))})},{passive:true});
 })();
