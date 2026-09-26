@@ -98,6 +98,14 @@ html.ff-real-mobile body:not(.auth-pending) .section.active.section-leaving{
   transform:none!important;
 }
 
+/* Exactly one signed-in mobile page may participate in layout. */
+html.ff-real-mobile body:not(.auth-pending) .section:not(.active){
+  display:none!important;
+}
+html.ff-real-mobile body:not(.auth-pending) .section.active{
+  display:block!important;
+}
+
 html.ff-real-mobile body:not(.auth-pending) .section{
   width:100%!important;
   max-width:100%!important;
@@ -107,11 +115,12 @@ html.ff-real-mobile body:not(.auth-pending) .section{
   padding:18px 16px 24px!important;
   overflow:visible!important;
 }
-html.ff-real-mobile body:not(.auth-pending) #home{
+html.ff-real-mobile body:not(.auth-pending) #home.active{
   display:block!important;
   min-height:0!important;
   padding-top:14px!important;
 }
+html.ff-real-mobile body:not(.auth-pending) #home:not(.active){display:none!important}
 html.ff-real-mobile body:not(.auth-pending) #home .hero-v3{
   display:grid!important;
   grid-template-columns:1fr!important;
