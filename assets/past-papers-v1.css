@@ -1,0 +1,26 @@
+/* FinalForge Past Papers v1 — lightweight external archive UI. */
+#past-papers .past-hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.6fr);gap:18px;align-items:stretch;margin-bottom:18px}
+#past-papers .past-hero-main{padding:clamp(22px,3vw,34px);position:relative;overflow:hidden}
+#past-papers .past-hero-main::after{content:"";position:absolute;width:260px;height:260px;right:-100px;top:-120px;border-radius:50%;background:radial-gradient(circle,rgba(74,173,255,.18),transparent 70%);pointer-events:none}
+#past-papers .past-hero h2{margin:6px 0 10px;font-size:clamp(1.7rem,3vw,2.5rem)}
+#past-papers .past-hero p{max-width:760px;line-height:1.65}
+#past-papers .past-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px}
+#past-papers .past-summary div{padding:14px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025)}
+#past-papers .past-summary strong{display:block;font-size:1.45rem;margin-bottom:3px}
+#past-papers .past-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+#past-papers .past-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+#past-papers .past-card{padding:18px;display:flex;flex-direction:column;min-height:230px}
+#past-papers .past-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:10px}
+#past-papers .past-card h3{margin:4px 0 0;font-size:1.12rem;line-height:1.35}
+#past-papers .past-badge{font-size:.7rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:6px 8px;border-radius:999px;border:1px solid rgba(112,194,255,.2);white-space:nowrap}
+#past-papers .past-badge.current{background:rgba(45,180,141,.11);color:#9ef0d1;border-color:rgba(79,221,177,.24)}
+#past-papers .past-badge.legacy{background:rgba(113,123,255,.10);color:#c8ceff;border-color:rgba(132,143,255,.24)}
+#past-papers .past-badge.related{background:rgba(255,183,76,.09);color:#ffd69a;border-color:rgba(255,190,92,.22)}
+#past-papers .past-meta{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0 12px}
+#past-papers .past-meta span{font-size:.73rem;padding:5px 7px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+#past-papers .past-note{font-size:.84rem;line-height:1.55;color:var(--muted);margin-bottom:16px}
+#past-papers .past-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+#past-papers .past-empty{padding:24px;grid-column:1/-1}
+#past-papers .past-disclaimer{margin-top:16px;padding:15px 17px;border:1px solid rgba(255,191,91,.18);border-radius:14px;background:rgba(255,182,72,.045);font-size:.82rem;line-height:1.55}
+@media(max-width:900px){#past-papers .past-hero{grid-template-columns:1fr}#past-papers .past-grid{grid-template-columns:1fr}}
+@media(max-width:520px){#past-papers .past-summary{grid-template-columns:1fr 1fr}#past-papers .past-card{padding:15px;min-height:0}#past-papers .past-card-head{display:block}#past-papers .past-badge{display:inline-block;margin-top:9px}}
