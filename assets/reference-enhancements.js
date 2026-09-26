@@ -86,3 +86,21 @@
   s.onerror=()=>console.warn('[FinalForge] Signup reliability patch could not be loaded.');
   document.body.appendChild(s);
 })();
+
+/* Runtime stability layer: final CSS specificity correction + Practice navigation guard. */
+(()=>{
+  if(!document.querySelector('link[data-finalforge-runtime-stability]')){
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='assets/runtime-stability-v1.css?v=1';
+    link.dataset.finalforgeRuntimeStability='1';
+    document.head.appendChild(link);
+  }
+  if(document.querySelector('script[data-finalforge-practice-stability]'))return;
+  const s=document.createElement('script');
+  s.src='assets/practice-stability-v1.js?v=1';
+  s.async=false;
+  s.dataset.finalforgePracticeStability='1';
+  s.onerror=()=>console.warn('[FinalForge] Practice stability guard could not be loaded.');
+  document.body.appendChild(s);
+})();
