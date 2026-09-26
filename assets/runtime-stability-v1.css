@@ -1,0 +1,66 @@
+/* FinalForge runtime stability v1 — practice escape + visible dark workspace background. */
+
+/* The older OLED coherence layer has higher selector specificity than the newer visual system.
+   Match that specificity here so dark mode keeps the intended layered navy workspace. */
+html[data-theme="dark"] body:not(.auth-pending),
+html[data-theme="dark"] body:not(.auth-pending) .app{
+  background:#07111f!important;
+  color:#edf5ff!important;
+}
+html[data-theme="dark"] body:not(.auth-pending) .app{
+  background-image:
+    radial-gradient(980px 560px at 88% -8%,rgba(71,92,255,.10),transparent 64%),
+    radial-gradient(760px 500px at 14% 108%,rgba(34,190,220,.055),transparent 68%),
+    linear-gradient(145deg,#07111f 0%,#081522 50%,#07111f 100%)!important;
+}
+html[data-theme="dark"] body:not(.auth-pending) .main{
+  background-color:#07111f!important;
+  background-image:
+    radial-gradient(920px 540px at 92% 2%,rgba(74,103,255,.095),transparent 63%),
+    radial-gradient(720px 460px at 20% 96%,rgba(42,199,222,.05),transparent 70%),
+    linear-gradient(180deg,#081421 0%,#07111f 58%,#08131f 100%)!important;
+}
+html[data-theme="dark"] body:not(.auth-pending) .section{
+  background:transparent!important;
+}
+
+/* Bring a restrained image layer back to the dark Home hero without heavy filters/animation. */
+html[data-theme="dark"] body:not(.auth-pending) .hero-main{
+  background:
+    linear-gradient(90deg,rgba(8,18,33,.96) 0%,rgba(8,19,35,.88) 48%,rgba(7,16,29,.56) 78%,rgba(7,16,29,.42) 100%),
+    url('campus-banner.webp') center center/cover no-repeat!important;
+}
+
+/* Practice must never trap interaction when its section is no longer active. */
+body:not(.auth-pending) #practice:not(.active) .exam-app,
+body:not(.auth-pending) #practice:not(.active) .exam-results{
+  display:none!important;
+  pointer-events:none!important;
+}
+body:not(.auth-pending) #practice.active{
+  min-width:0!important;
+}
+body:not(.auth-pending) #practice .exam-app,
+body:not(.auth-pending) #practice .exam-layout,
+body:not(.auth-pending) #practice .exam-question{
+  max-width:100%!important;
+  min-width:0!important;
+}
+
+/* When the stability guard detects an active exam, keep the shell scrollable and navigation reachable. */
+body.ff-practice-exam-running:not(.auth-pending){
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+}
+body.ff-practice-exam-running:not(.auth-pending) .sidebar,
+body.ff-practice-exam-running:not(.auth-pending) .topbar{
+  pointer-events:auto!important;
+}
+
+@media(max-width:900px){
+  html[data-theme="dark"] body:not(.auth-pending) .main{
+    background-image:
+      radial-gradient(620px 380px at 86% 0%,rgba(74,103,255,.08),transparent 64%),
+      linear-gradient(180deg,#081421 0%,#07111f 100%)!important;
+  }
+}
