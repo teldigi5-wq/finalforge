@@ -1,0 +1,50 @@
+/* FinalForge Professional Accessibility v1
+   Keyboard, touch-target and compact-tablet refinements for the signed-in workspace. */
+
+body:not(.auth-pending) :where(button,a,input,select,textarea,[tabindex]):focus-visible{
+  outline:3px solid color-mix(in srgb,var(--ffw-blue,#5b8cff) 78%,white)!important;
+  outline-offset:3px!important;
+  box-shadow:0 0 0 5px rgba(91,140,255,.14)!important;
+}
+body:not(.auth-pending) .nav button:focus-visible,
+body:not(.auth-pending) #mobileNav button:focus-visible{
+  background:rgba(91,140,255,.12)!important;
+  color:var(--ffw-text,#f5f8fc)!important;
+}
+body:not(.auth-pending) .module-detail{
+  scroll-margin-top:92px;
+}
+body:not(.auth-pending) .section[inert]{
+  pointer-events:none!important;
+  user-select:none!important;
+}
+
+/* Compact desktop / landscape tablet: reduce density before the phone shell begins. */
+@media (min-width:901px) and (max-width:1050px){
+  body:not(.auth-pending) #home .hero-v3{grid-template-columns:1fr!important}
+  body:not(.auth-pending) .quick-dock,
+  body:not(.auth-pending) .grid4,
+  body:not(.auth-pending) .ffw-metrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body:not(.auth-pending) .ffw-analytics-layout{grid-template-columns:1fr!important}
+  body:not(.auth-pending) .topbar>.muted{display:none!important}
+}
+
+@media (max-width:900px){
+  body:not(.auth-pending) :where(button,.btn,a.btn,input,select,textarea){min-height:44px}
+  body:not(.auth-pending) .module-detail{scroll-margin-top:78px}
+}
+
+@media (prefers-contrast:more){
+  body:not(.auth-pending) .card,
+  body:not(.auth-pending) .btn,
+  body:not(.auth-pending) input,
+  body:not(.auth-pending) select,
+  body:not(.auth-pending) textarea{border-width:2px!important}
+}
+
+@media (forced-colors:active){
+  body:not(.auth-pending) :where(button,a,input,select,textarea,[tabindex]):focus-visible{
+    outline:2px solid Highlight!important;
+    box-shadow:none!important;
+  }
+}
