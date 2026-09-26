@@ -1,0 +1,229 @@
+/* FinalForge Desktop Auth v6 — deterministic PC/laptop auth surface.
+   Loaded last on desktop so light/dark themes cannot be split by older auth layers. */
+@media (min-width:901px){
+  body.auth-pending{
+    min-height:100dvh!important;
+    overflow:auto!important;
+  }
+
+  body.auth-pending #authGate{
+    min-height:100dvh!important;
+    display:grid!important;
+    place-items:center!important;
+    padding:clamp(20px,2.5vw,44px)!important;
+    overflow:auto!important;
+  }
+
+  body.auth-pending .auth-shell{
+    width:min(1680px,calc(100vw - clamp(40px,5vw,88px)))!important;
+    min-height:min(800px,calc(100dvh - clamp(40px,5vw,88px)))!important;
+    height:min(900px,calc(100dvh - clamp(40px,5vw,88px)))!important;
+    max-height:900px!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1.28fr) minmax(500px,.92fr)!important;
+    border-radius:28px!important;
+    overflow:hidden!important;
+    isolation:isolate!important;
+  }
+
+  body.auth-pending .auth-brand-panel{
+    min-width:0!important;
+    min-height:0!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+    padding:clamp(46px,5vw,82px)!important;
+    overflow:hidden!important;
+  }
+
+  body.auth-pending .ff-auth-photo{
+    inset:0!important;
+    opacity:1!important;
+    filter:none!important;
+    transform:none!important;
+    background-position:58% 50%!important;
+    background-size:cover!important;
+  }
+  body.auth-pending .ff-auth-photo::after{
+    background:
+      linear-gradient(90deg,rgba(2,9,19,.93) 0%,rgba(3,11,23,.77) 46%,rgba(5,11,22,.42) 100%),
+      linear-gradient(0deg,rgba(2,7,14,.48),transparent 58%)!important;
+  }
+
+  body.auth-pending .ff-auth-brandbar,
+  body.auth-pending .ff-auth-brandcontent,
+  body.auth-pending .ff-auth-foot{position:relative!important;z-index:3!important}
+  body.auth-pending .ff-auth-brandlockup,
+  body.auth-pending .ff-auth-brandlockup span{color:#f8fbff!important}
+  body.auth-pending .ff-auth-help{color:#c5d3e4!important}
+  body.auth-pending .auth-brand-panel h1{
+    color:#f8fbff!important;
+    text-shadow:0 12px 34px rgba(0,0,0,.28)!important;
+  }
+  body.auth-pending .auth-brand-panel .gradient-text{
+    background:linear-gradient(92deg,#78b9ff 0%,#8da6ff 42%,#b06ee5 100%)!important;
+    -webkit-background-clip:text!important;
+    background-clip:text!important;
+    color:transparent!important;
+  }
+  body.auth-pending .ff-auth-brandcontent>p{color:#d2ddeb!important}
+  body.auth-pending .auth-points span{
+    color:#eef5ff!important;
+    background:rgba(4,14,28,.56)!important;
+    border-color:rgba(135,179,231,.18)!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+  body.auth-pending .ff-auth-foot{color:#aebed1!important}
+
+  body.auth-pending .auth-card{
+    min-width:0!important;
+    min-height:0!important;
+    height:100%!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+    padding:clamp(44px,4vw,72px)!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    border:0!important;
+    border-left:1px solid transparent!important;
+    border-radius:0!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+
+  body.auth-pending .auth-view{width:100%!important;max-width:none!important}
+  body.auth-pending .auth-tabs,
+  body.auth-pending .auth-role-toggle{width:100%!important}
+  body.auth-pending .auth-view input{width:100%!important;font-size:16px!important}
+  body.auth-pending .auth-submit{width:100%!important}
+
+  /* Dark desktop */
+  html[data-theme="dark"] body.auth-pending #authGate{
+    background:linear-gradient(135deg,#030914 0%,#07111f 50%,#081426 100%)!important;
+  }
+  html[data-theme="dark"] body.auth-pending .auth-shell{
+    background:#07111f!important;
+    border:1px solid #20324a!important;
+    box-shadow:0 34px 90px rgba(0,0,0,.48)!important;
+  }
+  html[data-theme="dark"] body.auth-pending .auth-brand-panel{
+    background:#07111f!important;
+    border-right:1px solid #20324a!important;
+  }
+  html[data-theme="dark"] body.auth-pending .auth-card{
+    background:linear-gradient(180deg,#081322 0%,#07101d 100%)!important;
+    color:#edf5ff!important;
+    border-left-color:#20324a!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] body.auth-pending .ff-auth-intro h2,
+  html[data-theme="dark"] body.auth-pending .auth-view h2,
+  html[data-theme="dark"] body.auth-pending .auth-view label{color:#eef5ff!important}
+  html[data-theme="dark"] body.auth-pending .ff-auth-intro p,
+  html[data-theme="dark"] body.auth-pending .muted,
+  html[data-theme="dark"] body.auth-pending .ff-auth-security{color:#91a5bd!important}
+  html[data-theme="dark"] body.auth-pending .auth-tabs,
+  html[data-theme="dark"] body.auth-pending .auth-role-toggle{
+    background:#07111e!important;
+    border-color:#1f344d!important;
+  }
+  html[data-theme="dark"] body.auth-pending .auth-tabs>button,
+  html[data-theme="dark"] body.auth-pending .auth-role-toggle>button{color:#8195ad!important}
+  html[data-theme="dark"] body.auth-pending .auth-tabs>button.active,
+  html[data-theme="dark"] body.auth-pending .auth-role-toggle>button.active{color:#fff!important}
+  html[data-theme="dark"] body.auth-pending .auth-view input{
+    background:#071321!important;
+    border-color:#233950!important;
+    color:#f5f8fd!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] body.auth-pending .auth-view input::placeholder{color:#71859d!important}
+  html[data-theme="dark"] body.auth-pending .password-wrap button{
+    background:#0b1a2a!important;
+    color:#9db1c8!important;
+    border-color:#233950!important;
+  }
+  html[data-theme="dark"] .ff-auth-theme-toggle{
+    background:#0a1626!important;
+    color:#dce8f7!important;
+    border-color:#243850!important;
+  }
+
+  /* Light desktop: keep the photographic brand panel dark for contrast, and make
+     the form panel genuinely light instead of mixing a dark card with light inputs. */
+  html[data-theme="light"] body.auth-pending #authGate{
+    background:linear-gradient(135deg,#f5f8fc 0%,#edf3f9 52%,#eef7fb 100%)!important;
+  }
+  html[data-theme="light"] body.auth-pending .auth-shell{
+    background:#fff!important;
+    border:1px solid #d6e2ee!important;
+    box-shadow:0 30px 82px rgba(43,68,102,.16)!important;
+  }
+  html[data-theme="light"] body.auth-pending .auth-brand-panel{
+    background:#07111f!important;
+    border-right:1px solid rgba(255,255,255,.08)!important;
+  }
+  html[data-theme="light"] body.auth-pending .auth-card{
+    background:linear-gradient(180deg,#ffffff 0%,#f7faff 100%)!important;
+    color:#172840!important;
+    border-left-color:#d9e5f0!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="light"] body.auth-pending .ff-auth-intro h2,
+  html[data-theme="light"] body.auth-pending .auth-view h2,
+  html[data-theme="light"] body.auth-pending .auth-view label{color:#172840!important}
+  html[data-theme="light"] body.auth-pending .ff-auth-intro p,
+  html[data-theme="light"] body.auth-pending .muted,
+  html[data-theme="light"] body.auth-pending .ff-auth-security{color:#667a91!important}
+  html[data-theme="light"] body.auth-pending .auth-tabs,
+  html[data-theme="light"] body.auth-pending .auth-role-toggle{
+    background:#eef4fa!important;
+    border-color:#d4e0ec!important;
+  }
+  html[data-theme="light"] body.auth-pending .auth-tabs>button,
+  html[data-theme="light"] body.auth-pending .auth-role-toggle>button{color:#687d94!important}
+  html[data-theme="light"] body.auth-pending .auth-tabs>button.active,
+  html[data-theme="light"] body.auth-pending .auth-role-toggle>button.active{color:#fff!important}
+  html[data-theme="light"] body.auth-pending .auth-view input{
+    background:#fff!important;
+    border-color:#cbd9e7!important;
+    color:#172840!important;
+    box-shadow:0 1px 0 rgba(255,255,255,.8) inset!important;
+  }
+  html[data-theme="light"] body.auth-pending .auth-view input:hover{background:#fbfdff!important;border-color:#aec3d8!important}
+  html[data-theme="light"] body.auth-pending .auth-view input:focus{
+    background:#fff!important;
+    border-color:#4a8ff0!important;
+    box-shadow:0 0 0 3px rgba(61,132,232,.12)!important;
+  }
+  html[data-theme="light"] body.auth-pending .auth-view input::placeholder{color:#8a9bad!important}
+  html[data-theme="light"] body.auth-pending .password-wrap button{
+    background:#f4f8fc!important;
+    color:#5e738b!important;
+    border-color:#cbd9e7!important;
+  }
+  html[data-theme="light"] body.auth-pending .text-btn{color:#2f72d9!important}
+  html[data-theme="light"] body.auth-pending .ff-remember{color:#40566f!important}
+  html[data-theme="light"] .ff-auth-theme-toggle{
+    background:#fff!important;
+    color:#26415f!important;
+    border-color:#d4e0ec!important;
+    box-shadow:0 8px 24px rgba(48,72,102,.12)!important;
+  }
+
+  /* Signup/verify can be taller than login. Keep only the form panel scrollable. */
+  body.auth-pending .auth-card[data-mode="signup"],
+  body.auth-pending .auth-card[data-mode="verify"],
+  body.auth-pending .auth-card[data-mode="reset"]{justify-content:flex-start!important;padding-top:clamp(34px,4vh,58px)!important;padding-bottom:clamp(34px,4vh,58px)!important}
+
+  @media (max-height:760px){
+    body.auth-pending #authGate{padding:16px!important}
+    body.auth-pending .auth-shell{height:calc(100dvh - 32px)!important;min-height:0!important}
+    body.auth-pending .auth-brand-panel{padding:36px 46px!important}
+    body.auth-pending .auth-card{justify-content:flex-start!important;padding:30px 42px!important}
+    body.auth-pending .auth-brand-panel h1{font-size:clamp(3rem,4.8vw,4.5rem)!important}
+    body.auth-pending .auth-points{gap:8px!important}
+  }
+}
