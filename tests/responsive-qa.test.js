@@ -1,9 +1,92 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
+
 const read=path=>readFile(new URL(`../${path}`,import.meta.url),'utf8');
-test('one mobile classifier protects touch-capable desktop PCs',async()=>{const [runtime,cloud,nav,css]=await Promise.all([read('assets/mobile-runtime-final-v1.js'),read('assets/cloud-ui-stability-v1.js'),read('assets/mobile-navigation-runtime-v2.js'),read('assets/mobile-modern-v4.css')]);assert.match(runtime,/window\.finalforgeIsMobile=realMobile/);assert.match(runtime,/viewport<=900/);assert.match(runtime,/physicalShort<=640/);assert.match(runtime,/handheldTouch/);assert.doesNotMatch(css,/\(hover:none\)\s*and\s*\(pointer:coarse\)/);assert.doesNotMatch(css,/max-device-width/);assert.match(cloud,/window\.finalforgeIsMobile/);assert.match(nav,/window\.finalforgeIsMobile/);const classify=({viewport,physicalShort,touch=false,coarse=false})=>viewport<=900||(touch&&coarse&&physicalShort<=640);assert.equal(classify({viewport:1920,physicalShort:1080,touch:true,coarse:true}),false);assert.equal(classify({viewport:1536,physicalShort:864,touch:true,coarse:true}),false);assert.equal(classify({viewport:1366,physicalShort:768,touch:true,coarse:true}),false);assert.equal(classify({viewport:1024,physicalShort:768,touch:true,coarse:true}),false);assert.equal(classify({viewport:800,physicalShort:800}),true);assert.equal(classify({viewport:390,physicalShort:390,touch:true,coarse:true}),true);assert.equal(classify({viewport:980,physicalShort:412,touch:true,coarse:true}),true)});
-test('app.js is the only section router',async()=>{const [app,practice,mobileNav]=await Promise.all([read('assets/app.js'),read('assets/practice-stability-v1.js'),read('assets/mobile-navigation-runtime-v2.js')]);assert.match(app,/function go\(id\)/);assert.match(app,/finalforgeBeforeNavigate/);assert.match(app,/finalforge-after-navigate/);assert.doesNotMatch(practice,/window\.go\s*=/);assert.doesNotMatch(mobileNav,/window\.go\s*=/);assert.match(practice,/window\.finalforgeBeforeNavigate/)});
-test('critical runtime loads deterministically before decorative motion',async()=>{const [loader,reference]=await Promise.all([read('assets/core-loader.js'),read('assets/reference-enhancements.js')]);const device=loader.indexOf("loadScript('assets/mobile-runtime-final-v1.js')");const cloud=loader.indexOf("loadScript('assets/cloud-ui-stability-v1.js')");const practice=loader.indexOf("loadScript('assets/practice-stability-v1.js')");const nav=loader.indexOf("loadScript('assets/mobile-navigation-runtime-v2.js')");const scroll=loader.indexOf("loadScript('assets/mobile-scroll-recovery-v1.js')");const workspace=loader.indexOf("loadScript('assets/professional-workspace-v2.js')");const motion=loader.indexOf("loadScript('assets/product-motion-v5.js')");assert.ok(device>=0&&cloud>device);assert.ok(practice>cloud&&nav>practice&&scroll>nav);assert.ok(workspace>scroll,'professional presentation must load after functional runtime ownership');assert.ok(motion>workspace);assert.match(loader,/if\(!window\.finalforgeIsMobile\?\.\(\)\)await loadScript\('assets\/product-motion-v5\.js'\)/);assert.doesNotMatch(reference,/mobile-runtime-final-v1\.js/);assert.doesNotMatch(reference,/mobile-scroll-recovery-v1\.js/);assert.doesNotMatch(reference,/mobile-navigation-runtime-v2\.js/);assert.doesNotMatch(reference,/practice-stability-v1\.js/)});
-test('cloud render queues are independent and Practice first render cannot be suppressed',async()=>{const cloud=await read('assets/cloud-ui-stability-v1.js');assert.match(cloud,/let pendingTimer=0/);assert.match(cloud,/if\(!isPopulated\(\)\)/);assert.match(cloud,/return original\.apply\(this,args\)/);assert.match(cloud,/practicePopulated/)});
-test('service worker carries the consolidated runtime and professional workspace',async()=>{const worker=await read('sw.js');assert.match(worker,/finalforge-v47-professional-workspace/);for(const asset of ['mobile-modern-v4.css','mobile-runtime-final-v1.js','mobile-scroll-recovery-v1.js','mobile-navigation-runtime-v2.js','practice-stability-v1.js','cloud-ui-stability-v1.js','professional-workspace-v2.css','professional-workspace-v2.js'])assert.ok(worker.includes(asset),`${asset} must be cached`)});
+
+test('one mobile classifier protects touch-capable desktop PCs',async()=>{
+  const [runtime,cloud,nav,css]=await Promise.all([
+    read('assets/mobile-runtime-final-v1.js'),
+    read('assets/cloud-ui-stability-v1.js'),
+    read('assets/mobile-navigation-runtime-v2.js'),
+    read('assets/mobile-modern-v4.css')
+  ]);
+  assert.match(runtime,/window\.finalforgeIsMobile=realMobile/);
+  assert.match(runtime,/viewport<=900/);
+  assert.match(runtime,/physicalShort<=640/);
+  assert.match(runtime,/handheldTouch/);
+  assert.doesNotMatch(css,/\(hover:none\)\s*and\s*\(pointer:coarse\)/);
+  assert.doesNotMatch(css,/max-device-width/);
+  assert.match(cloud,/window\.finalforgeIsMobile/);
+  assert.match(nav,/window\.finalforgeIsMobile/);
+  const classify=({viewport,physicalShort,touch=false,coarse=false})=>viewport<=900||(touch&&coarse&&physicalShort<=640);
+  assert.equal(classify({viewport:1920,physicalShort:1080,touch:true,coarse:true}),false);
+  assert.equal(classify({viewport:1536,physicalShort:864,touch:true,coarse:true}),false);
+  assert.equal(classify({viewport:1366,physicalShort:768,touch:true,coarse:true}),false);
+  assert.equal(classify({viewport:1024,physicalShort:768,touch:true,coarse:true}),false);
+  assert.equal(classify({viewport:800,physicalShort:800}),true);
+  assert.equal(classify({viewport:390,physicalShort:390,touch:true,coarse:true}),true);
+  assert.equal(classify({viewport:980,physicalShort:412,touch:true,coarse:true}),true);
+});
+
+test('app.js is the only section router',async()=>{
+  const [app,practice,mobileNav]=await Promise.all([
+    read('assets/app.js'),
+    read('assets/practice-stability-v1.js'),
+    read('assets/mobile-navigation-runtime-v2.js')
+  ]);
+  assert.match(app,/function go\(id\)/);
+  assert.match(app,/finalforgeBeforeNavigate/);
+  assert.match(app,/finalforge-after-navigate/);
+  assert.doesNotMatch(practice,/window\.go\s*=/);
+  assert.doesNotMatch(mobileNav,/window\.go\s*=/);
+  assert.match(practice,/window\.finalforgeBeforeNavigate/);
+});
+
+test('critical runtime loads deterministically before decorative motion',async()=>{
+  const [loader,reference]=await Promise.all([
+    read('assets/core-loader.js'),
+    read('assets/reference-enhancements.js')
+  ]);
+  const device=loader.indexOf("loadScript('assets/mobile-runtime-final-v1.js')");
+  const cloud=loader.indexOf("loadScript('assets/cloud-ui-stability-v1.js')");
+  const practice=loader.indexOf("loadScript('assets/practice-stability-v1.js')");
+  const nav=loader.indexOf("loadScript('assets/mobile-navigation-runtime-v2.js')");
+  const scroll=loader.indexOf("loadScript('assets/mobile-scroll-recovery-v1.js')");
+  const workspace=loader.indexOf("loadScript('assets/professional-workspace-v2.js')");
+  const motion=loader.indexOf("loadScript('assets/product-motion-v5.js')");
+  assert.ok(device>=0&&cloud>device);
+  assert.ok(practice>cloud&&nav>practice&&scroll>nav);
+  assert.ok(workspace>scroll,'professional presentation must load after functional runtime ownership');
+  assert.ok(motion>workspace);
+  assert.match(loader,/if\(!window\.finalforgeIsMobile\?\.\(\)\)await loadScript\('assets\/product-motion-v5\.js'\)/);
+  assert.doesNotMatch(reference,/mobile-runtime-final-v1\.js/);
+  assert.doesNotMatch(reference,/mobile-scroll-recovery-v1\.js/);
+  assert.doesNotMatch(reference,/mobile-navigation-runtime-v2\.js/);
+  assert.doesNotMatch(reference,/practice-stability-v1\.js/);
+});
+
+test('cloud render queues are independent and Practice first render cannot be suppressed',async()=>{
+  const cloud=await read('assets/cloud-ui-stability-v1.js');
+  assert.match(cloud,/let pendingTimer=0/);
+  assert.match(cloud,/if\(!isPopulated\(\)\)/);
+  assert.match(cloud,/return original\.apply\(this,args\)/);
+  assert.match(cloud,/practicePopulated/);
+});
+
+test('service worker carries the consolidated runtime and professional hardening',async()=>{
+  const worker=await read('sw.js');
+  assert.match(worker,/finalforge-v48-professional-hardening/);
+  for(const asset of [
+    'mobile-modern-v4.css',
+    'mobile-runtime-final-v1.js',
+    'mobile-scroll-recovery-v1.js',
+    'mobile-navigation-runtime-v2.js',
+    'practice-stability-v1.js',
+    'cloud-ui-stability-v1.js',
+    'professional-workspace-v2.css',
+    'professional-accessibility-v1.css',
+    'professional-workspace-v2.js'
+  ])assert.ok(worker.includes(asset),`${asset} must be cached`);
+  assert.match(worker,/typeof AbortSignal\.timeout==='function'/);
+});
