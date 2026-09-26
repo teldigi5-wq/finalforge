@@ -78,12 +78,12 @@ document.documentElement.classList.add('ff-auth-restoring');
   const loadScript=src=>new Promise((resolve,reject)=>{
     const existing=[...document.scripts].find(s=>s.src&&s.src.includes(src));
     if(existing){if(existing.dataset.ffLoaded==='1'||existing.readyState==='complete')return resolve();existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',()=>reject(new Error(`Could not load ${src}`)),{once:true});return;}
-    const s=document.createElement('script');s.src=src.startsWith('assets/')?`${src}?v=session-v1`:src;s.async=true;s.onload=()=>{s.dataset.ffLoaded='1';resolve()};s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s);
+    const s=document.createElement('script');s.src=src.startsWith('assets/')?`${src}?v=mobile-auth-v5`:src;s.async=true;s.onload=()=>{s.dataset.ffLoaded='1';resolve()};s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s);
   });
   const loadStyle=href=>new Promise((resolve,reject)=>{
     const existing=[...document.querySelectorAll('link[rel="stylesheet"]')].find(l=>l.href&&l.href.includes(href));
     if(existing){if(existing.sheet)return resolve();existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',()=>reject(new Error(`Could not load ${href}`)),{once:true});return;}
-    const l=document.createElement('link');l.rel='stylesheet';l.href=`${href}?v=session-v1`;l.onload=resolve;l.onerror=()=>reject(new Error(`Could not load ${href}`));document.head.appendChild(l);
+    const l=document.createElement('link');l.rel='stylesheet';l.href=`${href}?v=mobile-auth-v5`;l.onload=resolve;l.onerror=()=>reject(new Error(`Could not load ${href}`));document.head.appendChild(l);
   });
   const preconnect=href=>{if(document.querySelector(`link[rel="preconnect"][href="${href}"]`))return;const l=document.createElement('link');l.rel='preconnect';l.href=href;l.crossOrigin='anonymous';document.head.appendChild(l)};
 
@@ -109,7 +109,8 @@ document.documentElement.classList.add('ff-auth-restoring');
       loadStyle('assets/auth-neon-rounded-v1.css'),
       loadStyle('assets/past-papers-v1.css'),
       loadStyle('assets/student-experience-v2.css'),
-      loadStyle('assets/visual-system-v2.css')
+      loadStyle('assets/visual-system-v2.css'),
+      loadStyle('assets/mobile-auth-v5.css')
     ]);
 
     const firebaseSdkReady=(async()=>{

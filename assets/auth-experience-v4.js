@@ -12,8 +12,8 @@
 
   const copy={
     login:{eyebrow:'Secure student access',title:'Welcome back',text:'Continue exactly where you left off.'},
-    signup:{eyebrow:'Approved students only',title:'Create your FinalForge account',text:'Use your Student ID. Your SLIIT mailbox is generated automatically for verification.'},
-    verify:{eyebrow:'One last step',title:'Verify your SLIIT email',text:'Open the verification link in your SLIIT inbox, then return here.'},
+    signup:{eyebrow:'Approved students only',title:'Create your FinalForge account',text:'Enter your Student ID and confirm the matching SLIIT email you can actually access.'},
+    verify:{eyebrow:'One last step',title:'Verify your SLIIT email',text:'Check the exact SLIIT mailbox shown below, including Junk or Spam, then return here.'},
     reset:{eyebrow:'Account recovery',title:'Reset your password',text:'We will send the reset link to the SLIIT mailbox tied to your Student ID.'}
   };
 
