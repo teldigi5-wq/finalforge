@@ -1,0 +1,224 @@
+/* FinalForge Visual System v2 — balanced dark/light palettes and shared interaction language. */
+:root{
+  --ff-bg:#07111f;
+  --ff-bg-elev:#0b1526;
+  --ff-surface:#0f1b2d;
+  --ff-surface-2:#132136;
+  --ff-surface-3:#182941;
+  --ff-text:#edf5ff;
+  --ff-text-strong:#f8fbff;
+  --ff-muted:#96a9c0;
+  --ff-line:#223650;
+  --ff-line-strong:#31506f;
+  --ff-primary:#6c63ff;
+  --ff-primary-2:#3f8cff;
+  --ff-cyan:#38c7e8;
+  --ff-success:#34d399;
+  --ff-warning:#f6b95f;
+  --ff-danger:#fb7185;
+  --ff-shadow:0 18px 50px rgba(0,0,0,.24);
+  --ff-shadow-soft:0 10px 28px rgba(0,0,0,.14);
+  --ff-focus:0 0 0 3px rgba(79,142,255,.18),0 0 0 1px rgba(105,99,255,.54);
+  --ff-grad:linear-gradient(112deg,#7567ff 0%,#4d7dff 50%,#2ec7df 100%);
+  --ff-grad-soft:linear-gradient(145deg,rgba(108,99,255,.14),rgba(56,199,232,.08));
+}
+html[data-theme="light"]{
+  --ff-bg:#f4f7fb;
+  --ff-bg-elev:#eef3f9;
+  --ff-surface:#ffffff;
+  --ff-surface-2:#f8fbff;
+  --ff-surface-3:#eef5ff;
+  --ff-text:#1a2940;
+  --ff-text-strong:#102039;
+  --ff-muted:#64748b;
+  --ff-line:#d9e4f0;
+  --ff-line-strong:#c2d4e7;
+  --ff-primary:#5b57e8;
+  --ff-primary-2:#3176e8;
+  --ff-cyan:#0ea5c6;
+  --ff-success:#0f9f6e;
+  --ff-warning:#c77817;
+  --ff-danger:#dc4963;
+  --ff-shadow:0 18px 50px rgba(33,63,97,.10);
+  --ff-shadow-soft:0 10px 28px rgba(33,63,97,.08);
+  --ff-focus:0 0 0 3px rgba(49,118,232,.12),0 0 0 1px rgba(91,87,232,.46);
+  --ff-grad:linear-gradient(112deg,#675ee8 0%,#397ce8 52%,#16a8c4 100%);
+  --ff-grad-soft:linear-gradient(145deg,rgba(103,94,232,.08),rgba(22,168,196,.06));
+}
+
+html,body{background:var(--ff-bg)!important;color:var(--ff-text)!important}
+body:not(.auth-pending),body:not(.auth-pending) .app,body:not(.auth-pending) .main{background:var(--ff-bg)!important;color:var(--ff-text)!important}
+body:not(.auth-pending) .main{background-image:radial-gradient(900px 500px at 85% -10%,rgba(80,105,255,.07),transparent 62%)!important}
+html[data-theme="light"] body:not(.auth-pending) .main{background-image:radial-gradient(800px 480px at 85% -8%,rgba(83,120,255,.07),transparent 62%),linear-gradient(180deg,#f7f9fc 0%,#f4f7fb 100%)!important}
+
+/* Surfaces */
+body:not(.auth-pending) .sidebar,
+body:not(.auth-pending) .topbar,
+body:not(.auth-pending) .mobile-nav{background:color-mix(in srgb,var(--ff-surface) 92%,transparent)!important;border-color:var(--ff-line)!important;color:var(--ff-text)!important}
+body:not(.auth-pending) .topbar{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 1px 0 rgba(255,255,255,.025),0 10px 32px rgba(0,0,0,.08)}
+html[data-theme="light"] body:not(.auth-pending) .topbar{box-shadow:0 1px 0 rgba(23,50,82,.05),0 10px 30px rgba(47,76,112,.06)}
+
+body:not(.auth-pending) .card,
+body:not(.auth-pending) .module-card,
+body:not(.auth-pending) .planner-card,
+body:not(.auth-pending) .exam-card,
+body:not(.auth-pending) .paper-card,
+body:not(.auth-pending) .past-card,
+body:not(.auth-pending) .admin-panel,
+body:not(.auth-pending) .side-card,
+body:not(.auth-pending) .resource,
+body:not(.auth-pending) .task,
+body:not(.auth-pending) .security-list>div{
+  background:linear-gradient(155deg,var(--ff-surface),color-mix(in srgb,var(--ff-surface-2) 76%,var(--ff-surface)))!important;
+  border-color:var(--ff-line)!important;
+  color:var(--ff-text)!important;
+  box-shadow:var(--ff-shadow-soft)!important;
+}
+body:not(.auth-pending) .card:hover,
+body:not(.auth-pending) .module-card:hover,
+body:not(.auth-pending) .resource:hover,
+body:not(.auth-pending) .past-card:hover{
+  border-color:color-mix(in srgb,var(--ff-primary-2) 42%,var(--ff-line))!important;
+  transform:translateY(-1px);
+  box-shadow:var(--ff-shadow)!important;
+}
+html[data-theme="light"] body:not(.auth-pending) .card,
+html[data-theme="light"] body:not(.auth-pending) .module-card,
+html[data-theme="light"] body:not(.auth-pending) .planner-card,
+html[data-theme="light"] body:not(.auth-pending) .exam-card,
+html[data-theme="light"] body:not(.auth-pending) .paper-card,
+html[data-theme="light"] body:not(.auth-pending) .past-card,
+html[data-theme="light"] body:not(.auth-pending) .admin-panel,
+html[data-theme="light"] body:not(.auth-pending) .resource{box-shadow:0 12px 30px rgba(46,74,109,.075)!important}
+
+body:not(.auth-pending) h1,body:not(.auth-pending) h2,body:not(.auth-pending) h3,body:not(.auth-pending) h4,body:not(.auth-pending) b,body:not(.auth-pending) strong{color:var(--ff-text-strong)}
+body:not(.auth-pending) .muted,body:not(.auth-pending) small{color:var(--ff-muted)!important}
+body:not(.auth-pending) .gradient-text{background:var(--ff-grad)!important;-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important}
+
+/* Buttons */
+body:not(.auth-pending) .btn,
+body:not(.auth-pending) button.btn,
+body:not(.auth-pending) .account-menu-btn,
+body:not(.auth-pending) .filter-btn{
+  border:1px solid var(--ff-line)!important;
+  background:var(--ff-surface-2)!important;
+  color:var(--ff-text)!important;
+  box-shadow:0 5px 14px rgba(0,0,0,.08)!important;
+  transition:transform .16s ease,border-color .16s ease,background .16s ease,box-shadow .16s ease,filter .16s ease!important;
+}
+body:not(.auth-pending) .btn:hover,
+body:not(.auth-pending) button.btn:hover,
+body:not(.auth-pending) .account-menu-btn:hover,
+body:not(.auth-pending) .filter-btn:hover{
+  transform:translateY(-1px);
+  border-color:color-mix(in srgb,var(--ff-primary-2) 48%,var(--ff-line))!important;
+  background:var(--ff-surface-3)!important;
+  box-shadow:0 9px 22px rgba(0,0,0,.12)!important;
+}
+body:not(.auth-pending) .btn.primary,
+body:not(.auth-pending) button.btn.primary,
+body:not(.auth-pending) .filter-btn.active{
+  color:#fff!important;
+  border-color:transparent!important;
+  background:var(--ff-grad)!important;
+  box-shadow:0 10px 24px rgba(64,104,233,.24)!important;
+}
+body:not(.auth-pending) .btn.primary:hover,
+body:not(.auth-pending) button.btn.primary:hover{filter:brightness(1.07) saturate(1.05);box-shadow:0 13px 30px rgba(64,104,233,.30)!important}
+body:not(.auth-pending) .btn.ghost{background:transparent!important;color:var(--ff-muted)!important}
+body:not(.auth-pending) .btn.danger,.account-menu-btn.danger{color:#fff!important;background:linear-gradient(112deg,#e95d75,#c83f59)!important;border-color:transparent!important}
+body:not(.auth-pending) button:focus-visible,body:not(.auth-pending) a:focus-visible,body:not(.auth-pending) input:focus-visible,body:not(.auth-pending) select:focus-visible,body:not(.auth-pending) textarea:focus-visible{outline:0!important;box-shadow:var(--ff-focus)!important}
+
+/* Navigation */
+body:not(.auth-pending) .nav button,body:not(.auth-pending) .mobile-nav button{color:var(--ff-muted)!important;border:1px solid transparent!important}
+body:not(.auth-pending) .nav button:hover,body:not(.auth-pending) .mobile-nav button:hover{color:var(--ff-text)!important;background:var(--ff-surface-2)!important}
+body:not(.auth-pending) .nav button.active,body:not(.auth-pending) .mobile-nav button.active{color:var(--ff-text-strong)!important;background:var(--ff-grad-soft)!important;border-color:color-mix(in srgb,var(--ff-primary) 24%,var(--ff-line))!important;box-shadow:inset 3px 0 0 var(--ff-primary-2)!important}
+@media(max-width:900px){body:not(.auth-pending) .mobile-nav button.active{box-shadow:inset 0 2px 0 var(--ff-primary-2)!important}}
+
+/* Inputs, search and tables */
+body:not(.auth-pending) input,body:not(.auth-pending) select,body:not(.auth-pending) textarea,
+body:not(.auth-pending) .ff-v2-search-trigger{
+  background:var(--ff-surface-2)!important;
+  color:var(--ff-text)!important;
+  border-color:var(--ff-line)!important;
+}
+body:not(.auth-pending) input::placeholder,body:not(.auth-pending) textarea::placeholder{color:color-mix(in srgb,var(--ff-muted) 72%,transparent)!important}
+body:not(.auth-pending) input:focus,body:not(.auth-pending) select:focus,body:not(.auth-pending) textarea:focus{border-color:color-mix(in srgb,var(--ff-primary-2) 64%,var(--ff-line))!important;box-shadow:var(--ff-focus)!important}
+body:not(.auth-pending) .admin-table-wrap,body:not(.auth-pending) .admin-table{background:var(--ff-surface)!important;border-color:var(--ff-line)!important;color:var(--ff-text)!important}
+body:not(.auth-pending) .admin-table th{background:var(--ff-surface-2)!important;color:var(--ff-muted)!important;border-color:var(--ff-line)!important}
+body:not(.auth-pending) .admin-table td{background:var(--ff-surface)!important;color:var(--ff-text)!important;border-color:var(--ff-line)!important}
+
+/* Chips, status and progress */
+body:not(.auth-pending) .pill,body:not(.auth-pending) .chip{background:var(--ff-surface-2)!important;color:var(--ff-muted)!important;border-color:var(--ff-line)!important}
+body:not(.auth-pending) .status-active,body:not(.auth-pending) .live-dot{background:color-mix(in srgb,var(--ff-success) 13%,var(--ff-surface))!important;color:var(--ff-success)!important;border-color:color-mix(in srgb,var(--ff-success) 34%,var(--ff-line))!important}
+body:not(.auth-pending) .progressbar{background:var(--ff-surface-3)!important;border:1px solid var(--ff-line)!important}
+body:not(.auth-pending) .progressbar>i,body:not(.auth-pending) .progressbar>span{background:var(--ff-grad)!important}
+body:not(.auth-pending) .module-icon,body:not(.auth-pending) .ff-v2-card-icon,body:not(.auth-pending) .ff-v2-result-icon{background:var(--ff-grad-soft)!important;color:var(--ff-primary-2)!important;border-color:color-mix(in srgb,var(--ff-primary-2) 26%,var(--ff-line))!important}
+body:not(.auth-pending) .stat strong{background:var(--ff-grad)!important;-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important}
+
+/* V2 command center and palette */
+body:not(.auth-pending) .ff-v2-study-card::before{background:linear-gradient(90deg,transparent,var(--ff-cyan),var(--ff-primary),transparent)!important;opacity:.55}
+body:not(.auth-pending) .ff-v2-progress-ring{background:conic-gradient(var(--ff-cyan) calc(var(--p)*1%),color-mix(in srgb,var(--ff-line) 72%,transparent) 0)!important}
+body:not(.auth-pending) .ff-v2-progress-ring::after{background:var(--ff-surface)!important}
+body:not(.auth-pending) .ff-v2-urgency{background:color-mix(in srgb,var(--ff-cyan) 12%,var(--ff-surface))!important;color:var(--ff-cyan)!important;border-color:color-mix(in srgb,var(--ff-cyan) 30%,var(--ff-line))!important}
+body:not(.auth-pending) .ff-v2-urgency.soon{background:color-mix(in srgb,var(--ff-warning) 12%,var(--ff-surface))!important;color:var(--ff-warning)!important;border-color:color-mix(in srgb,var(--ff-warning) 30%,var(--ff-line))!important}
+body:not(.auth-pending) .ff-v2-urgency.urgent{background:color-mix(in srgb,var(--ff-danger) 12%,var(--ff-surface))!important;color:var(--ff-danger)!important;border-color:color-mix(in srgb,var(--ff-danger) 30%,var(--ff-line))!important}
+.ff-v2-palette{background:color-mix(in srgb,var(--ff-bg) 76%,transparent)!important}
+.ff-v2-palette-shell{background:linear-gradient(180deg,var(--ff-surface),var(--ff-bg-elev))!important;border-color:var(--ff-line)!important;box-shadow:var(--ff-shadow)!important}
+.ff-v2-palette-search,.ff-v2-palette-foot{border-color:var(--ff-line)!important}
+.ff-v2-palette-search input{color:var(--ff-text)!important}
+.ff-v2-result{color:var(--ff-text)!important}
+.ff-v2-result:hover,.ff-v2-result.active{background:var(--ff-grad-soft)!important;outline:1px solid color-mix(in srgb,var(--ff-primary-2) 22%,var(--ff-line))!important}
+.ff-v2-result-copy small,.ff-v2-result-type,.ff-v2-palette-foot{color:var(--ff-muted)!important}
+
+/* Auth theme toggle */
+.ff-auth-theme-toggle{position:absolute;right:18px;top:18px;z-index:30;width:42px;height:42px;display:grid;place-items:center;border-radius:13px;border:1px solid rgba(145,174,214,.18);background:rgba(7,16,29,.74);color:#dce8f7;box-shadow:0 10px 30px rgba(0,0,0,.20);cursor:pointer;transition:transform .16s ease,border-color .16s ease,background .16s ease}
+.ff-auth-theme-toggle:hover{transform:translateY(-1px);border-color:rgba(95,184,255,.42);background:rgba(12,25,45,.9)}
+.ff-auth-theme-toggle svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* Auth — dark */
+html[data-theme="dark"] body.auth-pending #authGate{background:linear-gradient(135deg,#040911 0%,#07111e 48%,#091326 100%)!important}
+html[data-theme="dark"] body.auth-pending .auth-shell{background:linear-gradient(145deg,#08131f,#050b14)!important;border-color:rgba(135,164,208,.18)!important;box-shadow:0 34px 90px rgba(0,0,0,.46)!important}
+html[data-theme="dark"] body.auth-pending .auth-brand-panel{background:linear-gradient(145deg,#0b1a2c 0%,#0a1726 52%,#07111d 100%)!important}
+html[data-theme="dark"] body.auth-pending .auth-card{background:linear-gradient(165deg,rgba(12,25,44,.94),rgba(7,14,27,.97))!important;color:#eef5ff!important;border-left:1px solid rgba(137,169,213,.12)!important}
+html[data-theme="dark"] body.auth-pending .auth-tabs,html[data-theme="dark"] body.auth-pending .auth-role-toggle{background:rgba(5,13,25,.72)!important;border-color:rgba(135,166,211,.16)!important}
+html[data-theme="dark"] body.auth-pending .auth-view input{background:rgba(4,12,24,.76)!important;border-color:rgba(135,166,211,.18)!important;color:#f3f7fd!important}
+html[data-theme="dark"] body.auth-pending .auth-view input:focus{border-color:#55b8ff!important;box-shadow:0 0 0 3px rgba(80,155,255,.12),0 0 0 1px rgba(115,92,255,.46)!important}
+html[data-theme="dark"] body.auth-pending .auth-submit{background:var(--ff-grad)!important;box-shadow:0 12px 30px rgba(70,96,233,.30)!important}
+
+/* Auth — light */
+html[data-theme="light"] body.auth-pending{background:#edf3f9!important;color:#1c2b42!important}
+html[data-theme="light"] body.auth-pending #authGate{background:radial-gradient(760px 540px at 0% 0%,rgba(83,104,236,.10),transparent 62%),radial-gradient(700px 520px at 100% 100%,rgba(23,171,197,.08),transparent 62%),linear-gradient(135deg,#f8fbff,#eef4fa)!important}
+html[data-theme="light"] body.auth-pending #authGate::before{opacity:.42!important;background-image:linear-gradient(rgba(57,87,123,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(57,87,123,.045) 1px,transparent 1px)!important}
+html[data-theme="light"] body.auth-pending .auth-shell{background:#fff!important;border-color:#d9e4f0!important;box-shadow:0 34px 90px rgba(47,75,111,.14)!important}
+html[data-theme="light"] body.auth-pending .auth-brand-panel{background:linear-gradient(145deg,#edf5ff 0%,#f7fbff 56%,#eef6ff 100%)!important;border-color:#dbe6f1!important}
+html[data-theme="light"] body.auth-pending .ff-auth-photo{opacity:.20!important;filter:saturate(.75) contrast(.95)!important}
+html[data-theme="light"] body.auth-pending .auth-brand-panel h1{color:#15263e!important}
+html[data-theme="light"] body.auth-pending .ff-auth-brandcontent>p,html[data-theme="light"] body.auth-pending .ff-auth-foot,html[data-theme="light"] body.auth-pending .ff-auth-help{color:#65788e!important}
+html[data-theme="light"] body.auth-pending .auth-points span{background:rgba(255,255,255,.72)!important;border-color:#d7e4f1!important;color:#536a82!important}
+html[data-theme="light"] body.auth-pending .ff-auth-brandlockup,html[data-theme="light"] body.auth-pending .ff-auth-brandlockup span{color:#182a43!important}
+html[data-theme="light"] body.auth-pending .auth-card{background:linear-gradient(180deg,#ffffff,#f8fbff)!important;color:#172840!important;border-left:1px solid #dbe6f1!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html[data-theme="light"] body.auth-pending .ff-auth-intro h2,html[data-theme="light"] body.auth-pending .auth-view label,html[data-theme="light"] body.auth-pending .auth-view h2{color:#172840!important}
+html[data-theme="light"] body.auth-pending .ff-auth-intro p,html[data-theme="light"] body.auth-pending .muted,html[data-theme="light"] body.auth-pending .password-hint,html[data-theme="light"] body.auth-pending .ff-auth-security{color:#6b7e94!important}
+html[data-theme="light"] body.auth-pending .auth-tabs,html[data-theme="light"] body.auth-pending .auth-role-toggle{background:#f1f5fa!important;border-color:#d9e4ef!important}
+html[data-theme="light"] body.auth-pending .auth-tabs button,html[data-theme="light"] body.auth-pending .auth-role-toggle button{color:#687a90!important}
+html[data-theme="light"] body.auth-pending .auth-tabs button.active,html[data-theme="light"] body.auth-pending .auth-role-toggle button.active{color:#172840!important}
+html[data-theme="light"] body.auth-pending .ff-auth-slider{background:linear-gradient(120deg,rgba(87,96,232,.13),rgba(47,143,229,.10))!important;border-color:rgba(74,111,218,.18)!important;box-shadow:0 7px 18px rgba(64,92,134,.08)!important}
+html[data-theme="light"] body.auth-pending .auth-view input{background:#fff!important;border-color:#cfdeec!important;color:#172840!important;box-shadow:inset 0 1px 2px rgba(48,73,101,.03)!important}
+html[data-theme="light"] body.auth-pending .auth-view input::placeholder{color:#99a8b8!important}
+html[data-theme="light"] body.auth-pending .auth-view input:focus{background:#fff!important;border-color:#4b8de8!important;box-shadow:0 0 0 3px rgba(49,118,232,.10),0 0 0 1px rgba(91,87,232,.36)!important}
+html[data-theme="light"] body.auth-pending .auth-submit{background:var(--ff-grad)!important;color:#fff!important;box-shadow:0 12px 28px rgba(67,101,213,.22)!important}
+html[data-theme="light"] body.auth-pending .text-btn{color:#356fd0!important}
+html[data-theme="light"] body.auth-pending .auth-alert{background:#fff5f6!important;border-color:#f1c4cb!important;color:#a33f52!important}
+html[data-theme="light"] body.auth-pending .auth-alert.success{background:#effbf6!important;border-color:#b9e7d3!important;color:#147354!important}
+html[data-theme="light"] .ff-auth-theme-toggle{background:rgba(255,255,255,.9);color:#25405e;border-color:#cfdeeb;box-shadow:0 10px 25px rgba(46,76,111,.10)}
+html[data-theme="light"] .ff-auth-theme-toggle:hover{background:#fff;border-color:#8eb9e3}
+
+/* Less noise on small screens */
+@media(max-width:640px){
+  .ff-auth-theme-toggle{right:14px;top:14px;width:39px;height:39px;border-radius:12px}
+  body:not(.auth-pending) .card:hover,body:not(.auth-pending) .module-card:hover,body:not(.auth-pending) .resource:hover,body:not(.auth-pending) .past-card:hover{transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+  body:not(.auth-pending) .card,body:not(.auth-pending) .module-card,body:not(.auth-pending) .resource,body:not(.auth-pending) .btn,.ff-auth-theme-toggle{transition:none!important}
+}
