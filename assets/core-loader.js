@@ -10,8 +10,66 @@ try{
   document.documentElement.style.colorScheme='dark';
 }
 
+/* Keep login/signup out of the first paint until Firebase has restored the saved session. */
+document.documentElement.classList.add('ff-auth-restoring');
+(()=>{
+  const style=document.createElement('style');
+  style.id='ff-session-restore-critical';
+  style.textContent=`
+    html.ff-auth-restoring body.auth-pending .auth-shell{
+      opacity:0!important;
+      visibility:hidden!important;
+      pointer-events:none!important;
+    }
+    html.ff-auth-restoring body.auth-pending #authGate{
+      display:grid!important;
+      place-items:center!important;
+    }
+    html.ff-auth-restoring body.auth-pending #authGate::after{
+      content:'Restoring your session…'!important;
+      position:fixed!important;
+      z-index:80!important;
+      left:50%!important;
+      top:50%!important;
+      right:auto!important;
+      bottom:auto!important;
+      width:auto!important;
+      height:auto!important;
+      min-width:13rem!important;
+      transform:translate(-50%,-50%)!important;
+      filter:none!important;
+      opacity:1!important;
+      padding:.78rem 1rem .78rem 2.55rem!important;
+      border:1px solid rgba(120,158,213,.22)!important;
+      border-radius:999px!important;
+      background:linear-gradient(135deg,rgba(13,27,47,.96),rgba(8,18,33,.98))!important;
+      color:#dce9f8!important;
+      box-shadow:0 18px 50px rgba(0,0,0,.28)!important;
+      font:750 .82rem/1.2 Inter,ui-sans-serif,system-ui,sans-serif!important;
+      letter-spacing:.01em!important;
+      text-align:center!important;
+      pointer-events:none!important;
+    }
+    html.ff-auth-restoring body.auth-pending #authGate::before{
+      content:''!important;
+    }
+    html[data-theme='light'].ff-auth-restoring body.auth-pending #authGate::after{
+      border-color:#d0deeb!important;
+      background:rgba(255,255,255,.96)!important;
+      color:#27415f!important;
+      box-shadow:0 18px 45px rgba(43,72,107,.14)!important;
+    }
+    @media(prefers-reduced-motion:no-preference){
+      html.ff-auth-restoring body.auth-pending #authGate::after{animation:ffSessionRestorePulse 1.4s ease-in-out infinite alternate!important}
+      @keyframes ffSessionRestorePulse{from{opacity:.72}to{opacity:1}}
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
 (async()=>{
   const fail=(msg)=>{
+    document.documentElement.classList.remove('ff-auth-restoring');
     console.error('[FinalForge]',msg);
     const status=document.getElementById('authBootStatus');if(status){status.textContent='Secure sign-in could not load.';status.classList.add('is-error');}
     const gate=document.getElementById('authGate');
@@ -20,12 +78,12 @@ try{
   const loadScript=src=>new Promise((resolve,reject)=>{
     const existing=[...document.scripts].find(s=>s.src&&s.src.includes(src));
     if(existing){if(existing.dataset.ffLoaded==='1'||existing.readyState==='complete')return resolve();existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',()=>reject(new Error(`Could not load ${src}`)),{once:true});return;}
-    const s=document.createElement('script');s.src=src.startsWith('assets/')?`${src}?v=visual-v2`:src;s.async=true;s.onload=()=>{s.dataset.ffLoaded='1';resolve()};s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s);
+    const s=document.createElement('script');s.src=src.startsWith('assets/')?`${src}?v=session-v1`:src;s.async=true;s.onload=()=>{s.dataset.ffLoaded='1';resolve()};s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s);
   });
   const loadStyle=href=>new Promise((resolve,reject)=>{
     const existing=[...document.querySelectorAll('link[rel="stylesheet"]')].find(l=>l.href&&l.href.includes(href));
     if(existing){if(existing.sheet)return resolve();existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',()=>reject(new Error(`Could not load ${href}`)),{once:true});return;}
-    const l=document.createElement('link');l.rel='stylesheet';l.href=`${href}?v=visual-v2`;l.onload=resolve;l.onerror=()=>reject(new Error(`Could not load ${href}`));document.head.appendChild(l);
+    const l=document.createElement('link');l.rel='stylesheet';l.href=`${href}?v=session-v1`;l.onload=resolve;l.onerror=()=>reject(new Error(`Could not load ${href}`));document.head.appendChild(l);
   });
   const preconnect=href=>{if(document.querySelector(`link[rel="preconnect"][href="${href}"]`))return;const l=document.createElement('link');l.rel='preconnect';l.href=href;l.crossOrigin='anonymous';document.head.appendChild(l)};
 
@@ -97,6 +155,7 @@ try{
 
     await firebaseSdkReady;
     await loadScript('assets/auth.js');
+    await loadScript('assets/session-restore-v1.js');
     await loadScript('assets/auth-experience-v4.js');
     await loadScript('assets/mobile-experience-v4.js');
     await loadScript('assets/tailwind-runtime-v6.js');
