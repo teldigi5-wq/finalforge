@@ -1,4 +1,4 @@
-/* FinalForge Mobile Navigation Runtime v2 — atomic section switching for Android/mobile. */
+/* FinalForge Mobile Navigation Runtime v3 — atomic section switching only on genuine compact screens. */
 (()=>{
   'use strict';
 
@@ -8,7 +8,13 @@
   let switching=false;
   let queuedTarget='';
 
-  const isMobile=()=>html.classList.contains('ff-real-mobile')||matchMedia('(max-width:900px)').matches||((navigator.maxTouchPoints||0)>0&&matchMedia('(pointer:coarse)').matches);
+  const compactScreen=()=>{
+    const sw=Number(screen?.width||0),sh=Number(screen?.height||0);
+    const physicalShort=Math.min(sw||9999,sh||9999);
+    const viewport=Number(window.innerWidth||document.documentElement.clientWidth||9999);
+    return physicalShort<=900||viewport<=900||matchMedia('(max-width:900px)').matches;
+  };
+  const isMobile=()=>html.classList.contains('ff-real-mobile')||compactScreen();
   const section=id=>document.getElementById(String(id||''));
   const examRunning=()=>!!document.querySelector('#practice .exam-app');
   const examResults=()=>!!document.querySelector('#practice .exam-results');
