@@ -133,3 +133,21 @@
   s.onerror=()=>console.warn('[FinalForge] Final mobile runtime recovery could not be loaded.');
   document.body.appendChild(s);
 })();
+
+/* Mobile scroll recovery: last layer by design. It unlocks stale Android body locks while preserving real open overlays. */
+(()=>{
+  if(!document.querySelector('link[data-finalforge-mobile-scroll-recovery]')){
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='assets/mobile-scroll-recovery-v1.css?v=1';
+    link.dataset.finalforgeMobileScrollRecovery='1';
+    document.head.appendChild(link);
+  }
+  if(document.querySelector('script[data-finalforge-mobile-scroll-recovery]'))return;
+  const s=document.createElement('script');
+  s.src='assets/mobile-scroll-recovery-v1.js?v=1';
+  s.async=false;
+  s.dataset.finalforgeMobileScrollRecovery='1';
+  s.onerror=()=>console.warn('[FinalForge] Mobile scroll recovery could not be loaded.');
+  document.body.appendChild(s);
+})();
