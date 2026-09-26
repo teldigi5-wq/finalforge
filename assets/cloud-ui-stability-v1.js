@@ -1,4 +1,4 @@
-/* FinalForge Cloud UI Stability v3 — delay mobile cloud hydration without classifying touch desktops as phones. */
+/* FinalForge Cloud UI Stability v4 — delay mobile cloud hydration without classifying touch desktops as phones. */
 (()=>{
   'use strict';
 
@@ -7,12 +7,14 @@
   if(!body)return;
 
   const compactScreen=()=>{
+    const viewport=Number(window.innerWidth||document.documentElement.clientWidth||9999);
+    if(viewport<=900||matchMedia('(max-width:900px)').matches)return true;
     const sw=Number(screen?.width||0),sh=Number(screen?.height||0);
     const physicalShort=Math.min(sw||9999,sh||9999);
-    const viewport=Number(window.innerWidth||document.documentElement.clientWidth||9999);
-    return physicalShort<=900||viewport<=900||matchMedia('(max-width:900px)').matches;
+    const handheldTouch=(navigator.maxTouchPoints||0)>0&&matchMedia('(hover:none) and (pointer:coarse)').matches;
+    return handheldTouch&&physicalShort<=640;
   };
-  const realMobile=()=>root.classList.contains('ff-real-mobile')||compactScreen();
+  const realMobile=()=>compactScreen();
   let lastInteractionAt=0;
   let pendingTimer=0;
 
