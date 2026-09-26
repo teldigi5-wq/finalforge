@@ -1,4 +1,4 @@
-const C='finalforge-v47-professional-workspace';
+const C='finalforge-v48-professional-hardening';
 
 // Cache the shell and critical runtime at install. Feature assets are cached as requested.
 const CORE=[
@@ -33,6 +33,7 @@ const CORE=[
   './assets/verification-handoff-v1.js',
   './assets/cloud-ui-stability-v1.js',
   './assets/professional-workspace-v2.css',
+  './assets/professional-accessibility-v1.css',
   './assets/professional-workspace-v2.js',
   './assets/ux-hardening-v1.js',
   './assets/finalforge-logo.svg',
@@ -70,6 +71,7 @@ const INSTANT=new Set([
   '/assets/verification-handoff-v1.js',
   '/assets/cloud-ui-stability-v1.js',
   '/assets/professional-workspace-v2.css',
+  '/assets/professional-accessibility-v1.css',
   '/assets/professional-workspace-v2.js',
   '/assets/ux-hardening-v1.js',
   '/assets/auth-premium-v5.css',
@@ -118,6 +120,7 @@ const CRITICAL_RUNTIME=new Set([
   '/assets/practice-stability-v1.js',
   '/assets/practice-exam-v4.js',
   '/assets/professional-workspace-v2.css',
+  '/assets/professional-accessibility-v1.css',
   '/assets/professional-workspace-v2.js'
 ]);
 
@@ -132,6 +135,12 @@ self.addEventListener('activate',event=>event.waitUntil(
     .then(keys=>Promise.all(keys.filter(key=>key!==C).map(key=>caches.delete(key))))
     .then(()=>self.clients.claim())
 ));
+
+function fetchOptions(){
+  const options={cache:'no-cache'};
+  if(typeof AbortSignal!=='undefined'&&typeof AbortSignal.timeout==='function')options.signal=AbortSignal.timeout(8000);
+  return options;
+}
 
 async function staleWhileRevalidate(request,fallback){
   const cache=await caches.open(C);
@@ -157,7 +166,7 @@ async function staleWhileRevalidate(request,fallback){
 async function freshNavigation(request){
   const cache=await caches.open(C);
   try{
-    const response=await fetch(request,{cache:'no-cache',signal:AbortSignal.timeout(8000)});
+    const response=await fetch(request,fetchOptions());
     if(response.ok){
       await cache.put(request,response.clone());
       return response;
@@ -169,7 +178,7 @@ async function freshNavigation(request){
 async function freshRuntime(request){
   const cache=await caches.open(C);
   try{
-    const response=await fetch(request,{cache:'no-cache',signal:AbortSignal.timeout(8000)});
+    const response=await fetch(request,fetchOptions());
     if(response.ok){
       await cache.put(request,response.clone());
       return response;
