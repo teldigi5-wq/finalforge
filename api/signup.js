@@ -19,11 +19,16 @@ function services() {
   return { auth: getAuth(), db: getFirestore() };
 }
 
-export async function registerStudent({ studentId, password, ip }, { auth, db }) {
+export async function registerStudent({ studentId, sliitEmail, password, ip }, { auth, db }) {
   const id = String(studentId || '').trim().toUpperCase();
+  const email = String(sliitEmail || '').trim().toLowerCase();
+  const expectedEmail = /^IT\d{8}$/.test(id) ? `${id.toLowerCase()}@my.sliit.lk` : '';
+
   if (!/^IT\d{8}$/.test(id) || typeof password !== 'string' || password.length < 8 || password.length > 128)
     return { status: 400, message: 'Invalid Student ID or password.' };
-  const email = `${id.toLowerCase()}@my.sliit.lk`;
+  if (!email || email !== expectedEmail)
+    return { status: 400, message: 'SLIIT email must exactly match your Student ID.' };
+
   const digest = createHash('sha256').update(`${process.env.SIGNUP_RATE_SECRET || ''}:${ip}`).digest('hex');
   const rateRef = db.collection('signup_rate').doc(digest);
   const now = Date.now();
@@ -36,14 +41,17 @@ export async function registerStudent({ studentId, password, ip }, { auth, db })
     return true;
   });
   if (!allowed) return { status: 429, message: 'Too many attempts. Try again later.' };
+
   const approved = await db.collection('student_allowlist').doc(id).get();
-  if (!approved.exists || approved.data().active !== true || approved.data().sliitEmail !== email)
-    return { status: 403, message: 'Student ID is not eligible for registration.' };
+  const approvedEmail = String(approved.data()?.sliitEmail || '').trim().toLowerCase();
+  if (!approved.exists || approved.data().active !== true || approvedEmail !== email)
+    return { status: 403, message: 'Student ID or SLIIT email is not eligible for registration.' };
+
   const claimed = await db.collection('student_claims').doc(id).get();
   if (claimed.exists) return { status: 409, message: 'Account already registered. Sign in or reset the password.' };
+
   try {
     await auth.createUser({ email, password, emailVerified: false, displayName: id });
-    // Social-proof telemetry is aggregate only. Never block signup if this cosmetic counter fails.
     try {
       await db.collection('platform_stats').doc('public').set({
         registered: FieldValue.increment(1),
@@ -64,9 +72,9 @@ export default async function handler(req, res) {
   if (Number(req.headers['content-length'] || 0) > 2048) return res.status(413).json({ error: 'Request too large.' });
   try {
     if (!process.env.SIGNUP_RATE_SECRET) throw new Error('Signup rate limit is not configured');
-    const { studentId, password } = req.body || {};
+    const { studentId, sliitEmail, password } = req.body || {};
     const ip = String(req.headers['x-vercel-forwarded-for'] || req.socket.remoteAddress || 'unknown').split(',')[0];
-    const result = await registerStudent({ studentId, password, ip }, services());
+    const result = await registerStudent({ studentId, sliitEmail, password, ip }, services());
     return res.status(result.status).json(result.status === 201 ? { message: result.message } : { error: result.message });
   } catch {
     return res.status(503).json({ error: 'Signup is temporarily unavailable.' });

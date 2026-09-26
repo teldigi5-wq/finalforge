@@ -80,9 +80,9 @@
 (()=>{
   if(document.querySelector('script[data-finalforge-signup-fix]'))return;
   const s=document.createElement('script');
-  s.src='assets/signup-fix-v2.js?v=2';
+  s.src='assets/signup-fix-v2.js?v=3';
   s.async=false;
-  s.dataset.finalforgeSignupFix='2';
+  s.dataset.finalforgeSignupFix='3';
   s.onerror=()=>console.warn('[FinalForge] Signup reliability patch could not be loaded.');
   document.body.appendChild(s);
 })();
