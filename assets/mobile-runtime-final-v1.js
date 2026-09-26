@@ -1,14 +1,14 @@
-/* FinalForge Mobile Runtime Final v1 — detect real phones and fail-open hidden entrance states. */
+/* FinalForge Mobile Runtime Final v2 — detect compact phone/tablet screens without misclassifying touch PCs. */
 (()=>{
   'use strict';
 
-  const coarse=()=>matchMedia('(hover:none) and (pointer:coarse)').matches||matchMedia('(pointer:coarse)').matches;
-  const narrowScreen=()=>{
-    const w=Number(screen?.width||0),h=Number(screen?.height||0);
-    const short=Math.min(w||9999,h||9999);
-    return short<=900||matchMedia('(max-width:900px)').matches;
+  const compactScreen=()=>{
+    const sw=Number(screen?.width||0),sh=Number(screen?.height||0);
+    const physicalShort=Math.min(sw||9999,sh||9999);
+    const viewport=Number(window.innerWidth||document.documentElement.clientWidth||9999);
+    return physicalShort<=900||viewport<=900||matchMedia('(max-width:900px)').matches;
   };
-  const realMobile=()=>narrowScreen()||((navigator.maxTouchPoints||0)>0&&coarse());
+  const realMobile=()=>compactScreen();
 
   function reveal(root=document){
     root.querySelectorAll?.('.ff-enter').forEach(el=>{
@@ -19,7 +19,19 @@
   }
 
   function apply(){
-    if(realMobile()) document.documentElement.classList.add('ff-real-mobile');
+    const html=document.documentElement;
+    const mobile=realMobile();
+    html.classList.toggle('ff-real-mobile',mobile);
+
+    /* Hybrid/touch Windows laptops can expose coarse pointers. If the screen is not
+       actually compact, explicitly clear every phone-only runtime state so desktop
+       cannot remain trapped in the mobile shell after resize/navigation. */
+    if(!mobile){
+      html.classList.remove('ff-scroll-free','ff-scroll-locked');
+      document.body?.classList.remove('mobile-nav-more-open');
+      window.closeMobileNavMore?.();
+    }
+
     if(!document.body?.classList.contains('auth-pending')) reveal(document);
   }
 
@@ -30,6 +42,7 @@
   addEventListener('finalforge-mobile-navigate',apply);
   addEventListener('pageshow',apply,{passive:true});
   addEventListener('resize',apply,{passive:true});
+  addEventListener('orientationchange',()=>setTimeout(apply,80),{passive:true});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)apply()});
 
   /* Dynamic cards can still arrive later, but ordinary class/style changes must not
