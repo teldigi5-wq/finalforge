@@ -1,0 +1,276 @@
+/* FinalForge Next UI v1 — reference-inspired student workspace, scoped to signed-in app only. */
+:root{
+  --nx-bg:#060b18;
+  --nx-bg-2:#091326;
+  --nx-panel:#0c1628;
+  --nx-panel-2:#101d33;
+  --nx-line:rgba(139,170,218,.16);
+  --nx-line-strong:rgba(107,163,255,.3);
+  --nx-text:#f5f8ff;
+  --nx-muted:#8fa2bf;
+  --nx-blue:#4f8cff;
+  --nx-cyan:#39d5ff;
+  --nx-violet:#7657ff;
+  --nx-green:#42df9b;
+  --nx-amber:#ffbd66;
+  --nx-red:#ff6f7d;
+  --nx-radius:18px;
+  --nx-radius-lg:26px;
+  --nx-shadow:0 24px 60px rgba(0,0,0,.26);
+}
+html[data-theme="light"]{
+  --nx-bg:#f4f7fc;
+  --nx-bg-2:#edf3fb;
+  --nx-panel:#ffffff;
+  --nx-panel-2:#f8fbff;
+  --nx-line:rgba(41,73,115,.12);
+  --nx-line-strong:rgba(70,126,213,.28);
+  --nx-text:#142239;
+  --nx-muted:#667b98;
+  --nx-shadow:0 20px 50px rgba(51,81,120,.12);
+}
+
+body:not(.auth-pending){background:var(--nx-bg)!important;color:var(--nx-text)!important}
+body:not(.auth-pending) .app{background:
+  radial-gradient(circle at 18% 2%,rgba(52,118,255,.12),transparent 28rem),
+  radial-gradient(circle at 86% 12%,rgba(108,74,255,.10),transparent 26rem),
+  linear-gradient(180deg,var(--nx-bg),var(--nx-bg-2))!important;
+  min-height:100dvh;
+}
+body:not(.auth-pending) .main{background:transparent!important;color:var(--nx-text);max-width:none!important}
+body:not(.auth-pending) .section{max-width:1400px;margin:0 auto;padding:34px 34px 72px!important}
+body:not(.auth-pending) .card,
+body:not(.auth-pending) .module-detail,
+body:not(.auth-pending) .resource,
+body:not(.auth-pending) .timeline-row{
+  background:linear-gradient(145deg,color-mix(in srgb,var(--nx-panel) 94%,transparent),color-mix(in srgb,var(--nx-panel-2) 96%,transparent))!important;
+  border:1px solid var(--nx-line)!important;
+  border-radius:var(--nx-radius)!important;
+  box-shadow:none!important;
+  color:var(--nx-text)!important;
+}
+body:not(.auth-pending) .card:hover{border-color:var(--nx-line-strong)!important;transform:translateY(-1px)}
+body:not(.auth-pending) .muted{color:var(--nx-muted)!important}
+body:not(.auth-pending) .kicker{color:#77a9ff!important;letter-spacing:.13em;font-size:.7rem;font-weight:800;text-transform:uppercase}
+body:not(.auth-pending) .btn{
+  border-radius:12px!important;
+  min-height:42px;
+  border:1px solid var(--nx-line)!important;
+  background:var(--nx-panel-2)!important;
+  color:var(--nx-text)!important;
+  box-shadow:none!important;
+  font-weight:750;
+}
+body:not(.auth-pending) .btn.primary{
+  border-color:transparent!important;
+  background:linear-gradient(135deg,var(--nx-blue),var(--nx-violet))!important;
+  color:#fff!important;
+}
+body:not(.auth-pending) .btn:hover{filter:brightness(1.08)}
+body:not(.auth-pending) .pill,
+body:not(.auth-pending) .chip{border:1px solid var(--nx-line)!important;background:rgba(90,130,190,.09)!important;color:var(--nx-muted)!important;border-radius:999px!important}
+
+/* Desktop navigation — compact app workspace. */
+body:not(.auth-pending) .sidebar{
+  width:236px!important;
+  background:rgba(5,10,22,.88)!important;
+  border-right:1px solid var(--nx-line)!important;
+  backdrop-filter:none!important;
+  padding:22px 16px!important;
+}
+html[data-theme="light"] body:not(.auth-pending) .sidebar{background:rgba(247,250,255,.94)!important}
+body:not(.auth-pending) .brand{padding:8px 8px 22px!important;border-bottom:1px solid var(--nx-line);margin-bottom:14px}
+body:not(.auth-pending) .brand img{width:34px!important;height:34px!important}
+body:not(.auth-pending) .brand b{font-size:.96rem!important;color:var(--nx-text)!important}
+body:not(.auth-pending) .brand small{font-size:.66rem!important;color:var(--nx-muted)!important}
+body:not(.auth-pending) .nav{display:grid!important;gap:5px!important}
+body:not(.auth-pending) .nav button{
+  min-height:44px!important;border:0!important;border-radius:11px!important;padding:0 12px!important;
+  color:var(--nx-muted)!important;background:transparent!important;font-weight:700!important;
+  justify-content:flex-start!important;gap:11px!important;
+}
+body:not(.auth-pending) .nav button.active{background:linear-gradient(90deg,rgba(69,133,255,.18),rgba(86,91,255,.08))!important;color:var(--nx-text)!important;box-shadow:inset 0 0 0 1px rgba(99,148,255,.18)}
+body:not(.auth-pending) .side-card{border:1px solid var(--nx-line)!important;background:rgba(61,95,145,.05)!important;border-radius:14px!important;color:var(--nx-muted)!important}
+
+body:not(.auth-pending) .topbar{
+  min-height:72px!important;padding:0 32px!important;background:rgba(6,11,24,.82)!important;
+  border-bottom:1px solid var(--nx-line)!important;backdrop-filter:blur(14px)!important;
+  position:sticky!important;top:0!important;z-index:35!important;
+}
+html[data-theme="light"] body:not(.auth-pending) .topbar{background:rgba(250,252,255,.9)!important}
+body:not(.auth-pending) .topbar>div:first-child .kicker{font-size:.65rem!important}
+body:not(.auth-pending) .top-account-wrap{gap:9px!important}
+body:not(.auth-pending) .account-chip,
+body:not(.auth-pending) .theme-toggle,
+body:not(.auth-pending) .sync-pill{background:var(--nx-panel)!important;border:1px solid var(--nx-line)!important}
+body:not(.auth-pending) .account-avatar{background:linear-gradient(135deg,var(--nx-blue),var(--nx-violet))!important}
+
+/* Universal page heading. */
+body:not(.auth-pending) .section>.section-head:first-child{margin-bottom:22px!important;align-items:end!important}
+body:not(.auth-pending) .section>.section-head:first-child h2{font-size:clamp(1.65rem,3vw,2.4rem)!important;letter-spacing:-.04em!important;margin-bottom:4px!important}
+body:not(.auth-pending) .section>.section-head:first-child .muted{font-size:.94rem!important}
+
+/* Reference-inspired academic selector. */
+.ff-academic-switcher{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:14px;margin-bottom:18px}
+.ff-academic-panel{padding:18px;border:1px solid var(--nx-line);border-radius:var(--nx-radius);background:linear-gradient(145deg,var(--nx-panel),var(--nx-panel-2))}
+.ff-academic-panel .ff-step{font-size:.63rem;text-transform:uppercase;letter-spacing:.14em;color:#6fa5ff;font-weight:850;margin-bottom:12px}
+.ff-year-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.ff-year-card,.ff-sem-card{border:1px solid var(--nx-line);background:rgba(73,111,167,.05);color:var(--nx-muted);border-radius:13px;padding:12px;text-align:left;min-height:76px}
+.ff-year-card b,.ff-sem-card b{display:block;color:var(--nx-text);font-size:.84rem;margin-bottom:5px}
+.ff-year-card span,.ff-sem-card span{font-size:.67rem;line-height:1.35;display:block}
+.ff-year-card.active,.ff-sem-card.active{border-color:rgba(79,140,255,.55);background:linear-gradient(145deg,rgba(63,128,255,.15),rgba(105,74,255,.09));box-shadow:inset 0 0 0 1px rgba(79,140,255,.08)}
+.ff-year-card[disabled],.ff-sem-card[disabled]{opacity:.48;cursor:not-allowed}
+.ff-sem-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ff-academic-note{display:flex;gap:8px;align-items:center;margin-top:11px;font-size:.68rem;color:var(--nx-muted)}
+.ff-academic-note i{width:7px;height:7px;border-radius:50%;background:var(--nx-green);box-shadow:0 0 12px rgba(66,223,155,.5)}
+
+/* Home becomes a compact learning dashboard. */
+body:not(.auth-pending) #home .hero-v3{display:grid!important;grid-template-columns:minmax(0,1.55fr) minmax(310px,.75fr)!important;gap:16px!important;margin-bottom:16px!important}
+body:not(.auth-pending) #home .hero-main{min-height:330px!important;padding:30px!important;overflow:hidden!important;background:
+ linear-gradient(120deg,rgba(10,22,42,.97),rgba(13,22,39,.72)),
+ url('campus-banner.webp') center/cover!important}
+html[data-theme="light"] body:not(.auth-pending) #home .hero-main{background:linear-gradient(120deg,rgba(255,255,255,.96),rgba(241,247,255,.83)),url('campus-banner.webp') center/cover!important}
+body:not(.auth-pending) #home .hero-main h1{font-size:clamp(2.2rem,5vw,4.4rem)!important;line-height:.92!important;letter-spacing:-.06em!important;max-width:650px!important}
+body:not(.auth-pending) #home .hero-main p{max-width:580px!important;font-size:.95rem!important;line-height:1.6!important}
+body:not(.auth-pending) #home .gradient-text{background:linear-gradient(90deg,#80b6ff,#8a75ff,#4fd9ff)!important;-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important}
+body:not(.auth-pending) #home .compact-notice{margin-top:22px!important;display:inline-grid!important;min-width:280px!important;max-width:470px!important;background:rgba(4,10,20,.58)!important;border:1px solid rgba(127,161,210,.15)!important;border-radius:15px!important;padding:13px 15px!important}
+body:not(.auth-pending) #home .hero-side{padding:18px!important;display:grid!important;gap:16px!important;background:var(--nx-panel)!important}
+body:not(.auth-pending) .study-focus-panel{background:transparent!important;border:0!important;padding:0!important}
+body:not(.auth-pending) .study-focus-task{border-top:1px solid var(--nx-line)!important;padding:12px 0!important}
+body:not(.auth-pending) .countdown-grid{gap:7px!important}
+body:not(.auth-pending) .timebox{background:var(--nx-panel-2)!important;border:1px solid var(--nx-line)!important;border-radius:12px!important}
+body:not(.auth-pending) .quick-dock{grid-template-columns:repeat(4,1fr)!important;gap:10px!important;margin-bottom:16px!important}
+body:not(.auth-pending) .quick-dock button{min-height:82px!important;background:var(--nx-panel)!important;border:1px solid var(--nx-line)!important;border-radius:14px!important;color:var(--nx-text)!important;text-align:left!important;padding:14px!important}
+body:not(.auth-pending) .grid4{grid-template-columns:repeat(4,1fr)!important;gap:10px!important}
+body:not(.auth-pending) .grid4 .stat{padding:16px!important;min-height:105px!important}
+body:not(.auth-pending) .grid4 .stat strong{font-size:1.6rem!important}
+
+/* Modules — dense academic cards like the reference. */
+body:not(.auth-pending) .module-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+body:not(.auth-pending) .module-card{padding:18px!important;min-height:250px!important;position:relative!important;overflow:hidden!important}
+body:not(.auth-pending) .module-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(var(--nx-blue),var(--nx-violet));opacity:.9}
+body:not(.auth-pending) .module-title{gap:12px!important}
+body:not(.auth-pending) .module-icon{width:42px!important;height:42px!important;border-radius:12px!important;background:rgba(79,140,255,.11)!important;border:1px solid rgba(79,140,255,.2)!important}
+body:not(.auth-pending) .module-card h3{font-size:1.12rem!important;letter-spacing:-.02em!important}
+body:not(.auth-pending) .module-meta{display:flex!important;flex-wrap:wrap!important;gap:6px!important;margin:13px 0!important}
+body:not(.auth-pending) .progressbar{height:7px!important;background:rgba(110,138,180,.12)!important;border-radius:99px!important;overflow:hidden!important;margin:14px 0 7px!important}
+body:not(.auth-pending) .progressbar i{background:linear-gradient(90deg,var(--nx-blue),var(--nx-cyan))!important}
+body:not(.auth-pending) .module-actions{margin-top:auto!important;padding-top:15px!important}
+body:not(.auth-pending) .module-detail{margin-top:14px!important;padding:20px!important}
+body:not(.auth-pending) .detail-grid{gap:14px!important}
+body:not(.auth-pending) .lesson{border:1px solid var(--nx-line)!important;background:rgba(66,98,145,.05)!important;border-radius:13px!important}
+
+/* Resources — compact library tiles. */
+body:not(.auth-pending) .resources-toolbar{display:flex!important;flex-wrap:wrap!important;gap:7px!important;margin:10px 0!important}
+body:not(.auth-pending) .filter-btn{min-height:36px!important;padding:0 12px!important;font-size:.77rem!important}
+body:not(.auth-pending) .filter-btn.active{background:rgba(79,140,255,.16)!important;border-color:rgba(79,140,255,.42)!important;color:#9bc0ff!important}
+body:not(.auth-pending) .resource-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;margin-top:16px!important}
+body:not(.auth-pending) .resource{padding:16px!important;min-height:210px!important}
+body:not(.auth-pending) .resource>b{font-size:.96rem!important;line-height:1.4!important}
+body:not(.auth-pending) .file-meta{font-size:.68rem!important;color:var(--nx-muted)!important;margin-top:9px!important}
+body:not(.auth-pending) .search{background:var(--nx-panel)!important;border:1px solid var(--nx-line)!important;color:var(--nx-text)!important;border-radius:12px!important;min-height:42px!important}
+
+/* Practice — focused exam studio. */
+body:not(.auth-pending) #practice .practice-hero{padding:20px!important;margin-top:12px!important}
+body:not(.auth-pending) .practice-actions-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:12px!important}
+body:not(.auth-pending) .practice-action{padding:18px!important;min-height:230px!important;display:flex!important;flex-direction:column!important}
+body:not(.auth-pending) .practice-action .action-icon{width:40px!important;height:40px!important;border-radius:11px!important;background:rgba(79,140,255,.11)!important;border:1px solid rgba(79,140,255,.23)!important;color:#9cc0ff!important}
+body:not(.auth-pending) .practice-action.featured{border-color:rgba(79,140,255,.42)!important;background:linear-gradient(145deg,rgba(33,72,133,.25),var(--nx-panel))!important}
+body:not(.auth-pending) .practice-action .btn{margin-top:auto!important}
+body:not(.auth-pending) .exam-app{background:var(--nx-bg)!important;border:1px solid var(--nx-line)!important;border-radius:var(--nx-radius-lg)!important;overflow:clip!important;box-shadow:var(--nx-shadow)!important}
+body:not(.auth-pending) .exam-top{background:var(--nx-panel)!important;border-bottom:1px solid var(--nx-line)!important;padding:14px 16px!important}
+body:not(.auth-pending) .exam-layout{grid-template-columns:230px minmax(0,1fr)!important;min-height:640px!important}
+body:not(.auth-pending) .exam-rail{background:var(--nx-panel-2)!important;border-right:1px solid var(--nx-line)!important;padding:18px!important}
+body:not(.auth-pending) .exam-question{background:var(--nx-panel)!important;padding:32px!important}
+body:not(.auth-pending) .exam-question>h2{font-size:1.45rem!important;line-height:1.45!important;max-width:900px!important}
+body:not(.auth-pending) .exam-options{display:grid!important;gap:10px!important;margin:22px 0!important}
+body:not(.auth-pending) .exam-options label{background:var(--nx-panel-2)!important;border:1px solid var(--nx-line)!important;border-radius:13px!important;padding:14px 15px!important;color:var(--nx-text)!important}
+body:not(.auth-pending) .exam-options label.selected{border-color:rgba(79,140,255,.55)!important;background:rgba(79,140,255,.11)!important}
+body:not(.auth-pending) .exam-written{background:var(--nx-panel-2)!important;border:1px solid var(--nx-line)!important;color:var(--nx-text)!important;border-radius:13px!important}
+body:not(.auth-pending) .exam-nav button{border:1px solid var(--nx-line)!important;background:var(--nx-panel)!important;color:var(--nx-muted)!important;border-radius:8px!important}
+body:not(.auth-pending) .exam-nav button.current{background:var(--nx-blue)!important;color:white!important}
+body:not(.auth-pending) .exam-nav button.answered{border-color:rgba(66,223,155,.48)!important;color:var(--nx-green)!important}
+body:not(.auth-pending) .exam-results{background:var(--nx-panel)!important;border-radius:var(--nx-radius-lg)!important;padding:24px!important}
+body:not(.auth-pending) .result-hero{border:1px solid var(--nx-line)!important;background:linear-gradient(145deg,rgba(79,140,255,.1),transparent)!important;border-radius:18px!important;padding:22px!important}
+body:not(.auth-pending) .review-answer{border-radius:13px!important;border:1px solid var(--nx-line)!important;background:var(--nx-panel-2)!important}
+body:not(.auth-pending) .review-answer.correct{border-color:rgba(66,223,155,.28)!important;background:rgba(66,223,155,.08)!important}
+body:not(.auth-pending) .review-answer.incorrect{border-color:rgba(255,111,125,.25)!important;background:rgba(255,111,125,.07)!important}
+
+/* Analytics workspace. */
+#analytics.section{max-width:1400px}
+.ff-analytics-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:20px}
+.ff-analytics-head h2{font-size:clamp(1.8rem,3vw,2.5rem);letter-spacing:-.04em;margin:0}
+.ff-analytics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ff-metric{padding:17px;border:1px solid var(--nx-line);background:var(--nx-panel);border-radius:var(--nx-radius)}
+.ff-metric span{display:block;color:var(--nx-muted);font-size:.72rem;margin-bottom:10px}
+.ff-metric strong{font-size:1.7rem;letter-spacing:-.04em}
+.ff-metric small{display:block;color:var(--nx-muted);font-size:.66rem;margin-top:5px}
+.ff-analytics-main{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:12px;margin-top:12px}
+.ff-chart-card,.ff-readiness-card{padding:20px;border:1px solid var(--nx-line);background:var(--nx-panel);border-radius:var(--nx-radius)}
+.ff-chart-card h3,.ff-readiness-card h3{margin:0 0 16px;font-size:1rem}
+.ff-module-bars{display:grid;gap:13px}
+.ff-module-row{display:grid;grid-template-columns:115px 1fr 46px;gap:10px;align-items:center;font-size:.76rem}
+.ff-module-row b{font-size:.76rem}
+.ff-bar{height:8px;background:rgba(100,130,175,.12);border-radius:99px;overflow:hidden}
+.ff-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--nx-blue),var(--nx-cyan))}
+.ff-ring{width:148px;height:148px;border-radius:50%;display:grid;place-items:center;margin:12px auto;background:conic-gradient(var(--nx-blue) var(--ff-ring),rgba(104,132,172,.12) 0)}
+.ff-ring:after{content:"";width:112px;height:112px;background:var(--nx-panel);border-radius:50%;position:absolute}
+.ff-ring b{position:relative;z-index:1;font-size:1.7rem}
+.ff-priority-list{display:grid;gap:8px;margin-top:16px}
+.ff-priority{padding:11px 12px;border:1px solid var(--nx-line);border-radius:12px;background:rgba(67,101,151,.05)}
+.ff-priority b{display:block;font-size:.78rem;margin-bottom:4px}.ff-priority span{font-size:.68rem;color:var(--nx-muted)}
+
+/* Bottom navigation/mobile app shell. */
+@media(max-width:900px),(hover:none) and (pointer:coarse){
+  body:not(.auth-pending) .sidebar{display:none!important}
+  body:not(.auth-pending) .main{width:100%!important;padding:0!important}
+  body:not(.auth-pending) .topbar{min-height:64px!important;padding:0 16px!important}
+  body:not(.auth-pending) .topbar>div:first-child{display:none!important}
+  body:not(.auth-pending) .mobile-brand{display:flex!important;align-items:center;gap:8px;font-weight:850}
+  body:not(.auth-pending) .mobile-brand img{width:28px!important;height:28px!important}
+  body:not(.auth-pending) .sync-pill,.account-copy,#accountChip>span:last-child{display:none!important}
+  body:not(.auth-pending) .account-chip{min-width:46px!important;width:46px!important;height:46px!important;padding:3px!important;border-radius:14px!important}
+  body:not(.auth-pending) .account-avatar{width:36px!important;height:36px!important}
+  body:not(.auth-pending) .section{padding:24px 16px 104px!important;max-width:none!important}
+  .ff-academic-switcher{grid-template-columns:1fr!important}
+  .ff-year-grid{grid-template-columns:repeat(2,1fr)!important}
+  body:not(.auth-pending) #home .hero-v3{grid-template-columns:1fr!important}
+  body:not(.auth-pending) #home .hero-main{min-height:310px!important;padding:22px!important}
+  body:not(.auth-pending) #home .hero-main h1{font-size:2.65rem!important}
+  body:not(.auth-pending) #home .hero-side{padding:16px!important}
+  body:not(.auth-pending) .quick-dock{grid-template-columns:repeat(2,1fr)!important}
+  body:not(.auth-pending) .grid4{grid-template-columns:repeat(2,1fr)!important}
+  body:not(.auth-pending) .module-grid{grid-template-columns:1fr!important}
+  body:not(.auth-pending) .resource-grid{grid-template-columns:1fr!important}
+  body:not(.auth-pending) .practice-actions-grid{grid-template-columns:1fr!important}
+  body:not(.auth-pending) .exam-layout{grid-template-columns:1fr!important;min-height:auto!important}
+  body:not(.auth-pending) .exam-rail{border-right:0!important;border-bottom:1px solid var(--nx-line)!important;padding:14px!important}
+  body:not(.auth-pending) .exam-question{padding:20px 16px!important}
+  body:not(.auth-pending) .exam-question>h2{font-size:1.12rem!important}
+  body:not(.auth-pending) .exam-nav{display:flex!important;overflow-x:auto!important;gap:6px!important;padding-bottom:4px!important;scrollbar-width:none}
+  body:not(.auth-pending) .exam-nav button{flex:0 0 34px!important;width:34px!important;height:34px!important}
+  .ff-analytics-grid{grid-template-columns:repeat(2,1fr)!important}
+  .ff-analytics-main{grid-template-columns:1fr!important}
+  .ff-module-row{grid-template-columns:84px 1fr 38px!important}
+  body:not(.auth-pending) .mobile-nav{
+    left:12px!important;right:12px!important;bottom:max(10px,env(safe-area-inset-bottom))!important;width:auto!important;
+    min-height:68px!important;padding:7px!important;border-radius:22px!important;background:rgba(7,14,28,.95)!important;
+    border:1px solid rgba(120,154,207,.2)!important;box-shadow:0 18px 50px rgba(0,0,0,.32)!important;backdrop-filter:blur(16px)!important;
+  }
+  html[data-theme="light"] body:not(.auth-pending) .mobile-nav{background:rgba(250,252,255,.96)!important}
+  body:not(.auth-pending) .mobile-nav button{border-radius:15px!important;min-height:52px!important;color:var(--nx-muted)!important;background:transparent!important;font-size:.72rem!important}
+  body:not(.auth-pending) .mobile-nav button.active{background:linear-gradient(145deg,rgba(44,118,201,.32),rgba(61,91,174,.2))!important;color:var(--nx-text)!important;box-shadow:inset 0 0 0 1px rgba(85,154,234,.22)}
+}
+
+@media(max-width:560px){
+  body:not(.auth-pending) .section{padding-inline:14px!important}
+  body:not(.auth-pending) #home .hero-main h1{font-size:2.3rem!important}
+  .ff-analytics-grid{grid-template-columns:1fr 1fr!important}
+  .ff-academic-panel{padding:14px}
+  .ff-year-card,.ff-sem-card{min-height:68px;padding:10px}
+  body:not(.auth-pending) .module-card{min-height:230px!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  body:not(.auth-pending) *,body:not(.auth-pending) *:before,body:not(.auth-pending) *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
