@@ -1,14 +1,18 @@
-/* FinalForge Mobile Runtime Final v1 — detect real phones and fail-open hidden entrance states. */
+/* FinalForge Mobile Runtime Final v4 — one device policy for signed-in runtime. */
 (()=>{
   'use strict';
 
-  const coarse=()=>matchMedia('(hover:none) and (pointer:coarse)').matches||matchMedia('(pointer:coarse)').matches;
-  const narrowScreen=()=>{
-    const w=Number(screen?.width||0),h=Number(screen?.height||0);
-    const short=Math.min(w||9999,h||9999);
-    return short<=900||matchMedia('(max-width:900px)').matches;
+  const compactScreen=()=>{
+    const viewport=Number(window.innerWidth||document.documentElement.clientWidth||9999);
+    if(viewport<=900||matchMedia('(max-width:900px)').matches)return true;
+    const sw=Number(screen?.width||0),sh=Number(screen?.height||0);
+    const physicalShort=Math.min(sw||9999,sh||9999);
+    const handheldTouch=(navigator.maxTouchPoints||0)>0&&matchMedia('(hover:none) and (pointer:coarse)').matches;
+    return handheldTouch&&physicalShort<=640;
   };
-  const realMobile=()=>narrowScreen()||((navigator.maxTouchPoints||0)>0&&coarse());
+  const realMobile=()=>compactScreen();
+
+  window.finalforgeIsMobile=realMobile;
 
   function reveal(root=document){
     root.querySelectorAll?.('.ff-enter').forEach(el=>{
@@ -19,34 +23,30 @@
   }
 
   function apply(){
-    if(realMobile()) document.documentElement.classList.add('ff-real-mobile');
-    if(!document.body?.classList.contains('auth-pending')) reveal(document);
+    const html=document.documentElement;
+    const mobile=realMobile();
+    html.classList.toggle('ff-real-mobile',mobile);
+
+    if(!mobile){
+      html.classList.remove('ff-scroll-free','ff-scroll-locked');
+      document.body?.classList.remove('mobile-nav-more-open');
+      window.closeMobileNavMore?.();
+    }else if(!document.body?.classList.contains('auth-pending')){
+      reveal(document);
+    }
+    return mobile;
   }
 
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',apply,{once:true});
+  window.finalforgeApplyDeviceMode=apply;
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply,{once:true});
   else apply();
 
-  addEventListener('finalforge-ready',()=>{apply();setTimeout(apply,80);setTimeout(apply,420)});
-  addEventListener('finalforge-mobile-navigate',apply);
+  addEventListener('finalforge-ready',()=>{apply();setTimeout(apply,80)});
   addEventListener('pageshow',apply,{passive:true});
   addEventListener('resize',apply,{passive:true});
+  addEventListener('orientationchange',()=>setTimeout(apply,80),{passive:true});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)apply()});
 
-  /* Dynamic cards can still arrive later, but ordinary class/style changes must not
-     trigger a whole-document recovery pass on every navigation frame. */
-  const app=document.querySelector('.app');
-  if(app){
-    let queued=false;
-    new MutationObserver(mutations=>{
-      if(!mutations.some(m=>m.addedNodes.length))return;
-      if(queued)return;
-      queued=true;
-      requestAnimationFrame(()=>{queued=false;apply()});
-    }).observe(app,{childList:true,subtree:true});
-  }
-
-  /* Desktop safeguard: entrance effects are optional; invisible content is never acceptable. */
-  setTimeout(()=>{
-    document.querySelectorAll('.ff-enter:not(.ff-entered)').forEach(el=>el.classList.add('ff-entered'));
-  },1600);
+  setTimeout(()=>{if(realMobile())reveal(document)},1200);
 })();

@@ -1,4 +1,4 @@
-/* FinalForge Cloud UI Stability v2 — prevent delayed cloud hydration from rebuilding active mobile UI mid-gesture without suppressing first renders. */
+/* FinalForge Cloud UI Stability v5 — stable hydration with independent render queues. */
 (()=>{
   'use strict';
 
@@ -6,10 +6,11 @@
   const body=document.body;
   if(!body)return;
 
-  const realMobile=()=>root.classList.contains('ff-real-mobile')||matchMedia('(max-width:900px)').matches||((navigator.maxTouchPoints||0)>0&&matchMedia('(pointer:coarse)').matches);
-  let lastInteractionAt=0;
-  let pendingTimer=0;
+  const realMobile=()=>typeof window.finalforgeIsMobile==='function'
+    ?window.finalforgeIsMobile()
+    :root.classList.contains('ff-real-mobile');
 
+  let lastInteractionAt=0;
   ['touchstart','touchmove','pointerdown','wheel'].forEach(type=>{
     addEventListener(type,()=>{lastInteractionAt=Date.now()},{passive:true});
   });
@@ -34,6 +35,7 @@
 
     let lastSignature=signatureFn();
     let queuedArgs=null;
+    let pendingTimer=0;
 
     const runQueued=()=>{
       pendingTimer=0;
@@ -46,11 +48,10 @@
       if(!canRun())return;
       const beforeSection=document.querySelector('.section.active')?.id||'';
       const beforeY=window.scrollY;
-      const sig=signatureFn();
-      lastSignature=sig;
+      lastSignature=signatureFn();
       original.apply(window,args);
       if(realMobile()&&document.querySelector('.section.active')?.id===beforeSection){
-        requestAnimationFrame(()=>window.scrollTo({top:beforeY,left:0,behavior:'instant'}));
+        requestAnimationFrame(()=>window.scrollTo({top:beforeY,left:0,behavior:'auto'}));
       }
     };
 
@@ -58,15 +59,12 @@
       const sig=signatureFn();
       const authOpen=!body.classList.contains('auth-pending');
 
-      /* Never suppress the first real render of a section. The Practice shell starts
-         empty in index.html and is populated only when renderPractice() runs. */
       if(!isPopulated()){
         if(!canRun())return;
         lastSignature=sig;
         return original.apply(this,args);
       }
 
-      /* Once a section is already populated, identical cloud data must not rebuild it. */
       if(authOpen&&sig===lastSignature)return;
 
       if(!realMobile()){
@@ -77,7 +75,7 @@
 
       queuedArgs=args;
       clearTimeout(pendingTimer);
-      pendingTimer=setTimeout(runQueued,idleFor()<700?760-idleFor():0);
+      pendingTimer=setTimeout(runQueued,idleFor()<700?Math.max(0,760-idleFor()):0);
     }
 
     stableWrapper.__ffCloudStable=true;
@@ -90,14 +88,12 @@
   wrapStable('renderPlanner',progressSignature,()=>true,plannerPopulated);
   wrapStable('renderPractice',practiceSignature,()=>!document.querySelector('#practice .exam-app'),practicePopulated);
 
-  /* Extra recovery for the exact empty-Practice regression: if navigation reaches
-     Practice with an uninitialized shell, render it immediately. */
-  addEventListener('finalforge-mobile-navigate',event=>{
-    const id=event?.detail?.id||event?.detail||document.querySelector('.section.active')?.id;
+  addEventListener('finalforge-after-navigate',event=>{
+    if(!realMobile())return;
+    const id=event?.detail?.id||document.querySelector('.section.active')?.id;
     if(id==='practice'&&!practicePopulated()&&typeof window.renderPractice==='function')window.renderPractice();
   });
 
-  /* A stale cloud refresh must never recreate an overlay/lock state on Home. */
   addEventListener('finalforge-ready',()=>{
     if(!realMobile())return;
     if(!document.querySelector('dialog[open]')&&!document.querySelector('#mobileMoreSheet.open')&&!document.querySelector('#ffV2Palette:not([hidden])')){

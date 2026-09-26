@@ -1,81 +1,66 @@
-/* FinalForge Practice Stability v1 — prevent exam state from trapping navigation. */
-(() => {
+/* FinalForge Practice Stability v2 — navigation hook, no router replacement. */
+(()=>{
   'use strict';
 
-  const practice = document.getElementById('practice');
-  if (!practice || typeof window.go !== 'function') return;
+  const practice=document.getElementById('practice');
+  if(!practice)return;
+  const $=s=>document.querySelector(s);
+  let cleaning=false;
 
-  const $ = s => document.querySelector(s);
-  const originalGo = window.go.bind(window);
-  let cleaning = false;
-
-  function examRunning(){
-    return Boolean(practice.querySelector('.exam-app'));
-  }
+  const examRunning=()=>Boolean(practice.querySelector('.exam-app'));
 
   function normalizePracticeShell(){
-    const running = examRunning();
-    document.body.classList.toggle('ff-practice-exam-running', running);
-
-    if (!running) {
-      ['practiceHero','practiceStats','practiceModuleTabs','mockLibrary'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.hidden = false;
+    const running=examRunning();
+    document.body.classList.toggle('ff-practice-exam-running',running);
+    if(!running){
+      ['practiceHero','practiceStats','practiceModuleTabs','mockLibrary'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el)el.hidden=false;
       });
     }
   }
 
   function leavePracticeSafely(){
-    if (cleaning) return;
-    cleaning = true;
-    try {
-      if (examRunning() && typeof window.exitPracticeExam === 'function') {
-        /* Canonical exit saves the attempt, stops its timer and restores the Practice shell. */
-        window.exitPracticeExam();
-      } else if (practice.querySelector('.exam-results') && typeof window.closePracticeResults === 'function') {
-        window.closePracticeResults();
-      }
+    if(cleaning)return;
+    cleaning=true;
+    try{
+      if(examRunning()&&typeof window.exitPracticeExam==='function')window.exitPracticeExam();
+      else if(practice.querySelector('.exam-results')&&typeof window.closePracticeResults==='function')window.closePracticeResults();
       normalizePracticeShell();
       document.body.classList.remove('ff-practice-exam-running');
-    } catch (error) {
-      console.warn('[FinalForge] Practice cleanup fallback used.', error);
+    }catch(error){
+      console.warn('[FinalForge] Practice cleanup fallback used.',error);
       document.body.classList.remove('ff-practice-exam-running');
-      ['practiceHero','practiceStats','practiceModuleTabs','mockLibrary'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.hidden = false;
+      ['practiceHero','practiceStats','practiceModuleTabs','mockLibrary'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el)el.hidden=false;
       });
-    } finally {
-      cleaning = false;
-    }
+    }finally{cleaning=false}
   }
 
-  window.go = function(id){
-    const target = String(id || '');
-    const practiceActive = practice.classList.contains('active');
+  const previousBeforeNavigate=window.finalforgeBeforeNavigate;
+  window.finalforgeBeforeNavigate=function(target){
+    if(typeof previousBeforeNavigate==='function'&&previousBeforeNavigate(target)===false)return false;
+    const id=String(target||'');
+    const practiceActive=practice.classList.contains('active');
 
-    /* Clicking Practice while already answering a paper should not destroy/re-render it. */
-    if (target === 'practice' && practiceActive && examRunning()) {
-      window.scrollTo({top:0,behavior:'smooth'});
+    if(id==='practice'&&practiceActive&&examRunning()){
+      window.scrollTo({top:0,left:0,behavior:'auto'});
       normalizePracticeShell();
-      return;
+      return false;
     }
-
-    /* Leaving an active exam must save + stop its timer before another section opens. */
-    if (target !== 'practice' && practiceActive) leavePracticeSafely();
-
-    const result = originalGo(target);
-    if (target === 'practice') requestAnimationFrame(normalizePracticeShell);
-    else document.body.classList.remove('ff-practice-exam-running');
-    return result;
+    if(id!=='practice'&&practiceActive)leavePracticeSafely();
+    return true;
   };
 
-  /* Keep body state synced when the runner swaps Practice Center <-> Exam <-> Results. */
-  const workbench = $('#practiceWorkbench');
-  if (workbench) {
-    new MutationObserver(() => requestAnimationFrame(normalizePracticeShell))
-      .observe(workbench,{childList:true,subtree:false});
-  }
+  addEventListener('finalforge-after-navigate',event=>{
+    if(event?.detail?.id==='practice')requestAnimationFrame(normalizePracticeShell);
+    else document.body.classList.remove('ff-practice-exam-running');
+  });
 
-  /* Recover from an interrupted older session that left Practice controls hidden. */
+  const workbench=$('#practiceWorkbench');
+  if(workbench)new MutationObserver(()=>requestAnimationFrame(normalizePracticeShell))
+    .observe(workbench,{childList:true,subtree:false});
+
   normalizePracticeShell();
 })();

@@ -1,10 +1,31 @@
-
 const D=window.FINALFORGE_DATA, modules=D.modules, resources=D.resources;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const NAV=[['home','🏠','Home'],['modules','📚','Modules'],['resources','📁','Resources'],['practice','🎯','Practice'],['schedule','🗓️','Schedule'],['planner','✅','Planner'],['roadmap','🧭','Roadmap']];
 let toastTimer=0;function toast(t){const x=$('#toast');if(!x)return;clearTimeout(toastTimer);x.textContent=t;x.setAttribute('role','status');x.setAttribute('aria-live','polite');x.setAttribute('aria-atomic','true');x.classList.add('show');toastTimer=setTimeout(()=>x.classList.remove('show'),2200)}
 function nav(){let h=NAV.map((n,i)=>`<button data-go="${n[0]}" class="${i?'':'active'}" onclick="go('${n[0]}')">${n[1]} <span>${n[2]}</span></button>`).join('');$('#nav').innerHTML=h;$('#mobileNav').innerHTML=h}
-function go(id){const current=$('.section.active');if(current&&current.id!==id){current.classList.add('section-leaving');setTimeout(()=>current.classList.remove('section-leaving'),190)}$$('.section').forEach(s=>s.classList.toggle('active',s.id===id));$$('[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===id));scrollTo({top:0,behavior:'smooth'});if(id==='resources')renderResources();if(id==='practice'&&typeof renderPractice==='function')renderPractice();if(id==='schedule')renderSchedule();if(id==='planner')renderPlanner();if(window.finalforgeAfterNavigate)window.finalforgeAfterNavigate(id)}
+function go(id){
+  const target=String(id||'');
+  const targetSection=document.getElementById(target);
+  if(!targetSection?.classList.contains('section'))return false;
+  try{if(typeof window.finalforgeBeforeNavigate==='function'&&window.finalforgeBeforeNavigate(target)===false)return false}catch(err){console.warn('[FinalForge] beforeNavigate fallback.',err)}
+  const mobile=typeof window.finalforgeIsMobile==='function'?window.finalforgeIsMobile():document.documentElement.classList.contains('ff-real-mobile');
+  const current=$('.section.active');
+  if(current&&current.id!==target){
+    if(!mobile){current.classList.add('section-leaving');setTimeout(()=>current.classList.remove('section-leaving'),190)}
+    else current.classList.remove('section-leaving');
+  }
+  $$('.section').forEach(s=>{const active=s.id===target;s.classList.toggle('active',active);s.setAttribute('aria-hidden',String(!active));});
+  $$('[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===target));
+  if(target==='resources')renderResources();
+  if(target==='practice'&&typeof renderPractice==='function')renderPractice();
+  if(target==='schedule')renderSchedule();
+  if(target==='planner')renderPlanner();
+  try{window.scrollTo(0,0)}catch{}
+  try{window.finalforgeAfterNavigate?.(target)}catch(err){console.warn('[FinalForge] afterNavigate fallback.',err)}
+  window.dispatchEvent(new CustomEvent('finalforge-after-navigate',{detail:{id:target,mobile}}));
+  if(mobile)window.dispatchEvent(new CustomEvent('finalforge-mobile-navigate',{detail:{id:target}}));
+  return true;
+}
 function fmtBytes(n){if(n<1024*1024)return (n/1024).toFixed(0)+' KB';return (n/1024/1024).toFixed(1)+' MB'}
 function examDate(m){return new Date(m.date)}
 function diffText(m){let ms=examDate(m)-Date.now();if(ms<=0)return 'Exam started/passed';let d=Math.floor(ms/86400000),h=Math.floor(ms%86400000/3600000);return d?`${d}d ${h}h remaining`:`${h}h remaining`}

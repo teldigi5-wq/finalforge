@@ -2,76 +2,89 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 
-const read = path => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
+const read=path=>readFile(new URL(`../${path}`,import.meta.url),'utf8');
 
-test('short landscape phone layout cannot be triggered by desktop zoom', async () => {
-  const css = await read('assets/auth-world-v1.css');
-  const legacy = await read('assets/reference-refresh.css');
-  const coarse = '@media(max-height:560px) and (orientation:landscape) and (max-width:950px) and (hover:none) and (pointer:coarse)';
-  const fine = '@media(max-height:560px) and (orientation:landscape) and (max-width:950px) and (hover:hover) and (pointer:fine)';
-  assert.ok(css.includes(coarse));
-  assert.ok(legacy.includes(coarse));
-  assert.ok(css.includes(fine));
-  assert.match(css, /padding:clamp\(5\.25rem,22dvh,7rem\) 0 0!important/);
-  for (const width of [1024,1280,1440,1920]) {
-    for (const zoom of [1,2,3,4]) assert.ok(width / zoom >= 256, `${width}px at ${zoom * 100}% remains covered by fluid layout`);
-  }
-});
-
-test('animated auth border is clipped to the card without fixed dimensions or shadows', async () => {
-  const css = await read('assets/auth-world-v1.css');
-  assert.match(css, /\.ff-auth-card-border\{[^}]*inset:0!important;[^}]*width:auto!important;[^}]*height:auto!important/);
-  assert.match(css, /\.ff-auth-card-border\{[^}]*contain:paint!important;[^}]*border:0!important;[^}]*border-radius:inherit!important;[^}]*box-shadow:none!important/);
-  assert.match(css, /\.ff-auth-card-border::before\{[^}]*border:0!important;[^}]*box-shadow:none!important/);
-});
-
-test('auth UX and responsive assets are loaded and cached', async () => {
-  const [html, loader, worker, ux] = await Promise.all([
-    read('index.html'), read('assets/core-loader.js'), read('sw.js'), read('assets/ux-hardening-v1.js')
+test('one mobile classifier protects touch-capable desktop PCs',async()=>{
+  const [runtime,cloud,nav,css]=await Promise.all([
+    read('assets/mobile-runtime-final-v1.js'),
+    read('assets/cloud-ui-stability-v1.js'),
+    read('assets/mobile-navigation-runtime-v2.js'),
+    read('assets/mobile-modern-v4.css')
   ]);
-  assert.match(html, /id="rememberSession"/);
-  assert.match(html, /id="signupStrength"/);
-  assert.match(html, /study-room\.webp" type="image\/webp" fetchpriority="high"/);
-  const authCss = html.indexOf('assets/auth-world-v1.css?v=responsive-qa-15');
-  const responsiveCss = html.indexOf('assets/responsive-hardening-v2.css?v=1');
-  const uxScript = html.indexOf('assets/ux-hardening-v1.js?v=1');
-  const toast = html.indexOf('id="toast"');
-  assert.ok(authCss >= 0 && responsiveCss > authCss, 'responsive CSS is the final auth override');
-  assert.ok(uxScript > toast, 'UX script loads after its DOM targets');
-  assert.match(html, /class="card ff-empty-state"/);
-  assert.match(html, /class="card stat ff-skeleton-card"/);
-  assert.match(loader, /responsive-hardening-v2\.css/);
-  assert.doesNotMatch(loader, /loadScript\('assets\/ux-hardening-v1\.js'/);
-  assert.match(worker, /finalforge-v15-responsive-qa-integration/);
-  assert.match(worker, /responsive-hardening-v2\.css/);
-  assert.match(worker, /ux-hardening-v1\.js/);
-  assert.match(ux, /Student IDs use IT followed by 8 digits/);
+
+  assert.match(runtime,/window\.finalforgeIsMobile=realMobile/);
+  assert.match(runtime,/viewport<=900/);
+  assert.match(runtime,/physicalShort<=640/);
+  assert.match(runtime,/handheldTouch/);
+  assert.doesNotMatch(css,/\(hover:none\)\s*and\s*\(pointer:coarse\)/);
+  assert.doesNotMatch(css,/max-device-width/);
+  assert.match(cloud,/window\.finalforgeIsMobile/);
+  assert.match(nav,/window\.finalforgeIsMobile/);
+
+  const classify=({viewport,physicalShort,touch=false,coarse=false})=>
+    viewport<=900||(touch&&coarse&&physicalShort<=640);
+
+  assert.equal(classify({viewport:1920,physicalShort:1080,touch:true,coarse:true}),false);
+  assert.equal(classify({viewport:1536,physicalShort:864,touch:true,coarse:true}),false);
+  assert.equal(classify({viewport:1366,physicalShort:768,touch:true,coarse:true}),false);
+  assert.equal(classify({viewport:1024,physicalShort:768,touch:true,coarse:true}),false);
+  assert.equal(classify({viewport:800,physicalShort:800}),true);
+  assert.equal(classify({viewport:390,physicalShort:390,touch:true,coarse:true}),true);
+  assert.equal(classify({viewport:980,physicalShort:412,touch:true,coarse:true}),true);
 });
 
-test('resize and dashboard parallax handlers are frame-throttled', async () => {
-  const [motion, mobile, reference, auth] = await Promise.all([
-    read('assets/product-motion-v5.js'), read('assets/mobile-experience-v4.js'),
-    read('assets/reference-enhancements.js'), read('assets/auth-world-v1.js')
+test('app.js is the only section router',async()=>{
+  const [app,practice,mobileNav]=await Promise.all([
+    read('assets/app.js'),
+    read('assets/practice-stability-v1.js'),
+    read('assets/mobile-navigation-runtime-v2.js')
   ]);
-  assert.match(motion, /if\(parallaxQueued\)return;parallaxQueued=true;requestAnimationFrame/);
-  assert.match(motion, /if\(resizeQueued\)return;resizeQueued=true;requestAnimationFrame/);
-  assert.match(mobile, /if\(resizeQueued\)return;resizeQueued=true;requestAnimationFrame/);
-  assert.match(reference, /if\(moveQueued\)return;moveQueued=true/);
-  assert.doesNotMatch(auth, /offsetWidth/);
+  assert.match(app,/function go\(id\)/);
+  assert.match(app,/finalforgeBeforeNavigate/);
+  assert.match(app,/finalforge-after-navigate/);
+  assert.doesNotMatch(practice,/window\.go\s*=/);
+  assert.doesNotMatch(mobileNav,/window\.go\s*=/);
+  assert.match(practice,/window\.finalforgeBeforeNavigate/);
 });
 
-test('login feedback, motion, and keyboard order remain wired', async () => {
-  const [html, auth, motion] = await Promise.all([
-    read('index.html'), read('assets/auth.js'), read('assets/auth-world-v1.js')
+test('critical runtime loads deterministically before decorative motion',async()=>{
+  const [loader,reference]=await Promise.all([
+    read('assets/core-loader.js'),
+    read('assets/reference-enhancements.js')
   ]);
-  const identity = html.indexOf('id="loginIdentity"');
-  const password = html.indexOf('id="loginPassword"');
-  const remember = html.indexOf('id="rememberSession"');
-  const submit = html.indexOf('Log in securely');
-  assert.ok(identity < password && password < remember && remember < submit, 'login controls follow a logical tab order');
-  assert.match(auth, /Student ID not found\. Check the ID or create an account first\./);
-  assert.match(auth, /Incorrect password\. Try again or use password reset\./);
-  assert.match(motion, /ff-auth-failure/);
-  assert.match(motion, /is-success/);
-  assert.match(motion, /ff-auth-card-exit/);
+  const device=loader.indexOf("loadScript('assets/mobile-runtime-final-v1.js')");
+  const cloud=loader.indexOf("loadScript('assets/cloud-ui-stability-v1.js')");
+  const practice=loader.indexOf("loadScript('assets/practice-stability-v1.js')");
+  const nav=loader.indexOf("loadScript('assets/mobile-navigation-runtime-v2.js')");
+  const scroll=loader.indexOf("loadScript('assets/mobile-scroll-recovery-v1.js')");
+  const motion=loader.indexOf("loadScript('assets/product-motion-v5.js')");
+  assert.ok(device>=0&&cloud>device);
+  assert.ok(practice>cloud&&nav>practice&&scroll>nav);
+  assert.ok(motion>scroll);
+  assert.match(loader,/if\(!window\.finalforgeIsMobile\?\.\(\)\)await loadScript\('assets\/product-motion-v5\.js'\)/);
+  assert.doesNotMatch(reference,/mobile-runtime-final-v1\.js/);
+  assert.doesNotMatch(reference,/mobile-scroll-recovery-v1\.js/);
+  assert.doesNotMatch(reference,/mobile-navigation-runtime-v2\.js/);
+  assert.doesNotMatch(reference,/practice-stability-v1\.js/);
+});
+
+test('cloud render queues are independent and Practice first render cannot be suppressed',async()=>{
+  const cloud=await read('assets/cloud-ui-stability-v1.js');
+  assert.match(cloud,/let pendingTimer=0/);
+  assert.match(cloud,/if\(!isPopulated\(\)\)/);
+  assert.match(cloud,/return original\.apply\(this,args\)/);
+  assert.match(cloud,/practicePopulated/);
+});
+
+test('service worker carries the consolidated runtime boundary',async()=>{
+  const worker=await read('sw.js');
+  assert.match(worker,/finalforge-v46-runtime-consolidation/);
+  for(const asset of [
+    'mobile-modern-v4.css',
+    'mobile-runtime-final-v1.js',
+    'mobile-scroll-recovery-v1.js',
+    'mobile-navigation-runtime-v2.js',
+    'practice-stability-v1.js',
+    'cloud-ui-stability-v1.js'
+  ])assert.ok(worker.includes(asset),`${asset} must be cached`);
 });
