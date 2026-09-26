@@ -10,7 +10,13 @@ test('signup reliability patch keeps the create-account card scroll-safe', () =>
 
 test('signup reliability patch recovers unverified existing accounts', () => {
   assert.match(source, /response\.status===409/);
-  assert.match(source, /A new verification email has been sent/);
+  assert.match(source, /await sendVerification\(credential\.user\)/);
+  assert.match(source, /fresh verification request was accepted/i);
+});
+
+test('verification resend uses delivery-aware wording instead of claiming mailbox delivery', () => {
+  assert.match(source, /A new verification request was accepted/);
+  assert.match(source, /Check Inbox and Junk\/Spam/);
 });
 
 test('verification email falls back when continue URL is rejected', () => {

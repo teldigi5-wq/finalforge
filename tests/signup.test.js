@@ -2,6 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { registerStudent } from '../api/signup.js';
 
+const STUDENT_ID='IT26111111';
+const SLIIT_EMAIL='it26111111@my.sliit.lk';
+const PASSWORD='test-password-123';
+
+function request(overrides={}){
+  return {studentId:STUDENT_ID,sliitEmail:SLIIT_EMAIL,password:PASSWORD,ip:'test',...overrides};
+}
+
 function backend(approved, { active = true, claimed = false, allowlistEmail } = {}) {
   const created = [];
   const db = {
@@ -18,30 +26,34 @@ function backend(approved, { active = true, claimed = false, allowlistEmail } = 
 
 test('unapproved Student ID cannot create an Auth account', async () => {
   const deps = backend(false);
-  const result = await registerStudent({ studentId: 'IT26111111', password: 'test-password-123', ip: 'test' }, deps);
+  const result = await registerStudent(request(), deps);
   assert.equal(result.status, 403);
   assert.equal(deps.created.length, 0);
 });
 
-test('approved ID is created with derived address and unverified email', async () => {
+test('approved ID is created with the validated SLIIT address and unverified email', async () => {
   const deps = backend(true);
-  const result = await registerStudent({ studentId: 'it26111111', password: 'test-password-123', email: 'attacker@example.com', ip: 'test' }, deps);
+  const result = await registerStudent(request({
+    studentId: 'it26111111',
+    email: 'attacker@example.com',
+  }), deps);
   assert.equal(result.status, 201);
-  assert.equal(deps.created[0].email, 'it26111111@my.sliit.lk');
+  assert.equal(deps.created[0].email, SLIIT_EMAIL);
   assert.equal(deps.created[0].emailVerified, false);
 });
 
-test('malformed ID and weak password never call the Auth API', async () => {
+test('malformed ID, weak password, and mismatched SLIIT email never call the Auth API', async () => {
   const deps = backend(true);
-  assert.equal((await registerStudent({ studentId: 'X123', password: 'test-password-123', ip: 'test' }, deps)).status, 400);
-  assert.equal((await registerStudent({ studentId: 'IT26111111', password: 'short', ip: 'test' }, deps)).status, 400);
+  assert.equal((await registerStudent(request({ studentId: 'X123', sliitEmail: 'x123@my.sliit.lk' }), deps)).status, 400);
+  assert.equal((await registerStudent(request({ password: 'short' }), deps)).status, 400);
+  assert.equal((await registerStudent(request({ sliitEmail: 'attacker@example.com' }), deps)).status, 400);
   assert.equal(deps.created.length, 0);
 });
 
 test('inactive and mismatched allowlist entries cannot create accounts', async () => {
   for (const options of [{ active: false }, { allowlistEmail: 'another@my.sliit.lk' }]) {
     const deps = backend(true, options);
-    const result = await registerStudent({ studentId: 'IT26111111', password: 'test-password-123', ip: 'test' }, deps);
+    const result = await registerStudent(request(), deps);
     assert.equal(result.status, 403);
     assert.equal(deps.created.length, 0);
   }
@@ -49,7 +61,7 @@ test('inactive and mismatched allowlist entries cannot create accounts', async (
 
 test('an already claimed Student ID cannot create another account', async () => {
   const deps = backend(true, { claimed: true });
-  const result = await registerStudent({ studentId: 'IT26111111', password: 'test-password-123', ip: 'test' }, deps);
+  const result = await registerStudent(request(), deps);
   assert.equal(result.status, 409);
   assert.equal(deps.created.length, 0);
 });

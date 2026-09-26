@@ -11,7 +11,6 @@ test('one mobile classifier protects touch-capable desktop PCs',async()=>{
     read('assets/mobile-navigation-runtime-v2.js'),
     read('assets/mobile-modern-v4.css')
   ]);
-
   assert.match(runtime,/window\.finalforgeIsMobile=realMobile/);
   assert.match(runtime,/viewport<=900/);
   assert.match(runtime,/physicalShort<=640/);
@@ -20,10 +19,7 @@ test('one mobile classifier protects touch-capable desktop PCs',async()=>{
   assert.doesNotMatch(css,/max-device-width/);
   assert.match(cloud,/window\.finalforgeIsMobile/);
   assert.match(nav,/window\.finalforgeIsMobile/);
-
-  const classify=({viewport,physicalShort,touch=false,coarse=false})=>
-    viewport<=900||(touch&&coarse&&physicalShort<=640);
-
+  const classify=({viewport,physicalShort,touch=false,coarse=false})=>viewport<=900||(touch&&coarse&&physicalShort<=640);
   assert.equal(classify({viewport:1920,physicalShort:1080,touch:true,coarse:true}),false);
   assert.equal(classify({viewport:1536,physicalShort:864,touch:true,coarse:true}),false);
   assert.equal(classify({viewport:1366,physicalShort:768,touch:true,coarse:true}),false);
@@ -57,10 +53,12 @@ test('critical runtime loads deterministically before decorative motion',async()
   const practice=loader.indexOf("loadScript('assets/practice-stability-v1.js')");
   const nav=loader.indexOf("loadScript('assets/mobile-navigation-runtime-v2.js')");
   const scroll=loader.indexOf("loadScript('assets/mobile-scroll-recovery-v1.js')");
+  const workspace=loader.indexOf("loadScript('assets/professional-workspace-v2.js')");
   const motion=loader.indexOf("loadScript('assets/product-motion-v5.js')");
   assert.ok(device>=0&&cloud>device);
   assert.ok(practice>cloud&&nav>practice&&scroll>nav);
-  assert.ok(motion>scroll);
+  assert.ok(workspace>scroll,'professional presentation must load after functional runtime ownership');
+  assert.ok(motion>workspace);
   assert.match(loader,/if\(!window\.finalforgeIsMobile\?\.\(\)\)await loadScript\('assets\/product-motion-v5\.js'\)/);
   assert.doesNotMatch(reference,/mobile-runtime-final-v1\.js/);
   assert.doesNotMatch(reference,/mobile-scroll-recovery-v1\.js/);
@@ -76,15 +74,19 @@ test('cloud render queues are independent and Practice first render cannot be su
   assert.match(cloud,/practicePopulated/);
 });
 
-test('service worker carries the consolidated runtime boundary',async()=>{
+test('service worker carries the consolidated runtime and professional hardening',async()=>{
   const worker=await read('sw.js');
-  assert.match(worker,/finalforge-v46-runtime-consolidation/);
+  assert.match(worker,/finalforge-v48-professional-hardening/);
   for(const asset of [
     'mobile-modern-v4.css',
     'mobile-runtime-final-v1.js',
     'mobile-scroll-recovery-v1.js',
     'mobile-navigation-runtime-v2.js',
     'practice-stability-v1.js',
-    'cloud-ui-stability-v1.js'
+    'cloud-ui-stability-v1.js',
+    'professional-workspace-v2.css',
+    'professional-accessibility-v1.css',
+    'professional-workspace-v2.js'
   ])assert.ok(worker.includes(asset),`${asset} must be cached`);
+  assert.match(worker,/typeof AbortSignal\.timeout==='function'/);
 });
