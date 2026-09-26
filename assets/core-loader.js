@@ -110,7 +110,8 @@ document.documentElement.classList.add('ff-auth-restoring');
       loadStyle('assets/past-papers-v1.css'),
       loadStyle('assets/student-experience-v2.css'),
       loadStyle('assets/visual-system-v2.css'),
-      loadStyle('assets/mobile-auth-v5.css')
+      loadStyle('assets/mobile-auth-v5.css'),
+      loadStyle('assets/desktop-auth-v6.css')
     ]);
 
     const firebaseSdkReady=(async()=>{
