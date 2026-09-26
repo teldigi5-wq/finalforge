@@ -115,3 +115,21 @@
   s.onerror=()=>console.warn('[FinalForge] Practice stability guard could not be loaded.');
   document.body.appendChild(s);
 })();
+
+/* Final mobile runtime layer: must load after every other visual/motion layer. */
+(()=>{
+  if(!document.querySelector('link[data-finalforge-mobile-runtime-final]')){
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='assets/mobile-runtime-final-v1.css?v=1';
+    link.dataset.finalforgeMobileRuntimeFinal='1';
+    document.head.appendChild(link);
+  }
+  if(document.querySelector('script[data-finalforge-mobile-runtime-final]'))return;
+  const s=document.createElement('script');
+  s.src='assets/mobile-runtime-final-v1.js?v=1';
+  s.async=false;
+  s.dataset.finalforgeMobileRuntimeFinal='1';
+  s.onerror=()=>console.warn('[FinalForge] Final mobile runtime recovery could not be loaded.');
+  document.body.appendChild(s);
+})();
