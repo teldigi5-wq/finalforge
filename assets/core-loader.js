@@ -42,7 +42,7 @@ document.documentElement.classList.add('ff-auth-restoring');
 })();
 
 (async()=>{
-  const VERSION='professional-workspace-v2';
+  const VERSION='professional-hardening-v1';
   const fail=msg=>{
     document.documentElement.classList.remove('ff-auth-restoring');
     console.error('[FinalForge]',msg);
@@ -124,7 +124,8 @@ document.documentElement.classList.add('ff-auth-restoring');
       loadStyle('assets/runtime-stability-v1.css'),
       loadStyle('assets/mobile-runtime-final-v1.css'),
       loadStyle('assets/mobile-scroll-recovery-v1.css'),
-      loadStyle('assets/professional-workspace-v2.css')
+      loadStyle('assets/professional-workspace-v2.css'),
+      loadStyle('assets/professional-accessibility-v1.css')
     ]);
 
     const firebaseSdkReady=(async()=>{

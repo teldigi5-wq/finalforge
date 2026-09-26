@@ -2,8 +2,6 @@ const D=window.FINALFORGE_DATA, modules=D.modules, resources=D.resources;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const NAV=[['home','🏠','Home'],['modules','📚','Modules'],['resources','📁','Resources'],['practice','🎯','Practice'],['schedule','🗓️','Schedule'],['planner','✅','Planner'],['roadmap','🧭','Roadmap']];
 const isMobileRuntime=()=>typeof window.finalforgeIsMobile==='function'?window.finalforgeIsMobile():document.documentElement.classList.contains('ff-real-mobile');
-function ensureWorkspaceA11yStyles(){if(document.querySelector('link[data-finalforge-workspace-a11y]'))return;const link=document.createElement('link');link.rel='stylesheet';link.href='assets/professional-accessibility-v1.css?v=1';link.dataset.finalforgeWorkspaceA11y='1';document.head.appendChild(link)}
-ensureWorkspaceA11yStyles();
 let toastTimer=0;function toast(t){const x=$('#toast');if(!x)return;clearTimeout(toastTimer);x.textContent=t;x.setAttribute('role','status');x.setAttribute('aria-live','polite');x.setAttribute('aria-atomic','true');x.classList.add('show');toastTimer=setTimeout(()=>x.classList.remove('show'),2200)}
 function nav(){let h=NAV.map((n,i)=>`<button type="button" data-go="${n[0]}" class="${i?'':'active'}"${i?'':' aria-current="page"'} onclick="go('${n[0]}')">${n[1]} <span>${n[2]}</span></button>`).join('');$('#nav').innerHTML=h;$('#mobileNav').innerHTML=h}
 function go(id){
