@@ -87,6 +87,17 @@
   document.body.appendChild(s);
 })();
 
+/* Mobile verification handoff: automatically re-check when the student returns from the email/Firebase tab. */
+(()=>{
+  if(document.querySelector('script[data-finalforge-verification-handoff]'))return;
+  const s=document.createElement('script');
+  s.src='assets/verification-handoff-v1.js?v=1';
+  s.async=false;
+  s.dataset.finalforgeVerificationHandoff='1';
+  s.onerror=()=>console.warn('[FinalForge] Verification handoff guard could not be loaded.');
+  document.body.appendChild(s);
+})();
+
 /* Runtime stability layer: final CSS specificity correction + Practice navigation guard. */
 (()=>{
   if(!document.querySelector('link[data-finalforge-runtime-stability]')){
