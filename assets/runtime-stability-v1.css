@@ -47,10 +47,25 @@ body:not(.auth-pending) #practice .exam-question{
   min-width:0!important;
 }
 
-/* When the stability guard detects an active exam, keep the shell scrollable and navigation reachable. */
-body.ff-practice-exam-running:not(.auth-pending){
-  overflow-y:auto!important;
-  overflow-x:hidden!important;
+/* Desktop can keep the traditional body scroll fallback during an exam. */
+@media(min-width:901px){
+  body.ff-practice-exam-running:not(.auth-pending){
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+  }
+}
+
+/* On phones the document (<html>) remains the only vertical scroller. Starting
+   Practice must not recreate a body scroller or steal Android touch gestures. */
+html.ff-real-mobile body.ff-practice-exam-running:not(.auth-pending){
+  position:static!important;
+  height:auto!important;
+  min-height:100dvh!important;
+  max-height:none!important;
+  overflow-x:clip!important;
+  overflow-y:visible!important;
+  overscroll-behavior:initial!important;
+  touch-action:auto!important;
 }
 body.ff-practice-exam-running:not(.auth-pending) .sidebar,
 body.ff-practice-exam-running:not(.auth-pending) .topbar{

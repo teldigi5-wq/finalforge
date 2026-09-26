@@ -1,6 +1,6 @@
-/* FinalForge Mobile Scroll Recovery v2 — Android single document scroller.
-   IMPORTANT: only <html> owns vertical scrolling. Body/app/main/sections must not
-   become nested vertical scroll containers. */
+/* FinalForge Mobile Scroll Recovery v3 — Android single document scroller.
+   IMPORTANT: only <html> owns vertical scrolling. Body/app/main/sections and
+   interactive feature shells must not become nested vertical scroll containers. */
 html.ff-real-mobile.ff-scroll-free{
   height:auto!important;
   min-height:100%!important;
@@ -51,6 +51,41 @@ html.ff-real-mobile.ff-scroll-free body:not(.auth-pending) .section.active{
 
 html.ff-real-mobile.ff-scroll-free body:not(.auth-pending) .main{
   min-height:100dvh!important;
+}
+
+/* Interactive feature shells must never take vertical scroll ownership. `clip`
+   preserves rounded clipping without creating a scroll container. */
+html.ff-real-mobile.ff-scroll-free body:not(.auth-pending) #practiceWorkbench,
+html.ff-real-mobile.ff-scroll-free body:not(.auth-pending) #practice .exam-layout,
+html.ff-real-mobile.ff-scroll-free body:not(.auth-pending) #practice .exam-question,
+html.ff-real-mobile.ff-scroll-free body:not(.auth-pending) #practice .result-review{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow-y:visible!important;
+  touch-action:auto!important;
+}
+html.ff-real-mobile.ff-scroll-free body:not(.auth-pending) #practice .exam-app,
+html.ff-real-mobile.ff-scroll-free body:not(.auth-pending) #practice .exam-results{
+  max-height:none!important;
+  overflow:clip!important;
+  touch-action:auto!important;
+}
+
+/* The question navigator is intentionally horizontal; keep vertical gestures on
+   the document while allowing a deliberate sideways swipe over the navigator. */
+html.ff-real-mobile.ff-scroll-free body:not(.auth-pending) #practice .exam-nav{
+  overflow-x:auto!important;
+  overflow-y:clip!important;
+  touch-action:pan-x!important;
+  overscroll-behavior-x:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+html.ff-real-mobile.ff-scroll-free body:not(.auth-pending) #practice .exam-question,
+html.ff-real-mobile.ff-scroll-free body:not(.auth-pending) #practice .exam-options,
+html.ff-real-mobile.ff-scroll-free body:not(.auth-pending) #practice .exam-written,
+html.ff-real-mobile.ff-scroll-free body:not(.auth-pending) #practice .exam-question-actions{
+  touch-action:auto!important;
 }
 
 /* Closed navigation layers must never intercept a page swipe. */
