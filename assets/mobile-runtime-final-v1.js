@@ -27,19 +27,22 @@
   else apply();
 
   addEventListener('finalforge-ready',()=>{apply();setTimeout(apply,80);setTimeout(apply,420)});
+  addEventListener('finalforge-mobile-navigate',apply);
   addEventListener('pageshow',apply,{passive:true});
   addEventListener('resize',apply,{passive:true});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)apply()});
 
+  /* Dynamic cards can still arrive later, but ordinary class/style changes must not
+     trigger a whole-document recovery pass on every navigation frame. */
   const app=document.querySelector('.app');
   if(app){
     let queued=false;
     new MutationObserver(mutations=>{
-      if(!mutations.some(m=>m.addedNodes.length||m.type==='attributes'))return;
+      if(!mutations.some(m=>m.addedNodes.length))return;
       if(queued)return;
       queued=true;
       requestAnimationFrame(()=>{queued=false;apply()});
-    }).observe(app,{childList:true,subtree:true,attributes:true,attributeFilter:['class','hidden']});
+    }).observe(app,{childList:true,subtree:true});
   }
 
   /* Desktop safeguard: entrance effects are optional; invisible content is never acceptable. */
