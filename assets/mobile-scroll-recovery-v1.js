@@ -4,6 +4,7 @@
 
   const root=document.documentElement;
   let queued=false;
+  const observed=new WeakSet();
 
   function visible(el){
     if(!el||el.hidden||el.getAttribute('aria-hidden')==='true') return false;
@@ -43,26 +44,39 @@
   function schedule(){
     if(queued)return;
     queued=true;
-    requestAnimationFrame(()=>{queued=false;state()});
+    requestAnimationFrame(()=>{queued=false;state();bindOverlayObservers()});
+  }
+
+  function observeOverlay(el){
+    if(!el||observed.has(el))return;
+    observed.add(el);
+    new MutationObserver(schedule).observe(el,{attributes:true,attributeFilter:['class','hidden','aria-hidden','style']});
+  }
+
+  function bindOverlayObservers(){
+    observeOverlay(document.getElementById('ffV2Palette'));
+    observeOverlay(document.getElementById('mobileMoreSheet'));
+    observeOverlay(document.getElementById('mobileNavScrim'));
   }
 
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',schedule,{once:true});
   else schedule();
 
   addEventListener('finalforge-ready',()=>{schedule();setTimeout(schedule,120);setTimeout(schedule,600)});
+  addEventListener('finalforge-mobile-navigate',schedule);
   addEventListener('pageshow',schedule,{passive:true});
   addEventListener('focus',schedule,{passive:true});
   addEventListener('resize',schedule,{passive:true});
   addEventListener('orientationchange',()=>setTimeout(schedule,120),{passive:true});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule()});
-  document.addEventListener('touchstart',schedule,{passive:true});
-  document.addEventListener('touchend',schedule,{passive:true});
-  document.addEventListener('pointerup',schedule,{passive:true});
 
-  const observeTarget=document.body||document.documentElement;
-  new MutationObserver(schedule).observe(observeTarget,{
-    subtree:true,
-    attributes:true,
-    attributeFilter:['class','hidden','aria-hidden','style']
-  });
+  /* Only body lock changes and newly inserted overlay roots matter. Do not observe
+     every class/style mutation in the whole app; navigation changes many of them. */
+  const body=document.body;
+  if(body){
+    new MutationObserver(schedule).observe(body,{attributes:true,attributeFilter:['class','style']});
+    new MutationObserver(mutations=>{
+      if(mutations.some(m=>m.addedNodes.length))schedule();
+    }).observe(body,{childList:true,subtree:true});
+  }
 })();
