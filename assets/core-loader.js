@@ -1,6 +1,14 @@
-/* FinalForge production loader — stable dark first paint, parallel auth boot, cached app reconstruction. */
-document.documentElement.style.background='#020304';
-document.documentElement.style.colorScheme='dark';
+/* FinalForge production loader — stable first paint, parallel auth boot, cached app reconstruction. */
+try{
+  const t=localStorage.getItem('finalforge_theme_v1');
+  const initial=t==='light'||t==='dark'?t:'dark';
+  document.documentElement.dataset.theme=initial;
+  document.documentElement.style.background=initial==='dark'?'#07111f':'#f4f7fb';
+  document.documentElement.style.colorScheme=initial;
+}catch{
+  document.documentElement.style.background='#07111f';
+  document.documentElement.style.colorScheme='dark';
+}
 
 (async()=>{
   const fail=(msg)=>{
@@ -12,12 +20,12 @@ document.documentElement.style.colorScheme='dark';
   const loadScript=src=>new Promise((resolve,reject)=>{
     const existing=[...document.scripts].find(s=>s.src&&s.src.includes(src));
     if(existing){if(existing.dataset.ffLoaded==='1'||existing.readyState==='complete')return resolve();existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',()=>reject(new Error(`Could not load ${src}`)),{once:true});return;}
-    const s=document.createElement('script');s.src=src.startsWith('assets/')?`${src}?v=student-v2`:src;s.async=true;s.onload=()=>{s.dataset.ffLoaded='1';resolve()};s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s);
+    const s=document.createElement('script');s.src=src.startsWith('assets/')?`${src}?v=visual-v2`:src;s.async=true;s.onload=()=>{s.dataset.ffLoaded='1';resolve()};s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s);
   });
   const loadStyle=href=>new Promise((resolve,reject)=>{
     const existing=[...document.querySelectorAll('link[rel="stylesheet"]')].find(l=>l.href&&l.href.includes(href));
     if(existing){if(existing.sheet)return resolve();existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',()=>reject(new Error(`Could not load ${href}`)),{once:true});return;}
-    const l=document.createElement('link');l.rel='stylesheet';l.href=`${href}?v=student-v2`;l.onload=resolve;l.onerror=()=>reject(new Error(`Could not load ${href}`));document.head.appendChild(l);
+    const l=document.createElement('link');l.rel='stylesheet';l.href=`${href}?v=visual-v2`;l.onload=resolve;l.onerror=()=>reject(new Error(`Could not load ${href}`));document.head.appendChild(l);
   });
   const preconnect=href=>{if(document.querySelector(`link[rel="preconnect"][href="${href}"]`))return;const l=document.createElement('link');l.rel='preconnect';l.href=href;l.crossOrigin='anonymous';document.head.appendChild(l)};
 
@@ -42,7 +50,8 @@ document.documentElement.style.colorScheme='dark';
       loadStyle('assets/responsive-hardening-v2.css'),
       loadStyle('assets/auth-neon-rounded-v1.css'),
       loadStyle('assets/past-papers-v1.css'),
-      loadStyle('assets/student-experience-v2.css')
+      loadStyle('assets/student-experience-v2.css'),
+      loadStyle('assets/visual-system-v2.css')
     ]);
 
     const firebaseSdkReady=(async()=>{
