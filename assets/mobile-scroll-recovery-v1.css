@@ -1,0 +1,74 @@
+/* FinalForge Mobile Scroll Recovery v1 — fail-open vertical scrolling without breaking real overlays. */
+html.ff-real-mobile.ff-scroll-free{
+  height:auto!important;
+  min-height:100%!important;
+  max-height:none!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  overscroll-behavior-x:none!important;
+  overscroll-behavior-y:auto!important;
+  touch-action:pan-y pinch-zoom!important;
+  scroll-behavior:auto!important;
+}
+
+html.ff-real-mobile.ff-scroll-free body:not(.auth-pending){
+  position:static!important;
+  inset:auto!important;
+  top:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  left:auto!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:100dvh!important;
+  max-height:none!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  overscroll-behavior-x:none!important;
+  overscroll-behavior-y:auto!important;
+  touch-action:pan-y pinch-zoom!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+
+html.ff-real-mobile.ff-scroll-free body:not(.auth-pending) .app,
+html.ff-real-mobile.ff-scroll-free body:not(.auth-pending) .main{
+  position:relative!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:100dvh!important;
+  max-height:none!important;
+  overflow-x:hidden!important;
+  overflow-y:visible!important;
+  overscroll-behavior-y:auto!important;
+  touch-action:pan-y pinch-zoom!important;
+}
+
+html.ff-real-mobile.ff-scroll-free body:not(.auth-pending) .section,
+html.ff-real-mobile.ff-scroll-free body:not(.auth-pending) .section.active{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow-y:visible!important;
+  overscroll-behavior-y:auto!important;
+  touch-action:pan-y pinch-zoom!important;
+}
+
+/* Closed mobile-nav layers must never sit over the document and steal a vertical swipe. */
+html.ff-real-mobile.ff-scroll-free #mobileNav .mobile-nav-scrim:not(.open),
+html.ff-real-mobile.ff-scroll-free #mobileNav .mobile-more-sheet:not(.open){
+  pointer-events:none!important;
+}
+
+/* The fixed bottom bar should handle taps, while ordinary page swipes stay vertical. */
+html.ff-real-mobile #mobileNav .mobile-nav-bar{
+  touch-action:manipulation!important;
+}
+
+/* When a real modal is open, its own existing lock behavior remains authoritative. */
+html.ff-real-mobile.ff-scroll-locked{
+  overscroll-behavior:none!important;
+}
