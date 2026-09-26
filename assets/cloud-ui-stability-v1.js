@@ -106,3 +106,30 @@
     }
   },{once:true});
 })();
+
+/* Reference-inspired FinalForge workspace.
+   Load after the canonical app and recovery layers so this stays an isolated, reversible redesign. */
+(()=>{
+  'use strict';
+  let loaded=false;
+  const load=()=>{
+    if(loaded)return;loaded=true;
+    if(!document.querySelector('link[data-finalforge-next-ui]')){
+      const link=document.createElement('link');
+      link.rel='stylesheet';
+      link.href='assets/next-ui-v1.css?v=1';
+      link.dataset.finalforgeNextUi='1';
+      document.head.appendChild(link);
+    }
+    if(!document.querySelector('script[data-finalforge-next-ui]')){
+      const script=document.createElement('script');
+      script.src='assets/next-ui-v1.js?v=1';
+      script.async=false;
+      script.dataset.finalforgeNextUi='1';
+      script.onerror=()=>console.warn('[FinalForge] Next UI could not be loaded.');
+      document.body.appendChild(script);
+    }
+  };
+  addEventListener('finalforge-ready',()=>setTimeout(load,260),{once:true});
+  if(document.readyState==='complete')setTimeout(load,900);
+})();
