@@ -1,4 +1,4 @@
-/* FinalForge Cloud UI Stability v1 — prevent delayed cloud hydration from rebuilding active mobile UI mid-gesture. */
+/* FinalForge Cloud UI Stability v2 — prevent delayed cloud hydration from rebuilding active mobile UI mid-gesture without suppressing first renders. */
 (()=>{
   'use strict';
 
@@ -22,7 +22,13 @@
     localStorage.getItem('finalforge_quiz_scores')||''
   ].join('\u001f');
 
-  const wrapStable=(name,signatureFn,canRun=()=>true)=>{
+  const hasChildren=id=>Boolean(document.querySelector(id)?.children?.length);
+  const homePopulated=()=>hasChildren('#homeModules');
+  const modulesPopulated=()=>hasChildren('#moduleGrid');
+  const plannerPopulated=()=>hasChildren('#plannerTasks');
+  const practicePopulated=()=>hasChildren('#practiceModuleTabs')&&hasChildren('#practiceHero')&&hasChildren('#practiceWorkbench');
+
+  const wrapStable=(name,signatureFn,canRun=()=>true,isPopulated=()=>true)=>{
     const original=window[name];
     if(typeof original!=='function'||original.__ffCloudStable)return;
 
@@ -52,8 +58,15 @@
       const sig=signatureFn();
       const authOpen=!body.classList.contains('auth-pending');
 
-      /* Initial page render already happened before this guard loads. If cloud sync
-         returns identical data, do not rebuild the live DOM at all. */
+      /* Never suppress the first real render of a section. The Practice shell starts
+         empty in index.html and is populated only when renderPractice() runs. */
+      if(!isPopulated()){
+        if(!canRun())return;
+        lastSignature=sig;
+        return original.apply(this,args);
+      }
+
+      /* Once a section is already populated, identical cloud data must not rebuild it. */
       if(authOpen&&sig===lastSignature)return;
 
       if(!realMobile()){
@@ -72,10 +85,17 @@
     window[name]=stableWrapper;
   };
 
-  wrapStable('renderHome',progressSignature);
-  wrapStable('renderModules',progressSignature);
-  wrapStable('renderPlanner',progressSignature);
-  wrapStable('renderPractice',practiceSignature,()=>!document.querySelector('#practice .exam-app'));
+  wrapStable('renderHome',progressSignature,()=>true,homePopulated);
+  wrapStable('renderModules',progressSignature,()=>true,modulesPopulated);
+  wrapStable('renderPlanner',progressSignature,()=>true,plannerPopulated);
+  wrapStable('renderPractice',practiceSignature,()=>!document.querySelector('#practice .exam-app'),practicePopulated);
+
+  /* Extra recovery for the exact empty-Practice regression: if navigation reaches
+     Practice with an uninitialized shell, render it immediately. */
+  addEventListener('finalforge-mobile-navigate',event=>{
+    const id=event?.detail?.id||event?.detail||document.querySelector('.section.active')?.id;
+    if(id==='practice'&&!practicePopulated()&&typeof window.renderPractice==='function')window.renderPractice();
+  });
 
   /* A stale cloud refresh must never recreate an overlay/lock state on Home. */
   addEventListener('finalforge-ready',()=>{
