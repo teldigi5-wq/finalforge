@@ -18,6 +18,11 @@
     observer?.disconnect();
   };
 
+  if(!body.classList.contains('auth-pending') || document.querySelector('#verifyForm.active')){
+    finish();
+    return;
+  }
+
   if(!window.firebase || !firebase.apps?.length){
     finish();
     return;
@@ -48,5 +53,6 @@
     finish();
   }
 
+  /* Never leave authentication hidden forever if the network/auth backend stalls. */
   setTimeout(finish,10000);
 })();
