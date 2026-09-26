@@ -20,6 +20,7 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed.' });
   if (req.headers.origin !== `https://${req.headers.host}`) return res.status(403).json({ error: 'Invalid origin.' });
+  if (Number(req.headers['content-length'] || 0) > 1024) return res.status(413).json({ error: 'Request too large.' });
   if (!process.env.SIGNUP_RATE_SECRET) return res.status(503).json({ error: 'Rating is temporarily unavailable.' });
 
   const rating = Number(req.body?.rating);

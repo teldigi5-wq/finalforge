@@ -1,11 +1,17 @@
 {
   "name": "FinalForge — Academic Study Platform",
   "short_name": "FinalForge",
-  "start_url": "./index.html",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#07101d",
   "theme_color": "#07101d",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "productivity"],
   "description": "Forge Your Academic Edge. Study, practise, take mock assessments, revise and track academic progress.",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "assets/icon-192.png",

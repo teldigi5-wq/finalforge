@@ -1,0 +1,57 @@
+name: FinalForge CI
+
+on:
+  pull_request:
+    branches:
+      - fix/firebase-activation-hardening
+      - fix/desktop-mobile-runtime-boundary-v1
+  push:
+    branches:
+      - fix/firebase-activation-hardening
+  workflow_dispatch:
+
+concurrency:
+  group: finalforge-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Runtime and responsive QA
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Security audit (high and critical)
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Syntax checks
+        run: |
+          node --check assets/core-loader.js
+          node --check assets/app.js
+          node --check assets/mobile-runtime-final-v1.js
+          node --check assets/mobile-navigation-runtime-v2.js
+          node --check assets/mobile-scroll-recovery-v1.js
+          node --check assets/practice-stability-v1.js
+          node --check assets/professional-workspace-v2.js
+          node --check api/signup.js
+          node --check api/rate.js
+          node --check api/public-stats.js
+          node --check sw.js
+
+      - name: Run regression tests
+        run: npm test

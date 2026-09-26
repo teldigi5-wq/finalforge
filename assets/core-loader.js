@@ -42,7 +42,7 @@ document.documentElement.classList.add('ff-auth-restoring');
 })();
 
 (async()=>{
-  const VERSION='runtime-consolidation-v1';
+  const VERSION='professional-workspace-v2';
   const fail=msg=>{
     document.documentElement.classList.remove('ff-auth-restoring');
     console.error('[FinalForge]',msg);
@@ -80,14 +80,20 @@ document.documentElement.classList.add('ff-auth-restoring');
       return;
     }
     const l=document.createElement('link');
-    l.rel='stylesheet';l.href=`${href}?v=${VERSION}`;
-    l.onload=resolve;l.onerror=()=>reject(new Error(`Could not load ${href}`));
+    l.rel='stylesheet';
+    l.href=`${href}?v=${VERSION}`;
+    l.onload=resolve;
+    l.onerror=()=>reject(new Error(`Could not load ${href}`));
     document.head.appendChild(l);
   });
 
   const preconnect=href=>{
     if(document.querySelector(`link[rel="preconnect"][href="${href}"]`))return;
-    const l=document.createElement('link');l.rel='preconnect';l.href=href;l.crossOrigin='anonymous';document.head.appendChild(l);
+    const l=document.createElement('link');
+    l.rel='preconnect';
+    l.href=href;
+    l.crossOrigin='anonymous';
+    document.head.appendChild(l);
   };
 
   preconnect('https://www.gstatic.com');
@@ -117,7 +123,8 @@ document.documentElement.classList.add('ff-auth-restoring');
       loadStyle('assets/desktop-auth-v6.css'),
       loadStyle('assets/runtime-stability-v1.css'),
       loadStyle('assets/mobile-runtime-final-v1.css'),
-      loadStyle('assets/mobile-scroll-recovery-v1.css')
+      loadStyle('assets/mobile-scroll-recovery-v1.css'),
+      loadStyle('assets/professional-workspace-v2.css')
     ]);
 
     const firebaseSdkReady=(async()=>{
@@ -181,6 +188,9 @@ document.documentElement.classList.add('ff-auth-restoring');
     await loadScript('assets/practice-stability-v1.js');
     await loadScript('assets/mobile-navigation-runtime-v2.js');
     await loadScript('assets/mobile-scroll-recovery-v1.js');
+
+    /* Presentation architecture loads only after functional ownership is stable. */
+    await loadScript('assets/professional-workspace-v2.js');
 
     await loadScript('assets/tailwind-runtime-v6.js');
 
