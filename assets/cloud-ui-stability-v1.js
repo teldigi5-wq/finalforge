@@ -1,4 +1,4 @@
-/* FinalForge Cloud UI Stability v2 — prevent delayed cloud hydration from rebuilding active mobile UI mid-gesture without suppressing first renders. */
+/* FinalForge Cloud UI Stability v3 — delay mobile cloud hydration without classifying touch desktops as phones. */
 (()=>{
   'use strict';
 
@@ -6,7 +6,13 @@
   const body=document.body;
   if(!body)return;
 
-  const realMobile=()=>root.classList.contains('ff-real-mobile')||matchMedia('(max-width:900px)').matches||((navigator.maxTouchPoints||0)>0&&matchMedia('(pointer:coarse)').matches);
+  const compactScreen=()=>{
+    const sw=Number(screen?.width||0),sh=Number(screen?.height||0);
+    const physicalShort=Math.min(sw||9999,sh||9999);
+    const viewport=Number(window.innerWidth||document.documentElement.clientWidth||9999);
+    return physicalShort<=900||viewport<=900||matchMedia('(max-width:900px)').matches;
+  };
+  const realMobile=()=>root.classList.contains('ff-real-mobile')||compactScreen();
   let lastInteractionAt=0;
   let pendingTimer=0;
 
@@ -58,15 +64,12 @@
       const sig=signatureFn();
       const authOpen=!body.classList.contains('auth-pending');
 
-      /* Never suppress the first real render of a section. The Practice shell starts
-         empty in index.html and is populated only when renderPractice() runs. */
       if(!isPopulated()){
         if(!canRun())return;
         lastSignature=sig;
         return original.apply(this,args);
       }
 
-      /* Once a section is already populated, identical cloud data must not rebuild it. */
       if(authOpen&&sig===lastSignature)return;
 
       if(!realMobile()){
@@ -90,14 +93,12 @@
   wrapStable('renderPlanner',progressSignature,()=>true,plannerPopulated);
   wrapStable('renderPractice',practiceSignature,()=>!document.querySelector('#practice .exam-app'),practicePopulated);
 
-  /* Extra recovery for the exact empty-Practice regression: if navigation reaches
-     Practice with an uninitialized shell, render it immediately. */
   addEventListener('finalforge-mobile-navigate',event=>{
+    if(!realMobile())return;
     const id=event?.detail?.id||event?.detail||document.querySelector('.section.active')?.id;
     if(id==='practice'&&!practicePopulated()&&typeof window.renderPractice==='function')window.renderPractice();
   });
 
-  /* A stale cloud refresh must never recreate an overlay/lock state on Home. */
   addEventListener('finalforge-ready',()=>{
     if(!realMobile())return;
     if(!document.querySelector('dialog[open]')&&!document.querySelector('#mobileMoreSheet.open')&&!document.querySelector('#ffV2Palette:not([hidden])')){
