@@ -1,4 +1,4 @@
-/* FinalForge Cloud UI Stability v4 — delay mobile cloud hydration without classifying touch desktops as phones. */
+/* FinalForge Cloud UI Stability v5 — stable hydration with independent render queues. */
 (()=>{
   'use strict';
 
@@ -6,18 +6,11 @@
   const body=document.body;
   if(!body)return;
 
-  const compactScreen=()=>{
-    const viewport=Number(window.innerWidth||document.documentElement.clientWidth||9999);
-    if(viewport<=900||matchMedia('(max-width:900px)').matches)return true;
-    const sw=Number(screen?.width||0),sh=Number(screen?.height||0);
-    const physicalShort=Math.min(sw||9999,sh||9999);
-    const handheldTouch=(navigator.maxTouchPoints||0)>0&&matchMedia('(hover:none) and (pointer:coarse)').matches;
-    return handheldTouch&&physicalShort<=640;
-  };
-  const realMobile=()=>compactScreen();
-  let lastInteractionAt=0;
-  let pendingTimer=0;
+  const realMobile=()=>typeof window.finalforgeIsMobile==='function'
+    ?window.finalforgeIsMobile()
+    :root.classList.contains('ff-real-mobile');
 
+  let lastInteractionAt=0;
   ['touchstart','touchmove','pointerdown','wheel'].forEach(type=>{
     addEventListener(type,()=>{lastInteractionAt=Date.now()},{passive:true});
   });
@@ -42,6 +35,7 @@
 
     let lastSignature=signatureFn();
     let queuedArgs=null;
+    let pendingTimer=0;
 
     const runQueued=()=>{
       pendingTimer=0;
@@ -54,11 +48,10 @@
       if(!canRun())return;
       const beforeSection=document.querySelector('.section.active')?.id||'';
       const beforeY=window.scrollY;
-      const sig=signatureFn();
-      lastSignature=sig;
+      lastSignature=signatureFn();
       original.apply(window,args);
       if(realMobile()&&document.querySelector('.section.active')?.id===beforeSection){
-        requestAnimationFrame(()=>window.scrollTo({top:beforeY,left:0,behavior:'instant'}));
+        requestAnimationFrame(()=>window.scrollTo({top:beforeY,left:0,behavior:'auto'}));
       }
     };
 
@@ -82,7 +75,7 @@
 
       queuedArgs=args;
       clearTimeout(pendingTimer);
-      pendingTimer=setTimeout(runQueued,idleFor()<700?760-idleFor():0);
+      pendingTimer=setTimeout(runQueued,idleFor()<700?Math.max(0,760-idleFor()):0);
     }
 
     stableWrapper.__ffCloudStable=true;
@@ -95,9 +88,9 @@
   wrapStable('renderPlanner',progressSignature,()=>true,plannerPopulated);
   wrapStable('renderPractice',practiceSignature,()=>!document.querySelector('#practice .exam-app'),practicePopulated);
 
-  addEventListener('finalforge-mobile-navigate',event=>{
+  addEventListener('finalforge-after-navigate',event=>{
     if(!realMobile())return;
-    const id=event?.detail?.id||event?.detail||document.querySelector('.section.active')?.id;
+    const id=event?.detail?.id||document.querySelector('.section.active')?.id;
     if(id==='practice'&&!practicePopulated()&&typeof window.renderPractice==='function')window.renderPractice();
   });
 

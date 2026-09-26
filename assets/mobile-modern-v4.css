@@ -1,116 +1,75 @@
-/* FinalForge mobile experience v4 — compact app-like navigation, safe areas, no content obstruction. */
+/* FinalForge mobile experience v5 — visual-only responsive polish.
+   Device ownership lives in mobile-runtime-final-v1.js via html.ff-real-mobile.
+   This file never treats touch/coarse-pointer capability as proof of a phone. */
+
 @media (min-width:901px){
   #mobileNav{display:none!important}
 }
 
-/* Some Android browsers/desktop-site modes report a desktop-sized layout viewport.
-   Device-width + coarse-pointer fallbacks keep the real phone UI active. */
-@media (max-width:900px), (max-device-width:900px), (hover:none) and (pointer:coarse){
+@media (max-width:900px){
   :root{--ff-mobile-nav-h:68px;--ff-mobile-gap:10px}
-  html,body{max-width:100%!important;overflow-x:hidden!important}
-  body:not(.auth-pending) .app{display:block!important;width:100%!important;max-width:100%!important}
-  body:not(.auth-pending) .main{
-    display:block!important;
-    width:100%!important;
-    max-width:100%!important;
-    margin:0!important;
-    padding-bottom:calc(var(--ff-mobile-nav-h) + 28px + env(safe-area-inset-bottom))!important;
-    overflow-x:hidden!important;
-  }
-  body:not(.auth-pending) .sidebar{display:none!important}
 
   body:not(.auth-pending) .topbar{
-    min-height:72px!important;
-    padding:14px 18px!important;
-    padding-top:max(14px,env(safe-area-inset-top))!important;
+    min-height:64px!important;
+    padding:10px 14px!important;
+    padding-top:max(10px,env(safe-area-inset-top))!important;
     align-items:center!important;
-    gap:10px!important;
-    background:rgba(4,16,29,.88)!important;
-    border-bottom:1px solid rgba(125,211,252,.09)!important;
-    backdrop-filter:blur(18px) saturate(140%)!important;
-    -webkit-backdrop-filter:blur(18px) saturate(140%)!important;
+    gap:8px!important;
   }
-  body:not(.auth-pending) .topbar>div:first-child .kicker{font-size:.72rem!important;letter-spacing:.12em!important}
-  body:not(.auth-pending) .topbar>div:first-child .muted{display:none!important}
-  body:not(.auth-pending) .sync-pill{display:none!important}
-  body:not(.auth-pending) .account-chip{
-    min-width:0!important;
-    min-height:48px!important;
-    padding:6px 9px!important;
-    border-radius:15px!important;
-  }
-  body:not(.auth-pending) .account-avatar{width:38px!important;height:38px!important;font-size:1rem!important}
-  body:not(.auth-pending) .account-copy{display:none!important}
 
-  body:not(.auth-pending) .section{
-    width:100%!important;
-    max-width:100%!important;
-    padding:26px 18px calc(22px + env(safe-area-inset-bottom))!important;
-    overflow-x:hidden!important;
-  }
   body:not(.auth-pending) .section-head{
     align-items:flex-start!important;
     gap:12px!important;
     margin-bottom:18px!important;
   }
+
   body:not(.auth-pending) .section-head h2{
-    font-size:clamp(2rem,8.7vw,2.8rem)!important;
-    line-height:1.02!important;
-    letter-spacing:-.045em!important;
+    font-size:clamp(1.65rem,7.5vw,2.3rem)!important;
+    line-height:1.04!important;
+    letter-spacing:-.04em!important;
   }
-  body:not(.auth-pending) .section-head .muted{font-size:1rem!important;line-height:1.5!important}
+
   body:not(.auth-pending) .track-select,
-  body:not(.auth-pending) .search{width:100%!important;max-width:100%!important}
+  body:not(.auth-pending) .search{
+    width:100%!important;
+    max-width:100%!important;
+  }
 
   body:not(.auth-pending) .card{border-radius:20px!important}
   body:not(.auth-pending) .module-card,
   body:not(.auth-pending) .resource,
   body:not(.auth-pending) .exam-card,
   body:not(.auth-pending) .planner-card,
-  body:not(.auth-pending) .practice-hero{padding:22px!important}
-  body:not(.auth-pending) .module-card h3{font-size:1.45rem!important;line-height:1.18!important}
-  body:not(.auth-pending) .module-meta{gap:7px!important;flex-wrap:wrap!important}
-  body:not(.auth-pending) .module-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
-  body:not(.auth-pending) .module-actions .btn{width:100%!important;justify-content:center!important}
-  body:not(.auth-pending) .timeline-row{grid-template-columns:1fr!important;gap:8px!important}
+  body:not(.auth-pending) .practice-hero{padding:20px!important}
+
+  body:not(.auth-pending) .module-card h3{
+    font-size:1.3rem!important;
+    line-height:1.18!important;
+  }
+
+  body:not(.auth-pending) .module-meta{
+    gap:7px!important;
+    flex-wrap:wrap!important;
+  }
+
+  body:not(.auth-pending) .module-actions{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:8px!important;
+  }
+
+  body:not(.auth-pending) .module-actions .btn{
+    width:100%!important;
+    justify-content:center!important;
+  }
+
+  body:not(.auth-pending) .timeline-row{
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+  }
+
   body:not(.auth-pending) .timeline-row .pill{justify-self:start!important}
 
-  /* The nav root itself has no visual box; only the compact bar/sheet are visible. */
-  #mobileNav{
-    display:block!important;
-    position:fixed!important;
-    inset:auto 0 0 0!important;
-    width:100%!important;
-    height:0!important;
-    min-height:0!important;
-    padding:0!important;
-    margin:0!important;
-    background:transparent!important;
-    border:0!important;
-    box-shadow:none!important;
-    overflow:visible!important;
-    z-index:150!important;
-    pointer-events:none!important;
-  }
-  #mobileNav>button{display:none!important}
-  #mobileNav .mobile-nav-bar{
-    position:fixed!important;
-    left:10px!important;
-    right:10px!important;
-    bottom:calc(8px + env(safe-area-inset-bottom))!important;
-    height:var(--ff-mobile-nav-h)!important;
-    display:grid!important;
-    grid-template-columns:repeat(5,minmax(0,1fr))!important;
-    gap:4px!important;
-    padding:6px!important;
-    border:1px solid rgba(125,211,252,.16)!important;
-    border-radius:22px!important;
-    background:rgba(4,16,29,.94)!important;
-    box-shadow:0 18px 55px rgba(0,0,0,.42),0 1px 0 rgba(255,255,255,.035) inset!important;
-    backdrop-filter:blur(22px) saturate(145%)!important;
-    -webkit-backdrop-filter:blur(22px) saturate(145%)!important;
-    pointer-events:auto!important;
-  }
   #mobileNav .mobile-nav-bar button{
     min-width:0!important;
     min-height:54px!important;
@@ -130,57 +89,32 @@
     transform:none!important;
     transition:background .18s ease,color .18s ease,transform .18s ease!important;
   }
-  #mobileNav .mobile-nav-bar button .mobile-nav-icon{font-size:1.18rem!important;line-height:1!important}
-  #mobileNav .mobile-nav-bar button span:last-child{font-size:.62rem!important;font-weight:780!important;letter-spacing:-.01em!important;white-space:nowrap!important}
+
+  #mobileNav .mobile-nav-bar button .mobile-nav-icon{
+    font-size:1.18rem!important;
+    line-height:1!important;
+  }
+
+  #mobileNav .mobile-nav-bar button span:last-child{
+    font-size:.62rem!important;
+    font-weight:780!important;
+    white-space:nowrap!important;
+  }
+
   #mobileNav .mobile-nav-bar button.active{
     color:#effbff!important;
     background:linear-gradient(145deg,rgba(59,130,246,.26),rgba(34,211,238,.12))!important;
     box-shadow:0 0 0 1px rgba(125,211,252,.12) inset!important;
   }
+
   #mobileNav .mobile-nav-bar button:active{transform:scale(.96)!important}
 
-  #mobileNav .mobile-nav-scrim{
-    position:fixed!important;
-    inset:0!important;
-    display:block!important;
-    background:rgba(1,8,15,.54)!important;
-    opacity:0!important;
-    visibility:hidden!important;
-    transition:opacity .2s ease,visibility .2s ease!important;
-    pointer-events:none!important;
-    backdrop-filter:blur(3px)!important;
-    -webkit-backdrop-filter:blur(3px)!important;
+  #mobileNav .mobile-more-links{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
   }
-  #mobileNav .mobile-nav-scrim.open{opacity:1!important;visibility:visible!important;pointer-events:auto!important}
 
-  #mobileNav .mobile-more-sheet{
-    position:fixed!important;
-    left:10px!important;
-    right:10px!important;
-    bottom:calc(var(--ff-mobile-nav-h) + 18px + env(safe-area-inset-bottom))!important;
-    max-height:min(58dvh,430px)!important;
-    overflow:auto!important;
-    padding:12px!important;
-    border:1px solid rgba(125,211,252,.17)!important;
-    border-radius:24px!important;
-    background:linear-gradient(180deg,rgba(8,27,46,.98),rgba(4,16,29,.98))!important;
-    box-shadow:0 24px 70px rgba(0,0,0,.5)!important;
-    opacity:0!important;
-    visibility:hidden!important;
-    transform:translateY(14px) scale(.985)!important;
-    transform-origin:bottom center!important;
-    transition:opacity .2s ease,transform .24s cubic-bezier(.22,1,.36,1),visibility .2s ease!important;
-    pointer-events:none!important;
-  }
-  #mobileNav .mobile-more-sheet.open{
-    opacity:1!important;
-    visibility:visible!important;
-    transform:translateY(0) scale(1)!important;
-    pointer-events:auto!important;
-  }
-  #mobileNav .mobile-sheet-handle{width:38px;height:4px;margin:1px auto 12px;border-radius:999px;background:rgba(148,203,255,.24)}
-  #mobileNav .mobile-sheet-title{padding:0 4px 10px;color:#7dd3fc;font-size:.72rem;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
-  #mobileNav .mobile-more-links{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
   #mobileNav .mobile-more-links button{
     min-height:58px!important;
     display:flex!important;
@@ -196,68 +130,12 @@
     font-weight:760!important;
     text-align:left!important;
   }
-  #mobileNav .mobile-more-links button.active{
-    color:white!important;
-    border-color:rgba(103,232,249,.28)!important;
-    background:linear-gradient(145deg,rgba(59,130,246,.24),rgba(34,211,238,.1))!important;
-  }
-  #mobileNav .mobile-more-links .mobile-nav-icon{font-size:1.25rem!important}
 }
 
-@media (max-width:430px), (max-device-width:430px){
-  body:not(.auth-pending) .section{padding-inline:16px!important}
-  body:not(.auth-pending) .topbar{padding-inline:16px!important}
-  #mobileNav .mobile-nav-bar{left:8px!important;right:8px!important}
-  #mobileNav .mobile-more-sheet{left:8px!important;right:8px!important}
+@media (max-width:430px){
+  body:not(.auth-pending) .section{padding-inline:14px!important}
+  body:not(.auth-pending) .topbar{padding-inline:14px!important}
   #mobileNav .mobile-nav-bar button span:last-child{font-size:.59rem!important}
-}
-
-/* Real-phone hardening: if a browser exposes a desktop-ish layout viewport on a phone,
-   increase rem density and force the signed-in app into a one-column mobile shell. */
-@media (max-device-width:900px), (hover:none) and (pointer:coarse){
-  html{font-size:clamp(16px,3.3vw,30px)!important;-webkit-text-size-adjust:100%!important;text-size-adjust:100%!important}
-  html body:not(.auth-pending) .app{display:block!important;min-width:0!important;width:100%!important;max-width:100%!important;overflow-x:hidden!important}
-  html body:not(.auth-pending) .sidebar{display:none!important;width:0!important;min-width:0!important}
-  html body:not(.auth-pending) .main{margin:0!important;min-width:0!important;width:100%!important;max-width:100%!important}
-  html body:not(.auth-pending) .topbar{display:flex!important;justify-content:space-between!important;width:100%!important;max-width:100%!important}
-  html body:not(.auth-pending) .topbar>div:first-child{display:none!important}
-  html body:not(.auth-pending) .mobile-brand{display:flex!important;align-items:center!important;gap:8px!important;min-width:0!important}
-  html body:not(.auth-pending) .mobile-brand img{width:30px!important;height:30px!important;flex:0 0 30px!important}
-  html body:not(.auth-pending) .mobile-brand span{font-size:1rem!important;font-weight:850!important;white-space:nowrap!important}
-  html body:not(.auth-pending) .top-account-wrap{display:flex!important;align-items:center!important;gap:7px!important;margin-left:auto!important;min-width:0!important}
-  html body:not(.auth-pending) .theme-toggle{width:42px!important;height:42px!important;min-width:42px!important}
-  html body:not(.auth-pending) .account-chip{width:44px!important;min-width:44px!important;max-width:44px!important;height:44px!important;min-height:44px!important;padding:3px!important;overflow:hidden!important}
-  html body:not(.auth-pending) .account-avatar{width:36px!important;height:36px!important;min-width:36px!important}
-  html body:not(.auth-pending) .account-chip>span:last-child{display:none!important}
-  html body:not(.auth-pending) .section{width:100%!important;max-width:100%!important;margin:0!important;padding:20px 16px calc(96px + env(safe-area-inset-bottom))!important}
-  html body:not(.auth-pending) .hero-v3,
-  html body:not(.auth-pending) .planner-grid,
-  html body:not(.auth-pending) .admin-grid,
-  html body:not(.auth-pending) .module-grid,
-  html body:not(.auth-pending) .resource-grid,
-  html body:not(.auth-pending) .exam-grid,
-  html body:not(.auth-pending) .feature-grid,
-  html body:not(.auth-pending) .ff-v2-command-grid{display:grid!important;grid-template-columns:1fr!important;gap:12px!important}
-  html body:not(.auth-pending) .quick-dock,
-  html body:not(.auth-pending) .grid4{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
-  html body:not(.auth-pending) .hero-main,
-  html body:not(.auth-pending) .hero-side{width:100%!important;max-width:100%!important;min-width:0!important}
-  html body:not(.auth-pending) .hero-main h1{font-size:clamp(2.35rem,8vw,3.2rem)!important;line-height:.98!important}
-  html body:not(.auth-pending) .ff-v2-command-head{display:block!important}
-  html body:not(.auth-pending) .ff-v2-search-trigger{width:42px!important;min-width:42px!important;height:42px!important;padding:0!important;justify-content:center!important}
-  html body:not(.auth-pending) .ff-v2-search-trigger>span:first-child span,
-  html body:not(.auth-pending) .ff-v2-search-trigger kbd{display:none!important}
-  html body:not(.auth-pending) .resource,
-  html body:not(.auth-pending) .module-card,
-  html body:not(.auth-pending) .exam-card,
-  html body:not(.auth-pending) .planner-card,
-  html body:not(.auth-pending) .ff-v2-study-card{min-width:0!important;width:100%!important;max-width:100%!important}
-}
-
-@media (max-device-width:480px){
-  html body:not(.auth-pending) .quick-dock,
-  html body:not(.auth-pending) .grid4{grid-template-columns:1fr 1fr!important}
-  html body:not(.auth-pending) .section{padding-inline:14px!important}
 }
 
 @media (prefers-reduced-motion:reduce){

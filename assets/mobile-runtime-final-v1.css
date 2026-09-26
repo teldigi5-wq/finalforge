@@ -1,14 +1,26 @@
-/* FinalForge Mobile Runtime Final v1 — last-mile phone shell and visibility recovery. */
-html.ff-real-mobile,html.ff-real-mobile body{max-width:100%!important;overflow-x:hidden!important}
+/* FinalForge Mobile Runtime Final v2 — canonical signed-in phone shell.
+   Every rule is gated by html.ff-real-mobile, including Android Desktop-site fallback. */
+
+html.ff-real-mobile,
+html.ff-real-mobile body{
+  max-width:100%!important;
+  overflow-x:clip!important;
+}
 
 html.ff-real-mobile body:not(.auth-pending) .app{
   display:block!important;
   width:100%!important;
   max-width:100%!important;
   grid-template-columns:1fr!important;
-  overflow-x:hidden!important;
+  overflow-x:clip!important;
 }
-html.ff-real-mobile body:not(.auth-pending) .sidebar{display:none!important}
+
+html.ff-real-mobile body:not(.auth-pending) .sidebar{
+  display:none!important;
+  width:0!important;
+  min-width:0!important;
+}
+
 html.ff-real-mobile body:not(.auth-pending) .main{
   display:block!important;
   width:100%!important;
@@ -16,10 +28,9 @@ html.ff-real-mobile body:not(.auth-pending) .main{
   min-width:0!important;
   margin:0!important;
   padding:0 0 calc(92px + env(safe-area-inset-bottom))!important;
-  overflow-x:hidden!important;
+  overflow-x:clip!important;
 }
 
-/* Mobile top bar must remain usable even when the browser reports a desktop-sized layout viewport. */
 html.ff-real-mobile body:not(.auth-pending) .topbar{
   position:sticky!important;
   top:0!important;
@@ -37,7 +48,9 @@ html.ff-real-mobile body:not(.auth-pending) .topbar{
   backdrop-filter:blur(16px) saturate(135%)!important;
   -webkit-backdrop-filter:blur(16px) saturate(135%)!important;
 }
+
 html.ff-real-mobile body:not(.auth-pending) .topbar>div:first-child{display:none!important}
+
 html.ff-real-mobile body:not(.auth-pending) .mobile-brand{
   display:flex!important;
   align-items:center!important;
@@ -47,7 +60,13 @@ html.ff-real-mobile body:not(.auth-pending) .mobile-brand{
   font-size:.95rem!important;
   font-weight:850!important;
 }
-html.ff-real-mobile body:not(.auth-pending) .mobile-brand img{width:30px!important;height:30px!important;flex:0 0 30px!important}
+
+html.ff-real-mobile body:not(.auth-pending) .mobile-brand img{
+  width:30px!important;
+  height:30px!important;
+  flex:0 0 30px!important;
+}
+
 html.ff-real-mobile body:not(.auth-pending) .top-account-wrap{
   display:flex!important;
   align-items:center!important;
@@ -56,8 +75,14 @@ html.ff-real-mobile body:not(.auth-pending) .top-account-wrap{
   min-width:0!important;
   margin-left:auto!important;
 }
+
 html.ff-real-mobile body:not(.auth-pending) .sync-pill{display:none!important}
-html.ff-real-mobile body:not(.auth-pending) .theme-toggle{width:40px!important;height:40px!important;min-width:40px!important}
+html.ff-real-mobile body:not(.auth-pending) .theme-toggle{
+  width:40px!important;
+  height:40px!important;
+  min-width:40px!important;
+}
+
 html.ff-real-mobile body:not(.auth-pending) .account-chip{
   width:44px!important;
   min-width:44px!important;
@@ -68,9 +93,16 @@ html.ff-real-mobile body:not(.auth-pending) .account-chip{
   place-items:center!important;
   border-radius:14px!important;
 }
-html.ff-real-mobile body:not(.auth-pending) .account-avatar{width:36px!important;height:36px!important;margin:0!important}
+
+html.ff-real-mobile body:not(.auth-pending) .account-avatar{
+  width:36px!important;
+  height:36px!important;
+  margin:0!important;
+}
+
 html.ff-real-mobile body:not(.auth-pending) .account-copy,
 html.ff-real-mobile body:not(.auth-pending) .account-chip>span:last-child{display:none!important}
+
 html.ff-real-mobile body:not(.auth-pending) .ff-v2-search-trigger{
   width:40px!important;
   min-width:40px!important;
@@ -80,10 +112,10 @@ html.ff-real-mobile body:not(.auth-pending) .ff-v2-search-trigger{
   place-items:center!important;
   border-radius:12px!important;
 }
+
 html.ff-real-mobile body:not(.auth-pending) .ff-v2-search-trigger>span:first-child span,
 html.ff-real-mobile body:not(.auth-pending) .ff-v2-search-trigger kbd{display:none!important}
 
-/* Never allow entrance animation state to leave mobile content permanently transparent. */
 html.ff-real-mobile body:not(.auth-pending) .ff-enter,
 html.ff-real-mobile body:not(.auth-pending) .ff-enter.ff-entered{
   opacity:1!important;
@@ -92,19 +124,15 @@ html.ff-real-mobile body:not(.auth-pending) .ff-enter.ff-entered{
   transition:none!important;
   transition-delay:0ms!important;
 }
+
 html.ff-real-mobile body:not(.auth-pending) .section.active.section-leaving{
   opacity:1!important;
   visibility:visible!important;
   transform:none!important;
 }
 
-/* Exactly one signed-in mobile page may participate in layout. */
-html.ff-real-mobile body:not(.auth-pending) .section:not(.active){
-  display:none!important;
-}
-html.ff-real-mobile body:not(.auth-pending) .section.active{
-  display:block!important;
-}
+html.ff-real-mobile body:not(.auth-pending) .section:not(.active){display:none!important}
+html.ff-real-mobile body:not(.auth-pending) .section.active{display:block!important}
 
 html.ff-real-mobile body:not(.auth-pending) .section{
   width:100%!important;
@@ -115,12 +143,15 @@ html.ff-real-mobile body:not(.auth-pending) .section{
   padding:18px 16px 24px!important;
   overflow:visible!important;
 }
+
 html.ff-real-mobile body:not(.auth-pending) #home.active{
   display:block!important;
   min-height:0!important;
   padding-top:14px!important;
 }
+
 html.ff-real-mobile body:not(.auth-pending) #home:not(.active){display:none!important}
+
 html.ff-real-mobile body:not(.auth-pending) #home .hero-v3{
   display:grid!important;
   grid-template-columns:1fr!important;
@@ -128,6 +159,7 @@ html.ff-real-mobile body:not(.auth-pending) #home .hero-v3{
   width:100%!important;
   min-height:0!important;
 }
+
 html.ff-real-mobile body:not(.auth-pending) #home .hero-main,
 html.ff-real-mobile body:not(.auth-pending) #home .hero-side{
   width:100%!important;
@@ -138,16 +170,37 @@ html.ff-real-mobile body:not(.auth-pending) #home .hero-side{
   visibility:visible!important;
   transform:none!important;
 }
+
 html.ff-real-mobile body:not(.auth-pending) #home .hero-main{padding:22px 18px!important}
+
 html.ff-real-mobile body:not(.auth-pending) #home .hero-main h1{
   font-size:clamp(2.15rem,10vw,3rem)!important;
   line-height:1!important;
   margin:8px 0 12px!important;
 }
-html.ff-real-mobile body:not(.auth-pending) #home .hero-copy>p{font-size:.92rem!important;line-height:1.55!important}
-html.ff-real-mobile body:not(.auth-pending) #home .hero-actions{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
-html.ff-real-mobile body:not(.auth-pending) #home .hero-actions .btn{width:100%!important;justify-content:center!important}
-html.ff-real-mobile body:not(.auth-pending) #home .hero-side{display:grid!important;grid-template-columns:1fr!important;gap:14px!important;padding:16px!important}
+
+html.ff-real-mobile body:not(.auth-pending) #home .hero-copy>p{
+  font-size:.92rem!important;
+  line-height:1.55!important;
+}
+
+html.ff-real-mobile body:not(.auth-pending) #home .hero-actions{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:8px!important;
+}
+
+html.ff-real-mobile body:not(.auth-pending) #home .hero-actions .btn{
+  width:100%!important;
+  justify-content:center!important;
+}
+
+html.ff-real-mobile body:not(.auth-pending) #home .hero-side{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:14px!important;
+  padding:16px!important;
+}
 
 html.ff-real-mobile body:not(.auth-pending) .quick-dock,
 html.ff-real-mobile body:not(.auth-pending) .grid4{
@@ -155,8 +208,18 @@ html.ff-real-mobile body:not(.auth-pending) .grid4{
   grid-template-columns:repeat(2,minmax(0,1fr))!important;
   gap:9px!important;
 }
-html.ff-real-mobile body:not(.auth-pending) .quick-dock>button{min-width:0!important;min-height:74px!important;padding:12px!important}
-html.ff-real-mobile body:not(.auth-pending) .stat{min-width:0!important;padding:16px!important}
+
+html.ff-real-mobile body:not(.auth-pending) .quick-dock>button{
+  min-width:0!important;
+  min-height:74px!important;
+  padding:12px!important;
+}
+
+html.ff-real-mobile body:not(.auth-pending) .stat{
+  min-width:0!important;
+  padding:16px!important;
+}
+
 html.ff-real-mobile body:not(.auth-pending) .ff-v2-command-grid,
 html.ff-real-mobile body:not(.auth-pending) .module-grid,
 html.ff-real-mobile body:not(.auth-pending) .resource-grid,
@@ -168,21 +231,123 @@ html.ff-real-mobile body:not(.auth-pending) .feature-grid{
   grid-template-columns:1fr!important;
   gap:10px!important;
 }
-html.ff-real-mobile body:not(.auth-pending) .section-head{margin:18px 0 12px!important;align-items:flex-start!important}
-html.ff-real-mobile body:not(.auth-pending) .section-head h2{font-size:clamp(1.55rem,7.5vw,2.15rem)!important;line-height:1.05!important}
 
-/* Mobile navigation stays visible and labels stay textual even after icon enhancement runs. */
-html.ff-real-mobile #mobileNav{display:block!important;visibility:visible!important;opacity:1!important}
-html.ff-real-mobile #mobileNav .mobile-nav-bar{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important}
+html.ff-real-mobile body:not(.auth-pending) .section-head{
+  margin:18px 0 12px!important;
+  align-items:flex-start!important;
+}
+
+html.ff-real-mobile body:not(.auth-pending) .section-head h2{
+  font-size:clamp(1.55rem,7.5vw,2.15rem)!important;
+  line-height:1.05!important;
+}
+
+/* Complete mobile navigation geometry, including Android Desktop-site mode. */
+html.ff-real-mobile #mobileNav{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  position:fixed!important;
+  inset:auto 0 0 0!important;
+  width:100%!important;
+  height:0!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  overflow:visible!important;
+  z-index:150!important;
+  pointer-events:none!important;
+}
+
+html.ff-real-mobile #mobileNav>button{display:none!important}
+
+html.ff-real-mobile #mobileNav .mobile-nav-bar{
+  position:fixed!important;
+  left:10px!important;
+  right:10px!important;
+  bottom:calc(8px + env(safe-area-inset-bottom))!important;
+  height:68px!important;
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:4px!important;
+  padding:6px!important;
+  border:1px solid rgba(125,211,252,.16)!important;
+  border-radius:22px!important;
+  background:rgba(4,16,29,.94)!important;
+  box-shadow:0 18px 55px rgba(0,0,0,.42),0 1px 0 rgba(255,255,255,.035) inset!important;
+  backdrop-filter:blur(22px) saturate(145%)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(145%)!important;
+  pointer-events:auto!important;
+}
+
+html.ff-real-mobile #mobileNav .mobile-nav-scrim{
+  position:fixed!important;
+  inset:0!important;
+  display:block!important;
+  background:rgba(1,8,15,.54)!important;
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+  backdrop-filter:blur(3px)!important;
+  -webkit-backdrop-filter:blur(3px)!important;
+}
+
+html.ff-real-mobile #mobileNav .mobile-nav-scrim.open{
+  opacity:1!important;
+  visibility:visible!important;
+  pointer-events:auto!important;
+}
+
+html.ff-real-mobile #mobileNav .mobile-more-sheet{
+  position:fixed!important;
+  left:10px!important;
+  right:10px!important;
+  bottom:calc(86px + env(safe-area-inset-bottom))!important;
+  max-height:min(58dvh,430px)!important;
+  overflow:auto!important;
+  padding:12px!important;
+  border:1px solid rgba(125,211,252,.17)!important;
+  border-radius:24px!important;
+  background:linear-gradient(180deg,rgba(8,27,46,.98),rgba(4,16,29,.98))!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.5)!important;
+  opacity:0!important;
+  visibility:hidden!important;
+  transform:translateY(14px) scale(.985)!important;
+  transform-origin:bottom center!important;
+  pointer-events:none!important;
+}
+
+html.ff-real-mobile #mobileNav .mobile-more-sheet.open{
+  opacity:1!important;
+  visibility:visible!important;
+  transform:translateY(0) scale(1)!important;
+  pointer-events:auto!important;
+}
+
 html.ff-real-mobile #mobileNav .mobile-nav-bar button[data-go] span:last-child{font-size:0!important}
-html.ff-real-mobile #mobileNav .mobile-nav-bar button[data-go] span:last-child::after{font-size:.60rem!important;font-weight:780!important;line-height:1!important}
+html.ff-real-mobile #mobileNav .mobile-nav-bar button[data-go] span:last-child::after{
+  font-size:.60rem!important;
+  font-weight:780!important;
+  line-height:1!important;
+}
 html.ff-real-mobile #mobileNav .mobile-nav-bar button[data-go="home"] span:last-child::after{content:'Home'}
 html.ff-real-mobile #mobileNav .mobile-nav-bar button[data-go="modules"] span:last-child::after{content:'Modules'}
 html.ff-real-mobile #mobileNav .mobile-nav-bar button[data-go="resources"] span:last-child::after{content:'Resources'}
 html.ff-real-mobile #mobileNav .mobile-nav-bar button[data-go="practice"] span:last-child::after{content:'Practice'}
 
+html[data-theme="light"].ff-real-mobile #mobileNav .mobile-nav-bar,
+html[data-theme="light"].ff-real-mobile #mobileNav .mobile-more-sheet{
+  background:rgba(249,252,255,.97)!important;
+  border-color:rgba(65,96,136,.16)!important;
+  color:#1f334a!important;
+}
+
 @media(max-width:390px){
   html.ff-real-mobile body:not(.auth-pending) .section{padding-inline:13px!important}
   html.ff-real-mobile body:not(.auth-pending) .quick-dock,
   html.ff-real-mobile body:not(.auth-pending) .grid4{grid-template-columns:1fr!important}
+  html.ff-real-mobile #mobileNav .mobile-nav-bar{left:8px!important;right:8px!important}
+  html.ff-real-mobile #mobileNav .mobile-more-sheet{left:8px!important;right:8px!important}
 }

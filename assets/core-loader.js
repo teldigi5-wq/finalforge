@@ -1,4 +1,4 @@
-/* FinalForge production loader — stable first paint, parallel auth boot, cached app reconstruction. */
+/* FinalForge production loader — deterministic runtime order and stable first paint. */
 try{
   const t=localStorage.getItem('finalforge_theme_v1');
   const initial=t==='light'||t==='dark'?t:'dark';
@@ -10,54 +10,28 @@ try{
   document.documentElement.style.colorScheme='dark';
 }
 
-/* Keep login/signup out of the first paint until Firebase has restored the saved session. */
 document.documentElement.classList.add('ff-auth-restoring');
 (()=>{
   const style=document.createElement('style');
   style.id='ff-session-restore-critical';
   style.textContent=`
-    html.ff-auth-restoring body.auth-pending .auth-shell{
-      opacity:0!important;
-      visibility:hidden!important;
-      pointer-events:none!important;
-    }
-    html.ff-auth-restoring body.auth-pending #authGate{
-      display:grid!important;
-      place-items:center!important;
-    }
+    html.ff-auth-restoring body.auth-pending .auth-shell{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+    html.ff-auth-restoring body.auth-pending #authGate{display:grid!important;place-items:center!important}
     html.ff-auth-restoring body.auth-pending #authGate::after{
-      content:'Restoring your session…'!important;
-      position:fixed!important;
-      z-index:80!important;
-      left:50%!important;
-      top:50%!important;
-      right:auto!important;
-      bottom:auto!important;
-      width:auto!important;
-      height:auto!important;
-      min-width:13rem!important;
-      transform:translate(-50%,-50%)!important;
-      filter:none!important;
-      opacity:1!important;
-      padding:.78rem 1rem .78rem 2.55rem!important;
-      border:1px solid rgba(120,158,213,.22)!important;
-      border-radius:999px!important;
-      background:linear-gradient(135deg,rgba(13,27,47,.96),rgba(8,18,33,.98))!important;
-      color:#dce9f8!important;
-      box-shadow:0 18px 50px rgba(0,0,0,.28)!important;
+      content:'Restoring your session…'!important;position:fixed!important;z-index:80!important;
+      left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;
+      width:auto!important;height:auto!important;min-width:13rem!important;
+      transform:translate(-50%,-50%)!important;filter:none!important;opacity:1!important;
+      padding:.78rem 1rem .78rem 2.55rem!important;border:1px solid rgba(120,158,213,.22)!important;
+      border-radius:999px!important;background:linear-gradient(135deg,rgba(13,27,47,.96),rgba(8,18,33,.98))!important;
+      color:#dce9f8!important;box-shadow:0 18px 50px rgba(0,0,0,.28)!important;
       font:750 .82rem/1.2 Inter,ui-sans-serif,system-ui,sans-serif!important;
-      letter-spacing:.01em!important;
-      text-align:center!important;
-      pointer-events:none!important;
+      letter-spacing:.01em!important;text-align:center!important;pointer-events:none!important
     }
-    html.ff-auth-restoring body.auth-pending #authGate::before{
-      content:''!important;
-    }
+    html.ff-auth-restoring body.auth-pending #authGate::before{content:''!important}
     html[data-theme='light'].ff-auth-restoring body.auth-pending #authGate::after{
-      border-color:#d0deeb!important;
-      background:rgba(255,255,255,.96)!important;
-      color:#27415f!important;
-      box-shadow:0 18px 45px rgba(43,72,107,.14)!important;
+      border-color:#d0deeb!important;background:rgba(255,255,255,.96)!important;color:#27415f!important;
+      box-shadow:0 18px 45px rgba(43,72,107,.14)!important
     }
     @media(prefers-reduced-motion:no-preference){
       html.ff-auth-restoring body.auth-pending #authGate::after{animation:ffSessionRestorePulse 1.4s ease-in-out infinite alternate!important}
@@ -68,29 +42,58 @@ document.documentElement.classList.add('ff-auth-restoring');
 })();
 
 (async()=>{
-  const fail=(msg)=>{
+  const VERSION='runtime-consolidation-v1';
+  const fail=msg=>{
     document.documentElement.classList.remove('ff-auth-restoring');
     console.error('[FinalForge]',msg);
-    const status=document.getElementById('authBootStatus');if(status){status.textContent='Secure sign-in could not load.';status.classList.add('is-error');}
+    const status=document.getElementById('authBootStatus');
+    if(status){status.textContent='Secure sign-in could not load.';status.classList.add('is-error')}
     const gate=document.getElementById('authGate');
-    if(gate){const n=document.getElementById('authConfigNote');if(n){n.hidden=false;n.innerHTML=`<b>FinalForge could not start.</b><br>${msg}`;}}
+    if(gate){
+      const n=document.getElementById('authConfigNote');
+      if(n){n.hidden=false;n.innerHTML=`<b>FinalForge could not start.</b><br>${msg}`}
+    }
   };
+
   const loadScript=src=>new Promise((resolve,reject)=>{
     const existing=[...document.scripts].find(s=>s.src&&s.src.includes(src));
-    if(existing){if(existing.dataset.ffLoaded==='1'||existing.readyState==='complete')return resolve();existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',()=>reject(new Error(`Could not load ${src}`)),{once:true});return;}
-    const s=document.createElement('script');s.src=src.startsWith('assets/')?`${src}?v=cloud-stability-v1`:src;s.async=true;s.onload=()=>{s.dataset.ffLoaded='1';resolve()};s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s);
+    if(existing){
+      if(existing.dataset.ffLoaded==='1'||existing.readyState==='complete')return resolve();
+      existing.addEventListener('load',resolve,{once:true});
+      existing.addEventListener('error',()=>reject(new Error(`Could not load ${src}`)),{once:true});
+      return;
+    }
+    const s=document.createElement('script');
+    s.src=src.startsWith('assets/')?`${src}?v=${VERSION}`:src;
+    s.async=true;
+    s.onload=()=>{s.dataset.ffLoaded='1';resolve()};
+    s.onerror=()=>reject(new Error(`Could not load ${src}`));
+    document.body.appendChild(s);
   });
+
   const loadStyle=href=>new Promise((resolve,reject)=>{
     const existing=[...document.querySelectorAll('link[rel="stylesheet"]')].find(l=>l.href&&l.href.includes(href));
-    if(existing){if(existing.sheet)return resolve();existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',()=>reject(new Error(`Could not load ${href}`)),{once:true});return;}
-    const l=document.createElement('link');l.rel='stylesheet';l.href=`${href}?v=cloud-stability-v1`;l.onload=resolve;l.onerror=()=>reject(new Error(`Could not load ${href}`));document.head.appendChild(l);
+    if(existing){
+      if(existing.sheet)return resolve();
+      existing.addEventListener('load',resolve,{once:true});
+      existing.addEventListener('error',()=>reject(new Error(`Could not load ${href}`)),{once:true});
+      return;
+    }
+    const l=document.createElement('link');
+    l.rel='stylesheet';l.href=`${href}?v=${VERSION}`;
+    l.onload=resolve;l.onerror=()=>reject(new Error(`Could not load ${href}`));
+    document.head.appendChild(l);
   });
-  const preconnect=href=>{if(document.querySelector(`link[rel="preconnect"][href="${href}"]`))return;const l=document.createElement('link');l.rel='preconnect';l.href=href;l.crossOrigin='anonymous';document.head.appendChild(l)};
+
+  const preconnect=href=>{
+    if(document.querySelector(`link[rel="preconnect"][href="${href}"]`))return;
+    const l=document.createElement('link');l.rel='preconnect';l.href=href;l.crossOrigin='anonymous';document.head.appendChild(l);
+  };
 
   preconnect('https://www.gstatic.com');
 
   try{
-    if(!('DecompressionStream' in window)) throw new Error('This browser is too old for the optimized FinalForge bundle. Please update your browser.');
+    if(!('DecompressionStream' in window))throw new Error('This browser is too old for the optimized FinalForge bundle. Please update your browser.');
 
     const stylesReady=Promise.all([
       loadStyle('assets/ui-responsive-v2.css'),
@@ -111,7 +114,10 @@ document.documentElement.classList.add('ff-auth-restoring');
       loadStyle('assets/student-experience-v2.css'),
       loadStyle('assets/visual-system-v2.css'),
       loadStyle('assets/mobile-auth-v5.css'),
-      loadStyle('assets/desktop-auth-v6.css')
+      loadStyle('assets/desktop-auth-v6.css'),
+      loadStyle('assets/runtime-stability-v1.css'),
+      loadStyle('assets/mobile-runtime-final-v1.css'),
+      loadStyle('assets/mobile-scroll-recovery-v1.css')
     ]);
 
     const firebaseSdkReady=(async()=>{
@@ -142,11 +148,15 @@ document.documentElement.classList.add('ff-auth-restoring');
     const text=await new Response(stream).text();
     const b=JSON.parse(text);
 
-    const style=document.createElement('style');style.dataset.finalforgeCore='1';style.textContent=b['styles.css'];document.head.prepend(style);
+    const style=document.createElement('style');
+    style.dataset.finalforgeCore='1';
+    style.textContent=b['styles.css'];
+    document.head.prepend(style);
 
     (0,eval)(b['data.js']);
     if(!window.FINALFORGE_DATA&&window.EXAMHUB_DATA)window.FINALFORGE_DATA=window.EXAMHUB_DATA;
     (0,eval)(b['practice-data.js']);
+
     await loadScript('assets/app.js');
     await loadScript('assets/past-papers-v1.js');
     await loadScript('assets/product-ui-v4.js');
@@ -154,20 +164,37 @@ document.documentElement.classList.add('ff-auth-restoring');
     await loadScript('assets/practice-exam-v4.js');
     await loadScript('assets/study-experience.js');
     await loadScript('assets/student-experience-v2.js');
+
+    /* Device policy must exist before cloud hydration or navigation helpers. */
+    await loadScript('assets/mobile-runtime-final-v1.js');
     await loadScript('assets/cloud-ui-stability-v1.js');
 
     await firebaseSdkReady;
     await loadScript('assets/auth.js');
     await loadScript('assets/session-restore-v1.js');
     await loadScript('assets/auth-experience-v4.js');
+    await loadScript('assets/signup-fix-v2.js');
+    await loadScript('assets/verification-handoff-v1.js');
+
+    /* Build mobile controls first, then attach non-owning functional helpers. */
     await loadScript('assets/mobile-experience-v4.js');
+    await loadScript('assets/practice-stability-v1.js');
+    await loadScript('assets/mobile-navigation-runtime-v2.js');
+    await loadScript('assets/mobile-scroll-recovery-v1.js');
+
     await loadScript('assets/tailwind-runtime-v6.js');
-    await loadScript('assets/product-motion-v5.js');
+
+    /* Decorative observers are desktop-only. Functional mobile UI never depends on them. */
+    if(!window.finalforgeIsMobile?.())await loadScript('assets/product-motion-v5.js');
     await loadScript('assets/reference-enhancements.js');
     await loadScript('assets/auth-world-v1.js');
-    const status=document.getElementById('authBootStatus');if(status)status.hidden=true;
 
-    if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+    const status=document.getElementById('authBootStatus');
+    if(status)status.hidden=true;
+
+    if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
+      navigator.serviceWorker.register('sw.js').catch(()=>{});
+    }
     window.dispatchEvent(new CustomEvent('finalforge-ready'));
-  }catch(err){fail(err?.message||String(err));}
+  }catch(err){fail(err?.message||String(err))}
 })();
