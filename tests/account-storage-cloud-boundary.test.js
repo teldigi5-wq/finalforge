@@ -1,9 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import vm from 'node:vm';
 
 const auth=fs.readFileSync(new URL('../assets/auth.js',import.meta.url),'utf8');
 const loader=fs.readFileSync(new URL('../assets/core-loader.js',import.meta.url),'utf8');
+
+test('account-isolation auth runtime parses successfully',()=>{
+  assert.doesNotThrow(()=>new vm.Script(auth));
+});
 
 test('Firebase Firestore compat SDK uses the canonical CDN filename',()=>{
   assert.match(loader,/firebasejs\/10\.14\.1\/firebase-firestore-compat\.js/);
