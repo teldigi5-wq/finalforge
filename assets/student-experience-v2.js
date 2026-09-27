@@ -165,9 +165,9 @@
       if(document.getElementById(id)) commands.push({type:'Section',title,desc,icon,keywords:`${title} ${desc}`,run:()=>window.go?.(id)});
     });
     Object.entries(modules).forEach(([key,m])=>commands.push({type:'Module',title:`${m.short||m.code} · ${m.name}`,desc:`${m.code} · ${(m.lessons||[]).length} lesson blocks`,icon:'▦',keywords:`${m.short} ${m.code} ${m.name} ${(m.lessons||[]).flat(2).join(' ')}`,run:()=>{window.go?.('modules');setTimeout(()=>window.openModule?.(key),80)}}));
-    resources.filter(r=>r&&r.title&&r.path).forEach(r=>commands.push({type:r.type||'Resource',title:r.title,desc:`${String(r.module||'').toUpperCase()} · ${r.ext?.toUpperCase()||'FILE'}`,icon:'⌕',keywords:`${r.title} ${r.module} ${r.type} ${r.ext}`,run:()=>window.open(encodeURI(r.path),'_blank','noopener')}));
+    resources.filter(r=>r&&r.title&&r.resourceId).forEach(r=>commands.push({type:r.type||'Resource',title:r.title,desc:`${String(r.module||'').toUpperCase()} · ${r.ext?.toUpperCase()||'FILE'}`,icon:'⌕',keywords:`${r.title} ${r.module} ${r.type} ${r.ext}`,run:()=>window.finalforgeOpenResource?.(r.resourceId)}));
     commands.push({type:'Action',title:'Resume current mock exam',desc:'Open your autosaved exam attempt',icon:'◎',keywords:'resume mock exam autosave attempt',run:()=>{window.go?.('practice');setTimeout(()=>window.resumePracticeExam?.(),80)}});
-    commands.push({type:'Action',title:'Open official timetable',desc:'View the uploaded SLIIT exam timetable',icon:'◷',keywords:'official timetable exam pdf schedule',run:()=>window.open('official/Y1S1_Final_Exam_Timetable_V3_15-09-2026.pdf','_blank','noopener')});
+    commands.push({type:'Action',title:'Open official timetable',desc:'View the uploaded SLIIT exam timetable',icon:'◷',keywords:'official timetable exam pdf schedule',run:()=>window.finalforgeOpenResource?.(window.FINALFORGE_OFFICIAL_TIMETABLE_RESOURCE_ID||'official-timetable-v3-2026-09-15')});
     return commands;
   }
   function score(cmd,q){

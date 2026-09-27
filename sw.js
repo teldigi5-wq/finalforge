@@ -1,4 +1,4 @@
-const C='finalforge-v48-professional-hardening';
+const C='finalforge-v49-private-resources';
 
 // Cache the shell and critical runtime at install. Feature assets are cached as requested.
 const CORE=[
@@ -8,6 +8,7 @@ const CORE=[
   './manifest.webmanifest',
   './assets/core-loader.js',
   './assets/account-storage-v1.js',
+  './assets/resource-delivery-v1.js',
   './assets/ui-responsive-v2.css',
   './assets/auth-experience-v4.css',
   './assets/experience-v9.css',
@@ -47,6 +48,7 @@ const INSTANT=new Set([
   '/verify.html',
   '/manifest.webmanifest',
   '/assets/account-storage-v1.js',
+  '/assets/resource-delivery-v1.js',
   '/assets/ui-responsive-v2.css',
   '/assets/auth-experience-v4.css',
   '/assets/auth-experience-v4.js',
@@ -107,6 +109,7 @@ const INSTANT=new Set([
 const CRITICAL_RUNTIME=new Set([
   '/assets/core-loader.js',
   '/assets/account-storage-v1.js',
+  '/assets/resource-delivery-v1.js',
   '/assets/app.js',
   '/assets/auth.js',
   '/assets/session-restore-v1.js',
@@ -145,11 +148,21 @@ function fetchOptions(){
   return options;
 }
 
+function protectedPath(pathname){
+  return pathname.startsWith('/api/')||pathname.startsWith('/resource/');
+}
+
+function cacheable(response){
+  if(!response?.ok)return false;
+  const control=response.headers?.get?.('Cache-Control')||'';
+  return !/(?:no-store|private)/i.test(control);
+}
+
 async function staleWhileRevalidate(request,fallback){
   const cache=await caches.open(C);
   const cached=await cache.match(request)||(fallback?await cache.match(fallback):null);
   const network=fetch(request).then(response=>{
-    if(response?.ok)cache.put(request,response.clone());
+    if(cacheable(response))cache.put(request,response.clone());
     return response;
   }).catch(()=>null);
 
@@ -170,10 +183,11 @@ async function freshNavigation(request){
   const cache=await caches.open(C);
   try{
     const response=await fetch(request,fetchOptions());
-    if(response.ok){
+    if(cacheable(response)){
       await cache.put(request,response.clone());
       return response;
     }
+    if(response)return response;
   }catch{}
   return await cache.match(request)||await cache.match('./index.html')||Response.error();
 }
@@ -182,17 +196,22 @@ async function freshRuntime(request){
   const cache=await caches.open(C);
   try{
     const response=await fetch(request,fetchOptions());
-    if(response.ok){
+    if(cacheable(response)){
       await cache.put(request,response.clone());
       return response;
     }
+    if(response)return response;
   }catch{}
   return await cache.match(request)||Response.error();
 }
 
 self.addEventListener('fetch',event=>{
-  if(event.request.method!=='GET')return;
   const url=new URL(event.request.url);
+  if(url.origin===location.origin&&protectedPath(url.pathname)){
+    event.respondWith(fetch(event.request,{cache:'no-store'}));
+    return;
+  }
+  if(event.request.method!=='GET')return;
   if(url.origin!==location.origin)return;
 
   if(event.request.mode==='navigate'){
@@ -210,7 +229,7 @@ self.addEventListener('fetch',event=>{
 
   event.respondWith(
     caches.match(event.request).then(cached=>cached||fetch(event.request).then(response=>{
-      if(response?.ok)caches.open(C).then(cache=>cache.put(event.request,response.clone()));
+      if(cacheable(response))caches.open(C).then(cache=>cache.put(event.request,response.clone()));
       return response;
     }))
   );

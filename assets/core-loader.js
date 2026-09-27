@@ -42,7 +42,7 @@ document.documentElement.classList.add('ff-auth-restoring');
 })();
 
 (async()=>{
-  const VERSION='professional-hardening-v1';
+  const VERSION='private-resource-delivery-v1';
   const fail=msg=>{
     document.documentElement.classList.remove('ff-auth-restoring');
     console.error('[FinalForge]',msg);
@@ -164,6 +164,9 @@ document.documentElement.classList.add('ff-auth-restoring');
     (0,eval)(b['data.js']);
     if(!window.FINALFORGE_DATA&&window.EXAMHUB_DATA)window.FINALFORGE_DATA=window.EXAMHUB_DATA;
     (0,eval)(b['practice-data.js']);
+
+    /* Convert the recovered public paths into stable private resource IDs before features render. */
+    await loadScript('assets/resource-delivery-v1.js');
 
     /* Account isolation must exist before any feature reads or writes study state. */
     await firebaseSdkReady;
