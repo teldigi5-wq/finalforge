@@ -135,7 +135,7 @@ document.documentElement.classList.add('ff-auth-restoring');
       ]);
       await Promise.all([
         loadScript('https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js'),
-        loadScript('https://www.gstatic.com/firebasejs/10.14.1/firestore-compat.js')
+        loadScript('https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js')
       ]);
     })();
 
