@@ -135,7 +135,7 @@ document.documentElement.classList.add('ff-auth-restoring');
       ]);
       await Promise.all([
         loadScript('https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js'),
-        loadScript('https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js')
+        loadScript('https://www.gstatic.com/firebasejs/10.14.1/firestore-compat.js')
       ]);
     })();
 
@@ -164,6 +164,10 @@ document.documentElement.classList.add('ff-auth-restoring');
     (0,eval)(b['data.js']);
     if(!window.FINALFORGE_DATA&&window.EXAMHUB_DATA)window.FINALFORGE_DATA=window.EXAMHUB_DATA;
     (0,eval)(b['practice-data.js']);
+
+    /* Account isolation must exist before any feature reads or writes study state. */
+    await firebaseSdkReady;
+    await loadScript('assets/account-storage-v1.js');
 
     await loadScript('assets/app.js');
     await loadScript('assets/past-papers-v1.js');
