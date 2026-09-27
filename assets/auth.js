@@ -7,6 +7,7 @@
   const localPreviewAllowed = location.protocol === 'file:' || ['localhost','127.0.0.1'].includes(location.hostname);
   let loginRole='student', currentProfile=null, syncTimer=null, db=null, auth=null, pendingVerificationUser=null;
   const originalSetItem = localStorage.setItem.bind(localStorage);
+  const CLOUD_PROGRESS_KEY='finalforge_progress';
 
   const normalizeStudentId = v => String(v||'').trim().toUpperCase().replace(/\s+/g,'');
   const validStudentId = id => /^IT\d{8}$/.test(normalizeStudentId(id));
@@ -22,6 +23,8 @@
   addEventListener('click',e=>{if(!e.target.closest('.top-account-wrap'))$('#accountMenu')?.classList.remove('open')});
 
   function showApp(profile,user,preview=false){
+    if(profile?.role==='admin')window.finalforgeAccountStorage?.unbind?.();
+    else if(profile?.role==='student'&&user?.uid)window.finalforgeAccountStorage?.bind?.(user.uid);
     document.body.classList.remove('auth-pending'); gate?.classList.add('hidden'); if(gate)gate.hidden=true; currentProfile=profile;
     window.scrollTo({top:0,left:0,behavior:'instant'});
     const primary=preview?'Preview Mode':profile?.role==='admin'?'Administrator':profile?.studentId||'Student';
@@ -39,29 +42,50 @@
     $('#nav')?.insertAdjacentHTML('beforeend',btn); $('#mobileNav')?.insertAdjacentHTML('beforeend',btn);
   }
 
-  function snapshotLocal(){const out={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k?.startsWith('finalforge_') && k!=='finalforge_cloud_meta') out[k]=localStorage.getItem(k)}return out;}
-  function mockVersion(snap){try{const m=JSON.parse(snap.finalforge_active_mock_v3||'null');return Math.max(Number(m?.updatedAt||m?.generatedAt||0),Number(snap.finalforge_mock_clear_at||0))}catch{return Number(snap.finalforge_mock_clear_at||0)}}
-  function mergeSnapshot(local,remote){
-    const merged={...remote,...local};
-    const preferred=mockVersion(remote)>mockVersion(local)?remote:local;
-    for(const k of ['finalforge_active_mock_v3','finalforge_mock_clear_at']){
-      if(k in preferred)merged[k]=preferred[k];else delete merged[k];
-    }
-    if(Number(merged.finalforge_mock_clear_at||0)>=mockVersion({finalforge_active_mock_v3:merged.finalforge_active_mock_v3}))delete merged.finalforge_active_mock_v3;
-    return merged;
+  function progressSnapshot(){
+    const value=localStorage.getItem(CLOUD_PROGRESS_KEY);
+    return typeof value==='string'?{[CLOUD_PROGRESS_KEY]:value}:{};
   }
-  function applySnapshot(snap){if(!snap)return;const merged=mergeSnapshot(snapshotLocal(),snap);for(const [k,v] of Object.entries(merged))if(k.startsWith('finalforge_')&&typeof v==='string')originalSetItem(k,v);if(!('finalforge_active_mock_v3' in merged))localStorage.removeItem('finalforge_active_mock_v3');try{renderModules?.();renderHome?.();renderPlanner?.();renderPractice?.()}catch{}}
+  function sanitizeRemoteSnapshot(snap){
+    const value=snap?.[CLOUD_PROGRESS_KEY];
+    return typeof value==='string'?{[CLOUD_PROGRESS_KEY]:value}:{};
+  }
+  function mergeProgressSnapshot(local,remote){
+    const l=sanitizeRemoteSnapshot(local),r=sanitizeRemoteSnapshot(remote);
+    return l[CLOUD_PROGRESS_KEY]!==undefined?l:r;
+  }
+  function applySnapshot(snap){
+    const merged=mergeProgressSnapshot(progressSnapshot(),snap);
+    const value=merged[CLOUD_PROGRESS_KEY];
+    if(typeof value==='string')originalSetItem(CLOUD_PROGRESS_KEY,value);
+    try{renderModules?.();renderHome?.();renderPlanner?.();renderPractice?.()}catch{}
+  }
   async function pullOrPush(){
     if(!auth?.currentUser||currentProfile?.role!=='student')return;
     const ref=db.collection('progress').doc(auth.currentUser.uid),doc=await ref.get();
-    if(doc.exists&&doc.data().snapshot){applySnapshot(doc.data().snapshot);$('#syncState').textContent='☁️ Synced'} else await pushCloud();
+    if(doc.exists&&doc.data().snapshot){
+      applySnapshot(doc.data().snapshot);
+      await pushCloud();
+    }else await pushCloud();
   }
   async function pushCloud(){
     if(!auth?.currentUser||currentProfile?.role!=='student')return;
-    try{const ref=db.collection('progress').doc(auth.currentUser.uid);const snapshot=await db.runTransaction(async tx=>{const previous=await tx.get(ref);const merged=mergeSnapshot(snapshotLocal(),previous.data()?.snapshot||{});tx.set(ref,{snapshot:merged,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});return merged});applySnapshot(snapshot);$('#syncState').textContent='☁️ Synced'}catch{$('#syncState').textContent='☁️ Offline'}
+    try{
+      const ref=db.collection('progress').doc(auth.currentUser.uid);
+      const local=progressSnapshot();
+      const snapshot=await db.runTransaction(async tx=>{
+        const previous=await tx.get(ref);
+        const merged=mergeProgressSnapshot(local,previous.data()?.snapshot||{});
+        const payload={snapshot:merged,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+        if(previous.exists)tx.update(ref,payload);else tx.set(ref,payload);
+        return merged;
+      });
+      applySnapshot(snapshot);
+      $('#syncState').textContent='☁️ Synced';
+    }catch{$('#syncState').textContent='☁️ Offline'}
   }
   function scheduleSync(delay=700){if(!auth?.currentUser||currentProfile?.role!=='student')return;$('#syncState').textContent='☁️ Saving…';clearTimeout(syncTimer);syncTimer=setTimeout(pushCloud,delay)}
-  localStorage.setItem=function(k,v){originalSetItem(k,v);if(String(k).startsWith('finalforge_'))scheduleSync();};
+  localStorage.setItem=function(k,v){originalSetItem(k,v);if(String(k)===CLOUD_PROGRESS_KEY)scheduleSync();};
   window.forceCloudSync=async()=>{await pushCloud();window.toast?.('Cloud progress synced')};
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')pushCloud()});
   addEventListener('pagehide',()=>{pushCloud()});
@@ -117,7 +141,9 @@
   }
   async function loginAdmin(email,password){
     const cred=await auth.signInWithEmailAndPassword(String(email||'').trim(),password);const profile=await loadProfile(cred.user);
-    if(profile?.role!=='admin'){await auth.signOut();throw new Error('This account needs a verified administrator email and admin access.');}return {user:cred.user,profile};
+    if(profile?.role!=='admin'){await auth.signOut();throw new Error('This account needs a verified administrator email and admin access.');}
+    window.finalforgeAccountStorage?.unbind?.();
+    return {user:cred.user,profile};
   }
 
   $('#loginForm')?.addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;if([...form.querySelectorAll('button,input')].some(el=>el.disabled))return;setAlert('');busy(form,true);try{const remember=$('#rememberSession')?.checked!==false;if(auth.setPersistence)await auth.setPersistence(remember?firebase.auth.Auth.Persistence.LOCAL:firebase.auth.Auth.Persistence.SESSION);const id=$('#loginIdentity').value,p=$('#loginPassword').value;const r=loginRole==='admin'?await loginAdmin(id,p):await loginStudent(id,p);await touchLogin(r.user,r.profile);showApp(r.profile,r.user);await pullOrPush()}catch(err){if(!err?.silent)setAlert(humanError(err))}finally{busy(form,false)}});
@@ -150,7 +176,7 @@
 
   $('#resetForm')?.addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;setAlert('');const id=normalizeStudentId($('#resetStudentId').value);if(!validStudentId(id))return setAlert('Enter a valid Student ID.');busy(form,true);try{await auth.sendPasswordResetEmail(studentEmail(id),{url:location.origin+location.pathname});setAlert(`Password reset email sent to ${studentEmail(id)}.`,'success')}catch(err){setAlert(humanError(err))}finally{busy(form,false)}});
 
-  window.finalforgeSignOut=async()=>{try{await pushCloud()}catch{}await auth.signOut();location.reload()};
+  window.finalforgeSignOut=async()=>{clearTimeout(syncTimer);syncTimer=null;try{await pushCloud()}catch{}localStorage.removeItem('finalforge_pending_student');await auth.signOut();location.reload()};
 
   function humanError(err){const c=err?.code||'',m=err?.message||String(err||'Authentication failed.');if(c.includes('user-not-found'))return 'Student ID not found. Check the ID or create an account first.';if(c.includes('wrong-password'))return 'Incorrect password. Try again or use password reset.';if(c.includes('invalid-credential'))return 'Student ID/email or password is incorrect.';if(c.includes('user-disabled'))return 'This account is disabled. Contact the FinalForge administrator.';if(c.includes('invalid-email'))return 'Enter a valid administrator email address.';if(c.includes('too-many-requests'))return 'Too many attempts. Wait a few minutes, then try again.';if(c.includes('email-already-in-use'))return 'This Student ID already has an account. Log in or reset the password.';if(c.includes('weak-password'))return 'Choose a stronger password with at least 8 characters.';if(c.includes('network-request-failed'))return 'Network error. Check your connection and try again.';if(c==='permission-denied'||c.includes('permission-denied'))return 'This Student ID is not approved, has already been claimed, or does not match the verified SLIIT email.';return m.replace(/^Firebase:\s*/,'').replace(/\s*\(auth\/[^)]+\)\.?$/,'');}
 
@@ -171,7 +197,7 @@
       if(!user){document.body.classList.add('auth-pending');gate?.classList.remove('hidden');if(gate)gate.hidden=false;return;}
       try{
         const token=await user.getIdTokenResult(true);
-        if(token.claims.admin){if(token.claims.email_verified!==true)throw new Error('Verify your administrator email before accessing FinalForge.');showApp({role:'admin',email:user.email},user);return;}
+        if(token.claims.admin){if(token.claims.email_verified!==true)throw new Error('Verify your administrator email before accessing FinalForge.');window.finalforgeAccountStorage?.unbind?.();showApp({role:'admin',email:user.email},user);return;}
         if(!user.emailVerified){showVerification(user);return;}
         const p=await finalizeVerifiedStudent(user);showApp(p,user);await pullOrPush();
       }catch(err){setAlert(humanError(err));try{await auth.signOut()}catch{}}

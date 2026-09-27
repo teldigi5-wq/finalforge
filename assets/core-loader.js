@@ -165,6 +165,10 @@ document.documentElement.classList.add('ff-auth-restoring');
     if(!window.FINALFORGE_DATA&&window.EXAMHUB_DATA)window.FINALFORGE_DATA=window.EXAMHUB_DATA;
     (0,eval)(b['practice-data.js']);
 
+    /* Account isolation must exist before any feature reads or writes study state. */
+    await firebaseSdkReady;
+    await loadScript('assets/account-storage-v1.js');
+
     await loadScript('assets/app.js');
     await loadScript('assets/past-papers-v1.js');
     await loadScript('assets/product-ui-v4.js');

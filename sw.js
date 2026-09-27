@@ -7,6 +7,7 @@ const CORE=[
   './verify.html',
   './manifest.webmanifest',
   './assets/core-loader.js',
+  './assets/account-storage-v1.js',
   './assets/ui-responsive-v2.css',
   './assets/auth-experience-v4.css',
   './assets/experience-v9.css',
@@ -45,6 +46,7 @@ const INSTANT=new Set([
   '/index.html',
   '/verify.html',
   '/manifest.webmanifest',
+  '/assets/account-storage-v1.js',
   '/assets/ui-responsive-v2.css',
   '/assets/auth-experience-v4.css',
   '/assets/auth-experience-v4.js',
@@ -104,6 +106,7 @@ const INSTANT=new Set([
 
 const CRITICAL_RUNTIME=new Set([
   '/assets/core-loader.js',
+  '/assets/account-storage-v1.js',
   '/assets/app.js',
   '/assets/auth.js',
   '/assets/session-restore-v1.js',
