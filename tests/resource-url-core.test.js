@@ -87,6 +87,26 @@ test('browser-supplied raw storage path is rejected even with a valid resource I
   assert.equal(signed, false);
 });
 
+test('resource existence is not disclosed before authentication and authorization', async () => {
+  let lookedUp = false;
+  const getResourceById = () => { lookedUp = true; return null; };
+
+  const missingAuth = responseRecorder();
+  const handler = createResourceUrlHandler(deps({ getResourceById }));
+  await handler(req({ resourceId: 'ffr1_ffffffffffffffff' }, { headers: { authorization: '' } }), missingAuth);
+  assert.equal(missingAuth.statusCode, 401);
+  assert.equal(lookedUp, false);
+
+  const denied = responseRecorder();
+  const deniedHandler = createResourceUrlHandler(deps({
+    getResourceById,
+    loadStudentEntitlement: async () => ({ ...entitlement, allowlist: { ...entitlement.allowlist, active: false } })
+  }));
+  await deniedHandler(req({ resourceId: 'ffr1_ffffffffffffffff' }), denied);
+  assert.equal(denied.statusCode, 403);
+  assert.equal(lookedUp, false);
+});
+
 test('unknown stable resource IDs never reach storage signing', async () => {
   let signed = false;
   const handler = createResourceUrlHandler(deps({ signResource: async () => { signed = true; return { url: 'https://project.supabase.co/x', expiresIn: 90 }; } }));

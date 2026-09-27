@@ -75,9 +75,6 @@ export function createResourceUrlHandler({ verifyIdToken, loadStudentEntitlement
     const resourceId = String(body.resourceId || '').trim();
     if (!RESOURCE_ID_RE.test(resourceId)) return res.status(400).json({ error: 'Invalid resource ID.' });
 
-    const resource = getResourceById(resourceId);
-    if (!resource) return res.status(404).json({ error: 'Resource not found.' });
-
     const token = tokenFromAuthorization(header(req, 'authorization'));
     if (!token) return res.status(401).json({ error: 'Authentication required.' });
 
@@ -94,6 +91,9 @@ export function createResourceUrlHandler({ verifyIdToken, loadStudentEntitlement
       catch { return res.status(503).json({ error: 'Resource authorization is temporarily unavailable.' }); }
     }
     if (!isAuthorizedResourceUser(decoded, entitlement)) return res.status(403).json({ error: 'Resource access denied.' });
+
+    const resource = getResourceById(resourceId);
+    if (!resource) return res.status(404).json({ error: 'Resource not found.' });
 
     try {
       const signed = await signResource(resource.storagePath);
