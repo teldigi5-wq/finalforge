@@ -1,0 +1,14 @@
+{
+  "name": "finalforge-azure-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.js",
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {
+    "@azure/functions": "^4.0.0",
+    "firebase-admin": "^13.0.0"
+  }
+}

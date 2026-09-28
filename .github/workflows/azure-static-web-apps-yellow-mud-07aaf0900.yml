@@ -30,7 +30,7 @@ jobs:
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "/" # App source code path
           skip_app_build: true # FinalForge frontend is already static
-          api_location: "" # Api source code path - optional
+          api_location: "azure-api" # FinalForge Azure Functions API
           output_location: "" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
