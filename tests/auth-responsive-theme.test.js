@@ -42,7 +42,7 @@ test('stability CSS disables expensive motion and inactive section painting',()=
   assert.match(stabilityCss,/\.section:not\(\.active\)/);
 });
 
-test('loader uses stability mode and omits decorative runtime layers',()=>{
+test('loader keeps stability mode and omits heavy decorative runtime layers',()=>{
   assert.doesNotThrow(()=>new Function(loader));
   assert.match(loader,/loadScript\('assets\/stability-runtime-v1\.js'\)/);
   assert.match(loader,/loadStyle\('assets\/stability-mode-v1\.css'\)/);
@@ -55,12 +55,17 @@ test('loader uses stability mode and omits decorative runtime layers',()=>{
   assert.doesNotMatch(loader,/await loadScript\('assets\/cloud-ui-stability-v1\.js'\)/);
 });
 
-test('service worker is bumped and stability runtime is network-fresh critical',()=>{
-  assert.match(sw,/finalforge-v52-stability-mode/);
+test('service worker is bumped and stability plus premium runtime are network-fresh critical',()=>{
+  assert.match(sw,/finalforge-v53-premium-stable/);
   assert.match(sw,/stability-runtime-v1\.js/);
   assert.match(sw,/stability-mode-v1\.css/);
+  assert.match(sw,/premium-ui-v1\.js/);
+  assert.match(sw,/premium-shell-v1\.css/);
+  assert.match(sw,/ip-paper-extension-v1\.js/);
   const critical=sw.slice(sw.indexOf('const CRITICAL_RUNTIME'),sw.indexOf("self.addEventListener('install'"));
   assert.match(critical,/stability-runtime-v1\.js/);
   assert.match(critical,/auth\.js/);
   assert.match(critical,/theme-toggle-stability-v1\.js/);
+  assert.match(critical,/premium-ui-v1\.js/);
+  assert.match(critical,/ip-paper-extension-v1\.js/);
 });
