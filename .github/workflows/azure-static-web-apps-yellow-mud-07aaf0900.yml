@@ -20,6 +20,14 @@ jobs:
           submodules: true
           lfs: false
 
+      - name: Verify auth runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check assets/auth.js
+          node --check assets/core-loader.js
+          node --test tests/auth-runtime-v2.test.js
+
       - name: Prepare public frontend bundle
         shell: bash
         run: |
@@ -65,6 +73,8 @@ jobs:
 
           test -f azure-static/index.html
           test -f azure-static/staticwebapp.config.json
+          test -f azure-static/assets/auth.js
+          test -f azure-static/assets/auth-system-v2.css
           test -f azure-static/assets/resource-delivery-v1.js
           test -f azure-static/mock-papers/index.html
 

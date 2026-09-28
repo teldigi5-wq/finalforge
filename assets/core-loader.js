@@ -42,7 +42,7 @@ document.documentElement.classList.add('ff-auth-restoring');
 })();
 
 (async()=>{
-  const VERSION='private-resource-delivery-v1';
+  const VERSION='auth-system-v2';
   const fail=msg=>{
     document.documentElement.classList.remove('ff-auth-restoring');
     console.error('[FinalForge]',msg);
@@ -125,7 +125,8 @@ document.documentElement.classList.add('ff-auth-restoring');
       loadStyle('assets/mobile-runtime-final-v1.css'),
       loadStyle('assets/mobile-scroll-recovery-v1.css'),
       loadStyle('assets/professional-workspace-v2.css'),
-      loadStyle('assets/professional-accessibility-v1.css')
+      loadStyle('assets/professional-accessibility-v1.css'),
+      loadStyle('assets/auth-system-v2.css')
     ]);
 
     const firebaseSdkReady=(async()=>{
@@ -184,12 +185,10 @@ document.documentElement.classList.add('ff-auth-restoring');
     await loadScript('assets/mobile-runtime-final-v1.js');
     await loadScript('assets/cloud-ui-stability-v1.js');
 
+    /* Auth Runtime v2 is the single functional owner of login/signup/verify/reset. */
     await firebaseSdkReady;
     await loadScript('assets/auth.js');
-    await loadScript('assets/session-restore-v1.js');
     await loadScript('assets/auth-experience-v4.js');
-    await loadScript('assets/signup-fix-v2.js');
-    await loadScript('assets/verification-handoff-v1.js');
 
     /* Build mobile controls first, then attach non-owning functional helpers. */
     await loadScript('assets/mobile-experience-v4.js');
