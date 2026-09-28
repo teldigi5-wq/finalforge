@@ -5,6 +5,7 @@ import fs from 'node:fs';
 const auth = fs.readFileSync(new URL('../assets/auth.js', import.meta.url), 'utf8');
 const loader = fs.readFileSync(new URL('../assets/core-loader.js', import.meta.url), 'utf8');
 const css = fs.readFileSync(new URL('../assets/auth-system-v2.css', import.meta.url), 'utf8');
+const accountStorage = fs.readFileSync(new URL('../assets/account-storage-v1.js', import.meta.url), 'utf8');
 
 function occurrences(source, needle) {
   return source.split(needle).length - 1;
@@ -14,6 +15,15 @@ test('auth runtime parses and declares one canonical v2 owner', () => {
   assert.doesNotThrow(() => new Function(auth));
   assert.match(auth, /FINALFORGE_AUTH_RUNTIME_V2/);
   assert.equal(occurrences(auth, 'onAuthStateChanged('), 1);
+});
+
+test('account storage never intercepts Firebase authentication', () => {
+  assert.doesNotThrow(() => new Function(accountStorage));
+  assert.match(accountStorage, /authBinding:'explicit'/);
+  assert.doesNotMatch(accountStorage, /onAuthStateChanged\s*\(/);
+  assert.doesNotMatch(accountStorage, /signInWithEmailAndPassword\s*=/);
+  assert.match(accountStorage, /queueRefreshViews\(/);
+  assert.match(accountStorage, /requestAnimationFrame/);
 });
 
 test('auth operations are timeout-bounded and always recover form controls', () => {
