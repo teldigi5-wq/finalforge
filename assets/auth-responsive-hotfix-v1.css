@@ -1,0 +1,220 @@
+/* FinalForge Auth Responsive Hotfix v1 — fixes auth overflow, zoom/viewport fit, and theme-transition jank. */
+
+body.auth-pending{
+  min-height:100svh!important;
+  overflow-x:hidden!important;
+}
+
+#authGate.auth-gate{
+  box-sizing:border-box!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain!important;
+}
+
+#authGate *,#authGate *::before,#authGate *::after{
+  box-sizing:border-box!important;
+}
+
+#authGate .auth-shell{
+  width:min(1360px,100%)!important;
+  min-width:0!important;
+  min-height:0!important;
+  height:auto!important;
+  max-height:calc(100svh - clamp(24px,4vw,54px))!important;
+  align-self:center!important;
+  grid-template-columns:minmax(0,1.06fr) minmax(420px,.94fr)!important;
+  overflow:hidden!important;
+}
+
+#authGate .auth-brand-panel,
+#authGate .auth-card,
+#authGate .auth-card>*{
+  min-width:0!important;
+  max-width:100%!important;
+}
+
+#authGate .auth-card{
+  justify-content:flex-start!important;
+  min-height:0!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:contain!important;
+  scrollbar-gutter:stable!important;
+  padding:clamp(26px,3.2vw,46px)!important;
+}
+
+#authGate .auth-view,
+#authGate .auth-view.active,
+#authGate .auth-tabs,
+#authGate .auth-role-toggle,
+#authGate .ff-auth-intro,
+#authGate .ff-auth-runtime-status,
+#authGate .auth-alert,
+#authGate .ff-auth-security,
+#authGate .auth-config-note{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+}
+
+#authGate .auth-view.active{
+  overflow-x:hidden!important;
+}
+
+#authGate .auth-tabs,
+#authGate .auth-role-toggle{
+  overflow:hidden!important;
+}
+
+#authGate .auth-tabs>button,
+#authGate .auth-role-toggle>button,
+#authGate .auth-submit,
+#authGate .text-btn,
+#authGate input,
+#authGate .password-wrap{
+  min-width:0!important;
+  max-width:100%!important;
+}
+
+#authGate #authBootStatus{
+  display:none!important;
+}
+
+#authGate .ff-auth-security{
+  flex:0 0 auto!important;
+  margin-top:14px!important;
+  padding-top:13px!important;
+}
+
+#authGate .ff-auth-security span{
+  display:inline!important;
+}
+
+#authGate .auth-card[data-mode="login"] .ff-auth-intro{
+  margin-bottom:16px!important;
+}
+
+#authGate .auth-card[data-mode="login"] .auth-tabs{
+  margin-bottom:12px!important;
+}
+
+#authGate .auth-card[data-mode="login"] .auth-role-toggle{
+  margin-bottom:14px!important;
+}
+
+#authGate .auth-card[data-mode="login"] .ff-auth-runtime-status{
+  margin-bottom:10px!important;
+}
+
+#authGate .ff-auth-theme-toggle,
+#themeToggle{
+  touch-action:manipulation!important;
+  -webkit-tap-highlight-color:transparent!important;
+}
+
+html.ff-theme-switching #authGate,
+html.ff-theme-switching #authGate *{
+  transition:none!important;
+}
+
+html.ff-theme-switching #authGate .auth-shell{
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+html.ff-theme-switching #authGate .ff-auth-aurora,
+html.ff-theme-switching #authGate .ff-auth-photo,
+html.ff-theme-switching #authGate .auth-brand-panel::after{
+  animation:none!important;
+}
+
+@media (max-width:1180px) and (min-width:981px){
+  #authGate .auth-shell{
+    width:min(1120px,100%)!important;
+    grid-template-columns:minmax(0,.98fr) minmax(410px,1.02fr)!important;
+  }
+  #authGate .auth-brand-panel{padding:clamp(26px,3.2vw,42px)!important}
+  #authGate .auth-card{padding:clamp(24px,3vw,38px)!important}
+  #authGate .ff-auth-brandcontent h1{font-size:clamp(2.35rem,4.2vw,3.65rem)!important}
+}
+
+@media (max-width:980px){
+  #authGate.auth-gate{
+    padding:0!important;
+    place-items:stretch!important;
+  }
+  #authGate .auth-shell{
+    width:100%!important;
+    max-height:none!important;
+    min-height:100svh!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    border:0!important;
+    border-radius:0!important;
+  }
+  #authGate .auth-brand-panel{
+    min-height:auto!important;
+    padding:16px 20px 13px!important;
+    border-right:0!important;
+  }
+  #authGate .ff-auth-brandcontent,
+  #authGate .ff-auth-foot{
+    display:none!important;
+  }
+  #authGate .auth-card{
+    min-height:0!important;
+    padding:clamp(22px,5vw,34px) clamp(18px,5vw,30px) max(24px,env(safe-area-inset-bottom))!important;
+    overflow-x:hidden!important;
+    overflow-y:visible!important;
+    scrollbar-gutter:auto!important;
+  }
+}
+
+@media (max-width:720px){
+  #authGate .ff-auth-help{display:none!important}
+  #authGate .auth-brand-panel{padding:13px 16px 11px!important}
+  #authGate .ff-auth-brandlockup img{width:32px!important;height:32px!important}
+  #authGate .auth-card{padding:20px 16px max(22px,env(safe-area-inset-bottom))!important}
+  #authGate .ff-auth-intro h2{font-size:clamp(1.65rem,7vw,2rem)!important}
+  #authGate .ff-auth-runtime-status{font-size:.72rem!important}
+}
+
+@media (max-width:520px){
+  #authGate .auth-card{padding-left:14px!important;padding-right:14px!important}
+  #authGate .auth-tabs>button,
+  #authGate .auth-role-toggle>button{font-size:.74rem!important;padding-inline:8px!important}
+  #authGate .auth-submit{min-height:50px!important}
+  #authGate .text-btn{font-size:.74rem!important}
+}
+
+@media (max-width:380px){
+  #authGate .auth-card{padding-left:12px!important;padding-right:12px!important}
+  #authGate .auth-stepper{gap:4px!important}
+  #authGate .auth-stepper span{font-size:.58rem!important;padding-inline:4px!important}
+}
+
+@media (max-height:780px) and (min-width:981px){
+  #authGate.auth-gate{padding:12px!important}
+  #authGate .auth-shell{max-height:calc(100svh - 24px)!important}
+  #authGate .auth-card{padding:20px 28px!important}
+  #authGate .ff-auth-intro{margin-bottom:11px!important}
+  #authGate .auth-tabs{margin-bottom:9px!important}
+  #authGate .auth-role-toggle{margin-bottom:10px!important}
+  #authGate .auth-view label{margin-bottom:8px!important}
+  #authGate .ff-auth-security{margin-top:10px!important;padding-top:10px!important}
+}
+
+@media (orientation:landscape) and (max-height:520px) and (max-width:980px){
+  #authGate .auth-brand-panel{display:none!important}
+  #authGate .auth-shell{min-height:100svh!important}
+  #authGate .auth-card{padding-top:14px!important;padding-bottom:14px!important}
+}
+
+@media (prefers-reduced-motion:reduce){
+  #authGate *,#authGate *::before,#authGate *::after{
+    animation-duration:.001ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+    transition-duration:.001ms!important;
+  }
+}

@@ -1,4 +1,4 @@
-const C='finalforge-v49-private-resources';
+const C='finalforge-v50-auth-responsive';
 
 // Cache the shell and critical runtime at install. Feature assets are cached as requested.
 const CORE=[
@@ -30,14 +30,16 @@ const CORE=[
   './assets/mobile-scroll-recovery-v1.js',
   './assets/mobile-navigation-runtime-v2.js',
   './assets/practice-stability-v1.js',
-  './assets/session-restore-v1.js',
-  './assets/signup-fix-v2.js',
-  './assets/verification-handoff-v1.js',
   './assets/cloud-ui-stability-v1.js',
   './assets/professional-workspace-v2.css',
   './assets/professional-accessibility-v1.css',
   './assets/professional-workspace-v2.js',
   './assets/ux-hardening-v1.js',
+  './assets/auth.js',
+  './assets/auth-system-v2.css',
+  './assets/auth-responsive-hotfix-v1.css',
+  './assets/appearance-v1.js',
+  './assets/theme-toggle-stability-v1.js',
   './assets/finalforge-logo.svg',
   './assets/dcn-2024-pattern-v1.js'
 ];
@@ -70,9 +72,6 @@ const INSTANT=new Set([
   '/assets/mobile-scroll-recovery-v1.js',
   '/assets/mobile-navigation-runtime-v2.js',
   '/assets/practice-stability-v1.js',
-  '/assets/session-restore-v1.js',
-  '/assets/signup-fix-v2.js',
-  '/assets/verification-handoff-v1.js',
   '/assets/cloud-ui-stability-v1.js',
   '/assets/professional-workspace-v2.css',
   '/assets/professional-accessibility-v1.css',
@@ -91,6 +90,9 @@ const INSTANT=new Set([
   '/assets/reference-enhancements.js',
   '/assets/experience-v9.css',
   '/assets/appearance-v1.js',
+  '/assets/theme-toggle-stability-v1.js',
+  '/assets/auth-responsive-hotfix-v1.css',
+  '/assets/auth-system-v2.css',
   '/assets/practice-exam-v4.js',
   '/assets/dcn-2024-pattern-v1.js',
   '/assets/study-room.webp',
@@ -112,8 +114,11 @@ const CRITICAL_RUNTIME=new Set([
   '/assets/resource-delivery-v1.js',
   '/assets/app.js',
   '/assets/auth.js',
-  '/assets/session-restore-v1.js',
   '/assets/firebase-config.js',
+  '/assets/appearance-v1.js',
+  '/assets/theme-toggle-stability-v1.js',
+  '/assets/auth-system-v2.css',
+  '/assets/auth-responsive-hotfix-v1.css',
   '/assets/cloud-ui-stability-v1.js',
   '/assets/mobile-modern-v4.css',
   '/assets/reference-enhancements.js',
