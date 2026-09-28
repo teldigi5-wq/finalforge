@@ -27,6 +27,7 @@ jobs:
           node --check assets/auth.js
           node --check assets/appearance-v1.js
           node --check assets/theme-toggle-stability-v1.js
+          node --check assets/stability-runtime-v1.js
           node --check assets/core-loader.js
           node --check sw.js
           node --test tests/auth-runtime-v2.test.js tests/auth-responsive-theme.test.js
@@ -35,38 +36,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-
           rm -rf azure-static
           mkdir -p azure-static
 
-          cp \
-            index.html \
-            verify.html \
-            404.html \
-            manifest.webmanifest \
-            sw.js \
-            staticwebapp.config.json \
-            azure-static/
-
+          cp index.html verify.html 404.html manifest.webmanifest sw.js staticwebapp.config.json azure-static/
           cp -R assets azure-static/assets
           cp -R mock-papers azure-static/mock-papers
 
-          forbidden=(
-            package.json
-            package-lock.json
-            api
-            azure-api
-            firebase
-            tests
-            docs
-            PRIVATE_RESOURCE_DELIVERY.md
-            AUTH_AND_DEPLOY_SETUP.md
-            BUILD_STEPS.md
-            README.md
-            vercel.json
-            tailwind.config.cjs
-          )
-
+          forbidden=(package.json package-lock.json api azure-api firebase tests docs PRIVATE_RESOURCE_DELIVERY.md AUTH_AND_DEPLOY_SETUP.md BUILD_STEPS.md README.md vercel.json tailwind.config.cjs)
           for path in "${forbidden[@]}"; do
             if [ -e "azure-static/$path" ]; then
               echo "::error::Forbidden deployment path present: $path"
@@ -79,19 +56,21 @@ jobs:
           test -f azure-static/assets/auth.js
           test -f azure-static/assets/auth-system-v2.css
           test -f azure-static/assets/auth-responsive-hotfix-v1.css
+          test -f azure-static/assets/stability-runtime-v1.js
+          test -f azure-static/assets/stability-mode-v1.css
           test -f azure-static/assets/appearance-v1.js
           test -f azure-static/assets/theme-toggle-stability-v1.js
           test -f azure-static/assets/resource-delivery-v1.js
           test -f azure-static/mock-papers/index.html
 
-          echo "Prepared allowlisted FinalForge frontend bundle."
+          echo "Prepared allowlisted FinalForge stability bundle."
 
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_YELLOW_MUD_07AAF0900 }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for GitHub integrations (i.e. PR comments)
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: "azure-static"
           skip_app_build: true

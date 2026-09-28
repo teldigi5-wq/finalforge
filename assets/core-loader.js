@@ -1,7 +1,7 @@
-/* FinalForge production loader — deterministic runtime order and stable first paint. */
+/* FinalForge production loader — stability-first runtime. */
 try{
-  const t=localStorage.getItem('finalforge_theme_v1');
-  const initial=t==='light'||t==='dark'?t:'dark';
+  const saved=localStorage.getItem('finalforge_theme_v1');
+  const initial=saved==='light'||saved==='dark'?saved:'dark';
   document.documentElement.dataset.theme=initial;
   document.documentElement.style.background=initial==='dark'?'#07111f':'#f4f7fb';
   document.documentElement.style.colorScheme=initial;
@@ -10,49 +10,28 @@ try{
   document.documentElement.style.colorScheme='dark';
 }
 
-document.documentElement.classList.add('ff-auth-restoring');
+document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
 (()=>{
   const style=document.createElement('style');
   style.id='ff-session-restore-critical';
   style.textContent=`
     html.ff-auth-restoring body.auth-pending .auth-shell{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
     html.ff-auth-restoring body.auth-pending #authGate{display:grid!important;place-items:center!important}
-    html.ff-auth-restoring body.auth-pending #authGate::after{
-      content:'Restoring your session…'!important;position:fixed!important;z-index:80!important;
-      left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;
-      width:auto!important;height:auto!important;min-width:13rem!important;
-      transform:translate(-50%,-50%)!important;filter:none!important;opacity:1!important;
-      padding:.78rem 1rem .78rem 2.55rem!important;border:1px solid rgba(120,158,213,.22)!important;
-      border-radius:999px!important;background:linear-gradient(135deg,rgba(13,27,47,.96),rgba(8,18,33,.98))!important;
-      color:#dce9f8!important;box-shadow:0 18px 50px rgba(0,0,0,.28)!important;
-      font:750 .82rem/1.2 Inter,ui-sans-serif,system-ui,sans-serif!important;
-      letter-spacing:.01em!important;text-align:center!important;pointer-events:none!important
-    }
-    html.ff-auth-restoring body.auth-pending #authGate::before{content:''!important}
-    html[data-theme='light'].ff-auth-restoring body.auth-pending #authGate::after{
-      border-color:#d0deeb!important;background:rgba(255,255,255,.96)!important;color:#27415f!important;
-      box-shadow:0 18px 45px rgba(43,72,107,.14)!important
-    }
-    @media(prefers-reduced-motion:no-preference){
-      html.ff-auth-restoring body.auth-pending #authGate::after{animation:ffSessionRestorePulse 1.4s ease-in-out infinite alternate!important}
-      @keyframes ffSessionRestorePulse{from{opacity:.72}to{opacity:1}}
-    }
+    html.ff-auth-restoring body.auth-pending #authGate::after{content:'Restoring your session…'!important;position:fixed!important;z-index:80!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;padding:.78rem 1rem!important;border:1px solid rgba(120,158,213,.22)!important;border-radius:999px!important;background:rgba(8,18,33,.98)!important;color:#dce9f8!important;font:750 .82rem/1.2 Inter,ui-sans-serif,system-ui,sans-serif!important;pointer-events:none!important}
+    html[data-theme='light'].ff-auth-restoring body.auth-pending #authGate::after{border-color:#d0deeb!important;background:rgba(255,255,255,.98)!important;color:#27415f!important}
   `;
   document.head.appendChild(style);
 })();
 
 (async()=>{
-  const VERSION='auth-system-v2';
+  const VERSION='stability-mode-v1';
   const fail=msg=>{
     document.documentElement.classList.remove('ff-auth-restoring');
     console.error('[FinalForge]',msg);
     const status=document.getElementById('authBootStatus');
     if(status){status.textContent='Secure sign-in could not load.';status.classList.add('is-error')}
-    const gate=document.getElementById('authGate');
-    if(gate){
-      const n=document.getElementById('authConfigNote');
-      if(n){n.hidden=false;n.innerHTML=`<b>FinalForge could not start.</b><br>${msg}`}
-    }
+    const note=document.getElementById('authConfigNote');
+    if(note){note.hidden=false;note.innerHTML=`<b>FinalForge could not start.</b><br>${msg}`}
   };
 
   const loadScript=src=>new Promise((resolve,reject)=>{
@@ -63,43 +42,24 @@ document.documentElement.classList.add('ff-auth-restoring');
       existing.addEventListener('error',()=>reject(new Error(`Could not load ${src}`)),{once:true});
       return;
     }
-    const s=document.createElement('script');
-    s.src=src.startsWith('assets/')?`${src}?v=${VERSION}`:src;
-    s.async=true;
-    s.onload=()=>{s.dataset.ffLoaded='1';resolve()};
-    s.onerror=()=>reject(new Error(`Could not load ${src}`));
-    document.body.appendChild(s);
+    const script=document.createElement('script');
+    script.src=src.startsWith('assets/')?`${src}?v=${VERSION}`:src;
+    script.async=true;
+    script.onload=()=>{script.dataset.ffLoaded='1';resolve()};
+    script.onerror=()=>reject(new Error(`Could not load ${src}`));
+    document.body.appendChild(script);
   });
 
   const loadStyle=href=>new Promise((resolve,reject)=>{
-    const existing=[...document.querySelectorAll('link[rel="stylesheet"]')].find(l=>l.href&&l.href.includes(href));
-    if(existing){
-      if(existing.sheet)return resolve();
-      existing.addEventListener('load',resolve,{once:true});
-      existing.addEventListener('error',()=>reject(new Error(`Could not load ${href}`)),{once:true});
-      return;
-    }
-    const l=document.createElement('link');
-    l.rel='stylesheet';
-    l.href=`${href}?v=${VERSION}`;
-    l.onload=resolve;
-    l.onerror=()=>reject(new Error(`Could not load ${href}`));
-    document.head.appendChild(l);
+    const existing=[...document.querySelectorAll('link[rel="stylesheet"]')].find(link=>link.href&&link.href.includes(href));
+    if(existing){if(existing.sheet)return resolve();existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',()=>reject(new Error(`Could not load ${href}`)),{once:true});return}
+    const link=document.createElement('link');
+    link.rel='stylesheet';link.href=`${href}?v=${VERSION}`;link.onload=resolve;link.onerror=()=>reject(new Error(`Could not load ${href}`));
+    document.head.appendChild(link);
   });
 
-  const preconnect=href=>{
-    if(document.querySelector(`link[rel="preconnect"][href="${href}"]`))return;
-    const l=document.createElement('link');
-    l.rel='preconnect';
-    l.href=href;
-    l.crossOrigin='anonymous';
-    document.head.appendChild(l);
-  };
-
-  preconnect('https://www.gstatic.com');
-
   try{
-    if(!('DecompressionStream' in window))throw new Error('This browser is too old for the optimized FinalForge bundle. Please update your browser.');
+    if(!('DecompressionStream' in window))throw new Error('This browser is too old for FinalForge. Please update your browser.');
 
     const stylesReady=Promise.all([
       loadStyle('assets/ui-responsive-v2.css'),
@@ -126,7 +86,9 @@ document.documentElement.classList.add('ff-auth-restoring');
       loadStyle('assets/mobile-scroll-recovery-v1.css'),
       loadStyle('assets/professional-workspace-v2.css'),
       loadStyle('assets/professional-accessibility-v1.css'),
-      loadStyle('assets/auth-system-v2.css')
+      loadStyle('assets/auth-system-v2.css'),
+      loadStyle('assets/auth-responsive-hotfix-v1.css'),
+      loadStyle('assets/stability-mode-v1.css')
     ]);
 
     const firebaseSdkReady=(async()=>{
@@ -141,77 +103,59 @@ document.documentElement.classList.add('ff-auth-restoring');
     })();
 
     const paths=['00','01','02','03','04','05a','05b','05c','05d','06'].map(x=>`assets/core/chunk-${x}.txt`);
-    const parts=await Promise.all(paths.map(async p=>{
-      const r=await fetch(p,{cache:'force-cache'});
-      if(!r.ok)throw new Error(`Core bundle chunk failed (${p}, ${r.status}).`);
-      return r.text();
+    const parts=await Promise.all(paths.map(async path=>{
+      const response=await fetch(path,{cache:'force-cache'});
+      if(!response.ok)throw new Error(`Core bundle chunk failed (${path}, ${response.status}).`);
+      return response.text();
     }));
 
     await stylesReady;
-
-    const b64=parts.join('');
-    const bin=atob(b64);
-    const bytes=new Uint8Array(bin.length);
-    for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+    const binary=atob(parts.join(''));
+    const bytes=new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
     const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
-    const text=await new Response(stream).text();
-    const b=JSON.parse(text);
+    const bundle=JSON.parse(await new Response(stream).text());
 
-    const style=document.createElement('style');
-    style.dataset.finalforgeCore='1';
-    style.textContent=b['styles.css'];
-    document.head.prepend(style);
+    const coreStyle=document.createElement('style');
+    coreStyle.dataset.finalforgeCore='1';
+    coreStyle.textContent=bundle['styles.css'];
+    document.head.prepend(coreStyle);
 
-    (0,eval)(b['data.js']);
+    (0,eval)(bundle['data.js']);
     if(!window.FINALFORGE_DATA&&window.EXAMHUB_DATA)window.FINALFORGE_DATA=window.EXAMHUB_DATA;
-    (0,eval)(b['practice-data.js']);
+    (0,eval)(bundle['practice-data.js']);
 
-    /* Convert the recovered public paths into stable private resource IDs before features render. */
     await loadScript('assets/resource-delivery-v1.js');
-
-    /* Account isolation must exist before any feature reads or writes study state. */
     await firebaseSdkReady;
     await loadScript('assets/account-storage-v1.js');
 
+    /* Functional application layer only. */
     await loadScript('assets/app.js');
     await loadScript('assets/past-papers-v1.js');
-    await loadScript('assets/product-ui-v4.js');
     await loadScript('assets/appearance-v1.js');
+    await loadScript('assets/theme-toggle-stability-v1.js');
     await loadScript('assets/practice-exam-v4.js');
     await loadScript('assets/study-experience.js');
-    await loadScript('assets/student-experience-v2.js');
-
-    /* Device policy must exist before cloud hydration or navigation helpers. */
+    await loadScript('assets/stability-runtime-v1.js');
     await loadScript('assets/mobile-runtime-final-v1.js');
-    await loadScript('assets/cloud-ui-stability-v1.js');
 
-    /* Auth Runtime v2 is the single functional owner of login/signup/verify/reset. */
+    /* Auth remains the only authentication owner. */
     await firebaseSdkReady;
     await loadScript('assets/auth.js');
-    await loadScript('assets/auth-experience-v4.js');
 
-    /* Build mobile controls first, then attach non-owning functional helpers. */
-    await loadScript('assets/mobile-experience-v4.js');
+    /* Small functional navigation guards only; no decorative scanners/observers. */
     await loadScript('assets/practice-stability-v1.js');
     await loadScript('assets/mobile-navigation-runtime-v2.js');
     await loadScript('assets/mobile-scroll-recovery-v1.js');
 
-    /* Presentation architecture loads only after functional ownership is stable. */
-    await loadScript('assets/professional-workspace-v2.js');
-
-    await loadScript('assets/tailwind-runtime-v6.js');
-
-    /* Decorative observers are desktop-only. Functional mobile UI never depends on them. */
-    if(!window.finalforgeIsMobile?.())await loadScript('assets/product-motion-v5.js');
-    await loadScript('assets/reference-enhancements.js');
-    await loadScript('assets/auth-world-v1.js');
+    /* Intentionally omitted in stability mode: product-motion, tailwind-runtime,
+       professional-workspace, student-experience, product-ui runtime,
+       auth-world runtime, reference-enhancements and cloud-ui-stability. */
 
     const status=document.getElementById('authBootStatus');
     if(status)status.hidden=true;
 
-    if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
-      navigator.serviceWorker.register('sw.js').catch(()=>{});
-    }
+    if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
     window.dispatchEvent(new CustomEvent('finalforge-ready'));
-  }catch(err){fail(err?.message||String(err))}
+  }catch(error){fail(error?.message||String(error))}
 })();
