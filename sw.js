@@ -1,23 +1,23 @@
-const C='finalforge-v52-stability-mode';
+const C='finalforge-v53-premium-stable';
 
 const CORE=[
   './','./index.html','./verify.html','./manifest.webmanifest',
   './assets/core-loader.js','./assets/account-storage-v1.js','./assets/resource-delivery-v1.js',
   './assets/app.js','./assets/past-papers-v1.js','./assets/appearance-v1.js','./assets/theme-toggle-stability-v1.js',
-  './assets/practice-exam-v4.js','./assets/study-experience.js','./assets/stability-runtime-v1.js',
-  './assets/mobile-runtime-final-v1.js','./assets/auth.js','./assets/practice-stability-v1.js',
+  './assets/practice-exam-v4.js','./assets/ip-paper-extension-v1.js','./assets/study-experience.js','./assets/stability-runtime-v1.js',
+  './assets/premium-ui-v1.js','./assets/mobile-runtime-final-v1.js','./assets/auth.js','./assets/practice-stability-v1.js',
   './assets/mobile-navigation-runtime-v2.js','./assets/mobile-scroll-recovery-v1.js',
-  './assets/auth-system-v2.css','./assets/auth-responsive-hotfix-v1.css','./assets/stability-mode-v1.css',
+  './assets/auth-system-v2.css','./assets/auth-responsive-hotfix-v1.css','./assets/stability-mode-v1.css','./assets/premium-shell-v1.css',
   './assets/finalforge-logo.svg'
 ];
 
 const CRITICAL_RUNTIME=new Set([
   '/assets/core-loader.js','/assets/account-storage-v1.js','/assets/resource-delivery-v1.js','/assets/app.js',
   '/assets/past-papers-v1.js','/assets/appearance-v1.js','/assets/theme-toggle-stability-v1.js',
-  '/assets/practice-exam-v4.js','/assets/study-experience.js','/assets/stability-runtime-v1.js',
-  '/assets/mobile-runtime-final-v1.js','/assets/auth.js','/assets/practice-stability-v1.js',
+  '/assets/practice-exam-v4.js','/assets/ip-paper-extension-v1.js','/assets/study-experience.js','/assets/stability-runtime-v1.js',
+  '/assets/premium-ui-v1.js','/assets/mobile-runtime-final-v1.js','/assets/auth.js','/assets/practice-stability-v1.js',
   '/assets/mobile-navigation-runtime-v2.js','/assets/mobile-scroll-recovery-v1.js',
-  '/assets/auth-system-v2.css','/assets/auth-responsive-hotfix-v1.css','/assets/stability-mode-v1.css'
+  '/assets/auth-system-v2.css','/assets/auth-responsive-hotfix-v1.css','/assets/stability-mode-v1.css','/assets/premium-shell-v1.css'
 ]);
 
 self.addEventListener('install',event=>event.waitUntil(
