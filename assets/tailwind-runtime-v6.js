@@ -1,5 +1,6 @@
-/* FinalForge Tailwind runtime v6 — component classes, SVG icon cleanup, real aggregate trust UI. */
+/* FinalForge Tailwind runtime v7 — event-driven component enhancement without app-wide mutation scans. */
 (()=>{
+  'use strict';
   const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>[...r.querySelectorAll(s)];
   const iconPaths={
     home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/>',
@@ -15,13 +16,10 @@
     eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>',
     eyeOff:'<path d="m3 3 18 18"/><path d="M10.6 10.6A2 2 0 0 0 12 14a2 2 0 0 0 1.4-.6"/><path d="M9.9 5.1A10.8 10.8 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3 4.2M6.6 6.6C3.7 8.4 2 12 2 12s3.5 7 10 7c1 0 1.9-.2 2.8-.4"/>',
     mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
-    chevron:'<path d="m9 18 6-6-6-6"/>',
     chevronDown:'<path d="m6 9 6 6 6-6"/>',
     file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>',
     star:'<path d="m12 2.8 2.8 5.7 6.3.9-4.6 4.4 1.1 6.3-5.6-3-5.6 3 1.1-6.3-4.6-4.4 6.3-.9Z"/>',
     users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
-    activity:'<path d="M3 12h4l2-6 4 12 2-6h6"/>',
-    check:'<path d="m5 12 4 4L19 6"/>',
     book:'<path d="M2 4h6a4 4 0 0 1 4 4v12a4 4 0 0 0-4-4H2Z"/><path d="M22 4h-6a4 4 0 0 0-4 4v12a4 4 0 0 1 4-4h6Z"/>',
     spark:'<path d="m12 3-1.4 4.1a2 2 0 0 1-1.3 1.3L5 10l4.3 1.6a2 2 0 0 1 1.3 1.3L12 17l1.4-4.1a2 2 0 0 1 1.3-1.3L19 10l-4.3-1.6a2 2 0 0 1-1.3-1.3Z"/>'
   };
@@ -91,8 +89,8 @@
       const r=await fetch('/api/public-stats',{headers:{Accept:'application/json'}});if(!r.ok)throw new Error('stats');
       const data=await r.json();
       const reg=q('[data-ff-registered]',box),live=q('[data-ff-live]',box),rating=q('[data-ff-rating]',box);
-      if(reg){reg.textContent=Number.isFinite(data.registered)?`${data.registered.toLocaleString()} students registered`:'Registration is open';}
-      if(live){if(Number.isFinite(data.studyingNow)){live.closest('.ff-trust-chip').hidden=false;live.textContent=`${data.studyingNow} studying now`}else live.closest('.ff-trust-chip').hidden=true;}
+      if(reg)reg.textContent=Number.isFinite(data.registered)?`${data.registered.toLocaleString()} students registered`:'Registration is open';
+      if(live){if(Number.isFinite(data.studyingNow)){live.closest('.ff-trust-chip').hidden=false;live.textContent=`${data.studyingNow} studying now`}else live.closest('.ff-trust-chip').hidden=true}
       if(rating&&Number.isFinite(data.ratingAverage)&&data.ratingCount>0)rating.textContent=`${data.ratingAverage.toFixed(1)} / 5 · ${data.ratingCount} ratings`;
     }catch{}
   }
@@ -114,28 +112,40 @@
   function installTrust(){
     const hero=q('.hero-copy');if(!hero||q('.ff-trust-row',hero))return;
     const box=document.createElement('div');box.className='ff-trust-row';box.setAttribute('aria-label','FinalForge trust and usage');
-    box.innerHTML=`
-      <span class="ff-trust-chip">${svg('users','ff-icon ff-icon-sm')}<span data-ff-registered>Loading registration…</span></span>
-      <span class="ff-trust-chip" hidden><i class="ff-live-dot"></i><span data-ff-live></span></span>
-      <span class="ff-trust-chip">${svg('shield','ff-icon ff-icon-sm')}<span>Verified SLIIT access</span></span>
-      <span class="ff-trust-chip">${svg('star','ff-icon ff-icon-sm')}<span data-ff-rating>Rate FinalForge</span></span>
-      <span class="ff-rating" aria-label="Rate FinalForge from 1 to 5">
-        ${[1,2,3,4,5].map(n=>`<button class="ff-rating-button" type="button" aria-label="Rate ${n} out of 5" data-rating="${n}">${svg('star','ff-icon ff-icon-sm')}</button>`).join('')}
-      </span>`;
-    const actions=q('.hero-actions',hero);actions?.insertAdjacentElement('afterend',box);
+    box.innerHTML=`<span class="ff-trust-chip">${svg('users','ff-icon ff-icon-sm')}<span data-ff-registered>Loading registration…</span></span><span class="ff-trust-chip" hidden><i class="ff-live-dot"></i><span data-ff-live></span></span><span class="ff-trust-chip">${svg('shield','ff-icon ff-icon-sm')}<span>Verified SLIIT access</span></span><span class="ff-trust-chip">${svg('star','ff-icon ff-icon-sm')}<span data-ff-rating>Rate FinalForge</span></span><span class="ff-rating" aria-label="Rate FinalForge from 1 to 5">${[1,2,3,4,5].map(n=>`<button class="ff-rating-button" type="button" aria-label="Rate ${n} out of 5" data-rating="${n}">${svg('star','ff-icon ff-icon-sm')}</button>`).join('')}</span>`;
+    q('.hero-actions',hero)?.insertAdjacentElement('afterend',box);
     qa('.ff-rating-button',box).forEach(b=>b.addEventListener('click',()=>sendRating(Number(b.dataset.rating),box)));
     const prior=Number(localStorage.getItem('finalforge_platform_rated')||0);if(prior)qa('.ff-rating-button',box).forEach((b,i)=>{b.disabled=true;b.style.color=i<prior?'#8B7CFF':''});
     loadStats(box);
   }
 
-  function refresh(root=document){applyComponents(root);upgradeNav(q('#nav'));upgradeNav(q('#mobileNav'));cleanFunctionalEmoji(root);installPasswordOverride();installTrust();}
-  let queued=false;
-  const observer=new MutationObserver(list=>{
-    if(document.body.classList.contains('auth-pending')||queued||!list.some(m=>m.addedNodes.length))return;
-    queued=true;requestAnimationFrame(()=>{queued=false;refresh()});
-  });
-  function boot(){document.documentElement.classList.add('ff-tailwind-v6');refresh();const app=q('.app');if(app&&!observer._on){observer.observe(app,{subtree:true,childList:true});observer._on=true}}
+  function refresh(root=document){
+    applyComponents(root);
+    upgradeNav(q('#nav'));
+    upgradeNav(q('#mobileNav'));
+    cleanFunctionalEmoji(root);
+    installPasswordOverride();
+    installTrust();
+  }
+
+  let refreshQueued=false;
+  let queuedRoot=document;
+  function scheduleRefresh(root=document){
+    queuedRoot=root||document;
+    if(refreshQueued)return;
+    refreshQueued=true;
+    requestAnimationFrame(()=>{
+      refreshQueued=false;
+      refresh(queuedRoot);
+      queuedRoot=document;
+    });
+  }
+
+  function boot(){document.documentElement.classList.add('ff-tailwind-v7');refresh()}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-  addEventListener('finalforge-ready',boot);
+  addEventListener('finalforge-ready',()=>scheduleRefresh());
+  addEventListener('finalforge-cloud-render-complete',()=>scheduleRefresh());
+  addEventListener('finalforge-after-navigate',event=>scheduleRefresh(document.getElementById(event?.detail?.id)||document));
   document.addEventListener('click',e=>{if(e.target.closest('[data-go]'))requestAnimationFrame(()=>{upgradeNav(q('#nav'));upgradeNav(q('#mobileNav'))})});
+  window.finalforgeTailwindRefresh=scheduleRefresh;
 })();

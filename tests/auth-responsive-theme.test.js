@@ -5,6 +5,9 @@ import fs from 'node:fs';
 const appearance = fs.readFileSync(new URL('../assets/appearance-v1.js', import.meta.url), 'utf8');
 const stability = fs.readFileSync(new URL('../assets/theme-toggle-stability-v1.js', import.meta.url), 'utf8');
 const responsive = fs.readFileSync(new URL('../assets/auth-responsive-hotfix-v1.css', import.meta.url), 'utf8');
+const cloud = fs.readFileSync(new URL('../assets/cloud-ui-stability-v1.js', import.meta.url), 'utf8');
+const tailwind = fs.readFileSync(new URL('../assets/tailwind-runtime-v6.js', import.meta.url), 'utf8');
+const motion = fs.readFileSync(new URL('../assets/product-motion-v5.js', import.meta.url), 'utf8');
 const sw = fs.readFileSync(new URL('../sw.js', import.meta.url), 'utf8');
 
 test('theme runtime parses and bounds repeated toggles', () => {
@@ -43,12 +46,30 @@ test('theme stability marks auth v2 stylesheet and recovers auth-only transient 
   assert.match(stability, /ff-v2-palette-open/);
 });
 
-test('service worker cache is bumped and auth hotfix assets are critical', () => {
-  assert.match(sw, /finalforge-v50-auth-responsive/);
-  assert.match(sw, /auth-responsive-hotfix-v1\.css/);
-  assert.match(sw, /theme-toggle-stability-v1\.js/);
-  const critical = sw.slice(sw.indexOf('const CRITICAL_RUNTIME'), sw.indexOf('self.addEventListener'));
+test('post-login cloud hydration is coalesced instead of synchronously rebuilding the app', () => {
+  assert.doesNotThrow(() => new Function(cloud));
+  assert.match(cloud, /finalforge-cloud-render-complete/);
+  assert.match(cloud, /requestAnimationFrame\(flushOne\)/);
+  assert.match(cloud, /queue\.set\(name/);
+  assert.match(cloud, /name==='renderPractice'/);
+});
+
+test('decorative runtimes are event-driven and do not install app-wide mutation observers', () => {
+  assert.doesNotThrow(() => new Function(tailwind));
+  assert.doesNotThrow(() => new Function(motion));
+  assert.doesNotMatch(tailwind, /observer\.observe\(app/);
+  assert.doesNotMatch(motion, /mo\.observe\(app/);
+  assert.match(tailwind, /finalforge-cloud-render-complete/);
+  assert.match(motion, /window\.finalforgeRefreshEffects=scheduleRefresh/);
+});
+
+test('service worker cache is bumped and stability runtimes are network-first critical assets', () => {
+  assert.match(sw, /finalforge-v51-dashboard-stability/);
+  const critical = sw.slice(sw.indexOf('const CRITICAL_RUNTIME'), sw.indexOf("self.addEventListener('install'"));
   assert.match(critical, /appearance-v1\.js/);
   assert.match(critical, /auth-responsive-hotfix-v1\.css/);
   assert.match(critical, /theme-toggle-stability-v1\.js/);
+  assert.match(critical, /cloud-ui-stability-v1\.js/);
+  assert.match(critical, /tailwind-runtime-v6\.js/);
+  assert.match(critical, /product-motion-v5\.js/);
 });

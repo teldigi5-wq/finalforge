@@ -1,4 +1,4 @@
-/* FinalForge Cloud UI Stability v5 — stable hydration with independent render queues. */
+/* FinalForge Cloud UI Stability v6 — coalesced post-login hydration without long main-thread render bursts. */
 (()=>{
   'use strict';
 
@@ -14,8 +14,8 @@
   ['touchstart','touchmove','pointerdown','wheel'].forEach(type=>{
     addEventListener(type,()=>{lastInteractionAt=Date.now()},{passive:true});
   });
-
   const idleFor=()=>Date.now()-lastInteractionAt;
+
   const progressSignature=()=>localStorage.getItem('finalforge_progress')||'{}';
   const practiceSignature=()=>[
     localStorage.getItem('finalforge_exam_v4_active')||'',
@@ -29,35 +29,61 @@
   const plannerPopulated=()=>hasChildren('#plannerTasks');
   const practicePopulated=()=>hasChildren('#practiceModuleTabs')&&hasChildren('#practiceHero')&&hasChildren('#practiceWorkbench');
 
+  const queue=new Map();
+  let scheduled=false;
+  let timer=0;
+
+  const dispatchComplete=()=>{
+    root.classList.remove('ff-cloud-rendering');
+    try{window.dispatchEvent(new CustomEvent('finalforge-cloud-render-complete'))}catch{}
+  };
+
+  const scheduleStep=(delay=0)=>{
+    if(scheduled)return;
+    scheduled=true;
+    const start=()=>requestAnimationFrame(flushOne);
+    if(delay>0)timer=setTimeout(start,delay);else start();
+  };
+
+  function flushOne(){
+    scheduled=false;
+    timer=0;
+    if(!queue.size){dispatchComplete();return;}
+
+    if(realMobile()&&(idleFor()<700||root.classList.contains('ff-scroll-locked'))){
+      scheduleStep(Math.max(180,760-idleFor()));
+      return;
+    }
+
+    const [name,job]=queue.entries().next().value;
+    queue.delete(name);
+    root.classList.add('ff-cloud-rendering');
+
+    const beforeSection=document.querySelector('.section.active')?.id||'';
+    const beforeY=window.scrollY;
+    try{job.original.apply(window,job.args)}catch(error){console.warn(`[FinalForge] deferred ${name} render failed`,error)}
+
+    if(realMobile()&&document.querySelector('.section.active')?.id===beforeSection){
+      requestAnimationFrame(()=>window.scrollTo({top:beforeY,left:0,behavior:'auto'}));
+    }
+
+    if(queue.size)scheduleStep();else dispatchComplete();
+  }
+
+  function enqueue(name,original,args){
+    queue.set(name,{original,args});
+    scheduleStep();
+  }
+
   const wrapStable=(name,signatureFn,canRun=()=>true,isPopulated=()=>true)=>{
     const original=window[name];
     if(typeof original!=='function'||original.__ffCloudStable)return;
 
     let lastSignature=signatureFn();
-    let queuedArgs=null;
-    let pendingTimer=0;
-
-    const runQueued=()=>{
-      pendingTimer=0;
-      if(!queuedArgs)return;
-      if(realMobile()&&(idleFor()<700||root.classList.contains('ff-scroll-locked'))){
-        pendingTimer=setTimeout(runQueued,Math.max(180,760-idleFor()));
-        return;
-      }
-      const args=queuedArgs;queuedArgs=null;
-      if(!canRun())return;
-      const beforeSection=document.querySelector('.section.active')?.id||'';
-      const beforeY=window.scrollY;
-      lastSignature=signatureFn();
-      original.apply(window,args);
-      if(realMobile()&&document.querySelector('.section.active')?.id===beforeSection){
-        requestAnimationFrame(()=>window.scrollTo({top:beforeY,left:0,behavior:'auto'}));
-      }
-    };
 
     function stableWrapper(...args){
       const sig=signatureFn();
-      const authOpen=!body.classList.contains('auth-pending');
+      const appOpen=!body.classList.contains('auth-pending');
 
       if(!isPopulated()){
         if(!canRun())return;
@@ -65,17 +91,16 @@
         return original.apply(this,args);
       }
 
-      if(authOpen&&sig===lastSignature)return;
+      if(sig===lastSignature)return;
+      lastSignature=sig;
+      if(!canRun())return;
 
-      if(!realMobile()){
-        if(!canRun())return;
-        lastSignature=sig;
-        return original.apply(this,args);
-      }
+      /* Practice UI is independent from syllabus-progress hydration. Never rebuild the
+         hidden practice workspace just because finalforge_progress changed. */
+      if(name==='renderPractice'&&!document.querySelector('#practice')?.classList.contains('active'))return;
 
-      queuedArgs=args;
-      clearTimeout(pendingTimer);
-      pendingTimer=setTimeout(runQueued,idleFor()<700?Math.max(0,760-idleFor()):0);
+      if(!appOpen)return;
+      enqueue(name,original,args);
     }
 
     stableWrapper.__ffCloudStable=true;
@@ -89,14 +114,12 @@
   wrapStable('renderPractice',practiceSignature,()=>!document.querySelector('#practice .exam-app'),practicePopulated);
 
   addEventListener('finalforge-after-navigate',event=>{
-    if(!realMobile())return;
     const id=event?.detail?.id||document.querySelector('.section.active')?.id;
     if(id==='practice'&&!practicePopulated()&&typeof window.renderPractice==='function')window.renderPractice();
   });
 
   addEventListener('finalforge-ready',()=>{
-    if(!realMobile())return;
-    if(!document.querySelector('dialog[open]')&&!document.querySelector('#mobileMoreSheet.open')&&!document.querySelector('#ffV2Palette:not([hidden])')){
+    if(realMobile()&&!document.querySelector('dialog[open]')&&!document.querySelector('#mobileMoreSheet.open')&&!document.querySelector('#ffV2Palette:not([hidden])')){
       root.classList.remove('ff-scroll-locked');
       body.classList.remove('mobile-nav-more-open','ff-v2-palette-open');
     }
