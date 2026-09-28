@@ -28,9 +28,11 @@ jobs:
           node --check assets/appearance-v1.js
           node --check assets/theme-toggle-stability-v1.js
           node --check assets/stability-runtime-v1.js
+          node --check assets/premium-ui-v1.js
+          node --check assets/ip-paper-extension-v1.js
           node --check assets/core-loader.js
           node --check sw.js
-          node --test tests/auth-runtime-v2.test.js tests/auth-responsive-theme.test.js
+          node --test tests/auth-runtime-v2.test.js tests/auth-responsive-theme.test.js tests/premium-ui-ip-extension.test.js
 
       - name: Prepare public frontend bundle
         shell: bash
@@ -58,12 +60,15 @@ jobs:
           test -f azure-static/assets/auth-responsive-hotfix-v1.css
           test -f azure-static/assets/stability-runtime-v1.js
           test -f azure-static/assets/stability-mode-v1.css
+          test -f azure-static/assets/premium-shell-v1.css
+          test -f azure-static/assets/premium-ui-v1.js
+          test -f azure-static/assets/ip-paper-extension-v1.js
           test -f azure-static/assets/appearance-v1.js
           test -f azure-static/assets/theme-toggle-stability-v1.js
           test -f azure-static/assets/resource-delivery-v1.js
           test -f azure-static/mock-papers/index.html
 
-          echo "Prepared allowlisted FinalForge stability bundle."
+          echo "Prepared allowlisted FinalForge premium stability bundle."
 
       - name: Build And Deploy
         id: builddeploy
