@@ -1,3 +1,31 @@
+function normalizeOrigin(value) {
+  return String(value || '').trim().replace(/\/+$/, '');
+}
+
+function configuredPublicOrigin() {
+  const value = normalizeOrigin(
+    process.env.FINALFORGE_PUBLIC_ORIGIN
+  );
+
+  if (!value) return '';
+
+  try {
+    const url = new URL(value);
+
+    if (url.protocol !== 'https:') {
+      return '';
+    }
+
+    if (url.pathname !== '/' || url.search || url.hash) {
+      return '';
+    }
+
+    return url.origin;
+  } catch {
+    return '';
+  }
+}
+
 function requestHeaders(request) {
   const headers = {};
 
@@ -5,22 +33,13 @@ function requestHeaders(request) {
     headers[String(key).toLowerCase()] = value;
   }
 
-  const requestUrl = new URL(request.url);
-
-  const forwardedHost = String(
-    headers['x-forwarded-host'] || ''
-  )
-    .split(',')[0]
-    .trim();
-
-  headers.host = forwardedHost || requestUrl.host;
-
   const forwardedFor = String(
     headers['x-forwarded-for'] ||
     headers['x-azure-clientip'] ||
     ''
   );
 
+  // Compatibility with the existing certified FinalForge handlers.
   headers['x-vercel-forwarded-for'] = forwardedFor;
 
   return headers;
@@ -64,16 +83,56 @@ function responseAdapter() {
   };
 }
 
+function forbiddenOrigin() {
+  return {
+    status: 403,
+    headers: {
+      'Cache-Control': 'no-store',
+      'X-Content-Type-Options': 'nosniff'
+    },
+    jsonBody: {
+      error: 'Invalid origin.'
+    }
+  };
+}
+
 export async function runVercelHandler(
   handler,
   request,
   { maxBodyBytes = 0 } = {}
 ) {
+  const method = request.method.toUpperCase();
   const headers = requestHeaders(request);
+
+  /*
+   * Azure Static Web Apps proxies API requests through its managed
+   * Functions backend. Do not trust X-Forwarded-Host for authorization.
+   *
+   * Instead, state-changing requests must exactly match the public
+   * origin configured as an Azure application setting.
+   */
+  if (!['GET', 'HEAD'].includes(method)) {
+    const trustedOrigin = configuredPublicOrigin();
+    const suppliedOrigin = normalizeOrigin(headers.origin);
+
+    if (!trustedOrigin || suppliedOrigin !== trustedOrigin) {
+      return forbiddenOrigin();
+    }
+
+    // Existing FinalForge Vercel handlers independently perform:
+    //
+    // origin === https://${host}
+    //
+    // Give them the already server-validated public hostname.
+    headers.host = new URL(trustedOrigin).host;
+  } else {
+    // GET handlers do not use Origin as an authorization boundary.
+    headers.host = new URL(request.url).host;
+  }
 
   let body;
 
-  if (!['GET', 'HEAD'].includes(request.method.toUpperCase())) {
+  if (!['GET', 'HEAD'].includes(method)) {
     let raw = '';
 
     try {
@@ -81,6 +140,9 @@ export async function runVercelHandler(
     } catch {
       return {
         status: 400,
+        headers: {
+          'Cache-Control': 'no-store'
+        },
         jsonBody: {
           error: 'Invalid request body.'
         }
@@ -133,7 +195,7 @@ export async function runVercelHandler(
     .trim();
 
   const req = {
-    method: request.method.toUpperCase(),
+    method,
     headers,
     body,
     socket: {
