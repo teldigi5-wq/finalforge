@@ -1,4 +1,4 @@
-// Earlier certified caches: finalforge-v57-premium-resource-session, finalforge-v58-exam-studio, finalforge-v59-premium-comfort
+// Earlier certified caches: finalforge-v56-resource-access, finalforge-v57-premium-resource-session, finalforge-v58-exam-studio, finalforge-v59-premium-comfort
 const C='finalforge-v60-practice-interaction';
 
 const CORE=[
