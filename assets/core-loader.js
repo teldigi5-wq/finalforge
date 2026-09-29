@@ -1,5 +1,5 @@
 /* FinalForge production loader — stability-first premium workspace runtime. */
-/* Previous certified loader: account-security-v63 */
+/* Previous certified loader: mobile-auth-viewport-v65 */
 try{
   const saved=localStorage.getItem('finalforge_theme_v1');
   const initial=saved==='light'||saved==='dark'?saved:'dark';
@@ -38,7 +38,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
 })();
 
 (async()=>{
-  const VERSION='registration-mobile-v65';
+  const VERSION='auth-premium-v66';
   const fail=msg=>{
     document.documentElement.classList.remove('ff-auth-restoring');
     console.error('[FinalForge]',msg);
@@ -114,7 +114,8 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
       loadStyle('assets/practice-premium-v6.css'),
       loadStyle('assets/account-security-v1.css'),
       loadStyle('assets/mobile-premium-v7.css'),
-      loadStyle('assets/auth-mobile-compact-v8.css')
+      loadStyle('assets/auth-mobile-compact-v8.css'),
+      loadStyle('assets/auth-premium-v9.css')
     ]);
 
     const firebaseSdkReady=(async()=>{
