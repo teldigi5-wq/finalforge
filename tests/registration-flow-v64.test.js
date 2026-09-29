@@ -123,7 +123,7 @@ test('mobile premium v10 reduces vertical load and fixes remember-control sizing
   assert.match(mobilePremiumV10,/ff-auth-runtime-status/);
   assert.match(mobilePremiumV10,/height:20px!important/);
   assert.match(mobilePremiumV10,/min-height:50px!important/);
-  assert.match(mobilePremiumV10,/padding-bottom:max\(96px/);
+  assert.match(mobilePremiumV10,/max\(96px,calc\(72px \+ env\(safe-area-inset-bottom\)\)\)/);
   assert.match(mobilePremiumV10,/pointer-events:none!important/);
   assert.match(mobilePremiumV10,/prefers-reduced-motion: reduce/);
   assert.doesNotMatch(mobilePremiumV10,/animation\s*:\s*[^;]*infinite/i);
