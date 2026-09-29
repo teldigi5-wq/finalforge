@@ -101,7 +101,7 @@ test('mobile signup is compact, scrollable and keeps confirm-password reachable'
   assert.match(compactCss,/overflow-y:auto!important/);
   assert.match(compactCss,/scroll-padding-bottom/);
   assert.match(compactCss,/scroll-margin-bottom:42vh/);
-  assert.match(compactCss,/auth-mobile/i);
+  assert.match(compactCss,/Auth Mobile Compact v8/);
   assert.match(compactCss,/#signupForm>\.password-hint/);
   assert.match(compactCss,/pointer-events:none!important/);
   assert.doesNotMatch(compactCss,/animation\s*:\s*[^;]*infinite/i);
