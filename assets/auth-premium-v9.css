@@ -1,6 +1,6 @@
 /* FinalForge Auth Premium v9 — photographic study atmosphere, calm premium surfaces, mobile-safe. */
 :root{
-  --ff-auth-photo:url("data:image/webp;base64,UklGRkSuAQBXRUJQVlA4IDiuAQAwKACdASqEAwQDPpFIp1mqKqYhSZLJ4nZJ7Y0A...REDACTED_FOR_BREVITY...");
+  --ff-auth-photo:url("study-room.webp");
   --ff9-panel:rgba(7,17,31,.93);
   --ff9-card:#0b1829;
   --ff9-card-2:#0e1e32;
@@ -171,6 +171,7 @@ html[data-theme="light"] #authGate .password-wrap{
   border-radius:13px!important;
 }
 
+/* Mobile: preserve the compact signup fix; only Login gets a photographic study strip. */
 @media(max-width:900px){
   #authGate .auth-shell{
     border-radius:0!important;
