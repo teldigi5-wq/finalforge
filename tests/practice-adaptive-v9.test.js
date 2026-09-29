@@ -64,12 +64,14 @@ test('adaptive practice CSS is scoped and responsive',()=>{
   assert.doesNotMatch(css,/animation\s*:\s*[^;]*infinite/i);
 });
 
-test('production loader and service worker certify v73 adaptive assets',()=>{
-  assert.match(loader,/product-v73-adaptive-practice/);
+test('v73 adaptive practice remains production-certified through v74',()=>{
+  assert.match(loader,/product-v74-student-readiness/);
   assert.match(loader,/practice-adaptive-v9\.css/);
   assert.match(loader,/practice-adaptive-v9\.js/);
+  assert.match(loader,/student-readiness-v10\.js/);
   assert.ok(loader.indexOf("loadScript('assets/account-storage-v1.js')")<loader.indexOf("loadScript('assets/practice-adaptive-v9.js')"));
   assert.ok(loader.indexOf("loadScript('assets/practice-review-v7.js')")<loader.indexOf("loadScript('assets/practice-adaptive-v9.js')"));
+  assert.match(sw,/finalforge-v74-student-readiness/);
   assert.match(sw,/finalforge-v73-adaptive-practice/);
   assert.match(sw,/\.\/assets\/practice-adaptive-v9\.js/);
   assert.match(sw,/\.\/assets\/practice-adaptive-v9\.css/);
