@@ -12,6 +12,7 @@ const auth=fs.readFileSync('assets/auth.js','utf8');
 const dom=fs.readFileSync('assets/auth-flow-dom-v1.js','utf8');
 const mobileCss=fs.readFileSync('assets/mobile-premium-v7.css','utf8');
 const compactCss=fs.readFileSync('assets/auth-mobile-compact-v8.css','utf8');
+const premiumAuthCss=fs.readFileSync('assets/auth-premium-v9.css','utf8');
 const viewportJs=fs.readFileSync('assets/auth-mobile-viewport-v1.js','utf8');
 const loader=fs.readFileSync('assets/core-loader.js','utf8');
 const rules=fs.readFileSync('firebase/firestore.rules','utf8');
@@ -107,6 +108,15 @@ test('mobile signup is compact, scrollable and keeps confirm-password reachable'
   assert.doesNotMatch(compactCss,/animation\s*:\s*[^;]*infinite/i);
 });
 
+test('premium auth v9 adds study imagery without regressing compact signup',()=>{
+  assert.match(premiumAuthCss,/Auth Premium v9/);
+  assert.match(premiumAuthCss,/study-room\.webp/);
+  assert.match(premiumAuthCss,/data-mode="login"/);
+  assert.match(premiumAuthCss,/data-mode="signup"/);
+  assert.match(premiumAuthCss,/prefers-reduced-motion:reduce/);
+  assert.doesNotMatch(premiumAuthCss,/animation\s*:\s*[^;]*infinite/i);
+});
+
 test('mobile auth viewport recovery is event-driven and keyboard-aware',()=>{
   assert.doesNotThrow(()=>new Function(viewportJs));
   assert.match(viewportJs,/visualViewport/);
@@ -117,14 +127,17 @@ test('mobile auth viewport recovery is event-driven and keyboard-aware',()=>{
   assert.doesNotMatch(viewportJs,/setInterval/);
 });
 
-test('service worker advances v65 and treats auth/mobile assets as critical',()=>{
-  assert.match(sw,/finalforge-v65-mobile-auth-viewport/);
+test('service worker advances v66 and treats auth/mobile assets as critical',()=>{
+  assert.match(sw,/finalforge-v66-auth-premium/);
   assert.match(sw,/auth-flow-dom-v1\.js/);
   assert.match(sw,/mobile-premium-v7\.css/);
   assert.match(sw,/auth-mobile-compact-v8\.css/);
+  assert.match(sw,/auth-premium-v9\.css/);
   assert.match(sw,/auth-mobile-viewport-v1\.js/);
+  assert.match(sw,/study-room\.webp/);
   assert.match(sw,/pathname\.startsWith\('\/api\/'\)/);
-  assert.match(loader,/registration-mobile-v65/);
+  assert.match(loader,/auth-premium-v66/);
   assert.match(loader,/auth-mobile-compact-v8\.css/);
+  assert.match(loader,/auth-premium-v9\.css/);
   assert.match(loader,/auth-mobile-viewport-v1\.js/);
 });
