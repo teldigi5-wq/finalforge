@@ -1,0 +1,99 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+
+const signup=fs.readFileSync('api/signup.js','utf8');
+const azureSignup=fs.readFileSync('azure-api/src/vercel/signup.js','utf8');
+const activate=fs.readFileSync('api/activate-account.js','utf8');
+const azureActivate=fs.readFileSync('azure-api/src/vercel/activate-account.js','utf8');
+const restart=fs.readFileSync('api/restart-registration.js','utf8');
+const azureRestart=fs.readFileSync('azure-api/src/vercel/restart-registration.js','utf8');
+const auth=fs.readFileSync('assets/auth.js','utf8');
+const dom=fs.readFileSync('assets/auth-flow-dom-v1.js','utf8');
+const mobileCss=fs.readFileSync('assets/mobile-premium-v7.css','utf8');
+const rules=fs.readFileSync('firebase/firestore.rules','utf8');
+const sw=fs.readFileSync('sw.js','utf8');
+const azureIndex=fs.readFileSync('azure-api/src/index.js','utf8');
+
+test('Vercel and Azure signup handlers stay identical',()=>{
+  assert.equal(signup,azureSignup);
+  assert.match(signup,/REGISTRATION_WINDOW_MS = 20 \* 60 \* 1000/);
+  assert.match(signup,/pending_registrations/);
+  assert.match(signup,/const email = \/\^IT\\d\{8\}\$\/.test\(id\)/);
+  assert.match(signup,/Unexpected signup fields/);
+  assert.doesNotMatch(signup,/FieldValue\.increment\(1\)/);
+  assert.doesNotMatch(signup,/sliitEmail, password/);
+});
+
+test('activation is revocation-aware, server-side and time bounded',()=>{
+  assert.equal(activate,azureActivate);
+  assert.match(activate,/verifyIdToken\(token, true\)/);
+  assert.match(activate,/pending_registrations/);
+  assert.match(activate,/expiresAt <= now/);
+  assert.match(activate,/REGISTRATION_EXPIRED/);
+  assert.match(activate,/student_claims/);
+  assert.match(activate,/profiles/);
+  assert.match(activate,/FieldValue\.increment\(1\)/);
+  assert.match(activate,/Cache-Control', 'no-store, private/);
+});
+
+test('expired registration can be restarted without changing Firebase Auth users',()=>{
+  assert.equal(restart,azureRestart);
+  assert.match(restart,/REGISTRATION_WINDOW_MS = 20 \* 60 \* 1000/);
+  assert.match(restart,/verifyIdToken\(token, true\)/);
+  assert.match(restart,/pending_registrations/);
+  assert.match(restart,/expiresAt: new Date\(expiresAt\)/);
+  assert.doesNotMatch(restart,/deleteUser\(/);
+  assert.doesNotMatch(restart,/updateUser\(/);
+});
+
+test('browser auth uses only server activation and restart APIs',()=>{
+  assert.doesNotThrow(()=>new Function(auth));
+  assert.match(auth,/postAuthenticated\('\/api\/activate-account'/);
+  assert.match(auth,/postAuthenticated\('\/api\/restart-registration'/);
+  assert.match(auth,/JSON\.stringify\(\{ studentId: id, password \}\)/);
+  assert.match(auth,/20-minute/);
+  assert.doesNotMatch(auth,/transaction\.set\(claimRef/);
+});
+
+test('auth DOM layer is one-shot and removes manual SLIIT email editing',()=>{
+  assert.doesNotThrow(()=>new Function(dom));
+  assert.match(dom,/derived\.closest\('label'\)/);
+  assert.match(dom,/replaceWith\(identity\)/);
+  assert.match(dom,/20 min/);
+  assert.match(dom,/verifyRestartBtn/);
+  assert.doesNotMatch(dom,/MutationObserver/);
+  assert.doesNotMatch(dom,/setInterval/);
+});
+
+test('Firestore browser rules cannot bypass server-certified activation',()=>{
+  assert.match(rules,/match \/pending_registrations\/\{uid\}/);
+  assert.match(rules,/allow read, write: if false/);
+  assert.match(rules,/match \/student_claims\/\{studentId\}/);
+  assert.match(rules,/allow create, update: if false/);
+  assert.match(rules,/match \/profiles\/\{uid\}/);
+  assert.match(rules,/allow create: if false/);
+});
+
+test('Azure exposes both account lifecycle routes',()=>{
+  assert.match(azureIndex,/app\.http\('activate-account'/);
+  assert.match(azureIndex,/route: 'activate-account'/);
+  assert.match(azureIndex,/app\.http\('restart-registration'/);
+  assert.match(azureIndex,/route: 'restart-registration'/);
+});
+
+test('mobile premium layer is responsive and low-motion',()=>{
+  assert.match(mobileCss,/@media\(max-width:900px\)/);
+  assert.match(mobileCss,/min-height:44px/);
+  assert.match(mobileCss,/font-size:16px/);
+  assert.match(mobileCss,/overflow-x:auto/);
+  assert.match(mobileCss,/prefers-reduced-motion:reduce/);
+  assert.doesNotMatch(mobileCss,/animation\s*:\s*[^;]*infinite/i);
+});
+
+test('service worker advances v64 and treats auth/mobile assets as critical',()=>{
+  assert.match(sw,/finalforge-v64-registration-mobile/);
+  assert.match(sw,/auth-flow-dom-v1\.js/);
+  assert.match(sw,/mobile-premium-v7\.css/);
+  assert.match(sw,/pathname\.startsWith\('\/api\/'\)/);
+});
