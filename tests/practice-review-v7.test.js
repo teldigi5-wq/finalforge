@@ -55,11 +55,15 @@ test('premium review styling is responsive, accessible and low motion',()=>{
   assert.doesNotMatch(css,/animation\s*:\s*[^;]*infinite/i);
 });
 
-test('production loader and service worker certify v71 assets',()=>{
-  assert.match(loader,/product-v71-smart-review/);
+test('production loader and service worker keep v7 review certified through v72',()=>{
+  assert.match(loader,/product-v72-java-workspace/);
   assert.match(loader,/practice-review-v7\.css/);
   assert.match(loader,/practice-review-v7\.js/);
-  assert.match(sw,/finalforge-v71-smart-exam-review/);
+  assert.match(loader,/practice-code-workspace-v8\.css/);
+  assert.match(loader,/practice-code-workspace-v8\.js/);
+  assert.match(sw,/finalforge-v72-java-workspace/);
   assert.match(sw,/\.\/assets\/practice-review-v7\.js/);
   assert.match(sw,/\.\/assets\/practice-review-v7\.css/);
+  assert.match(sw,/\.\/assets\/practice-code-workspace-v8\.js/);
+  assert.match(sw,/\.\/assets\/practice-code-workspace-v8\.css/);
 });
