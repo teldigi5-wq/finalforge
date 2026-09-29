@@ -1,0 +1,95 @@
+/* FinalForge Practice Premium v6 — eye-comfort, clear feedback and distinct module tabs. */
+:root{
+  --ff6-bg:#07121f;
+  --ff6-panel:#0d1b2d;
+  --ff6-panel-2:#102238;
+  --ff6-line:rgba(139,178,226,.14);
+  --ff6-line-strong:rgba(122,169,231,.27);
+  --ff6-text:#edf3fb;
+  --ff6-soft:#a7bad0;
+  --ff6-muted:#8094ab;
+  --ff6-blue:#72aef8;
+  --ff6-cyan:#63d6cf;
+  --ff6-violet:#9a8df7;
+  --ff6-green:#63cfa6;
+  --ff6-red:#ef8794;
+}
+
+/* The module selector in the supplied screenshot was too bright. These selectors intentionally win over old white/light layers. */
+html.ff-premium-ui-v2 body.ff-authenticated #practice #practiceModuleTabs{
+  display:flex!important;flex-wrap:wrap!important;gap:10px!important;padding:4px 0 2px!important;background:transparent!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated #practice #practiceModuleTabs .practice-tab{
+  min-width:112px!important;min-height:76px!important;padding:13px 18px!important;border:1px solid rgba(135,170,216,.15)!important;border-radius:16px!important;
+  background:linear-gradient(155deg,rgba(17,34,56,.92),rgba(10,24,41,.96))!important;color:#d6e2f0!important;box-shadow:0 10px 28px rgba(0,0,0,.12)!important;
+  transition:transform .14s ease,border-color .14s ease,background .14s ease,box-shadow .14s ease!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated #practice #practiceModuleTabs .practice-tab span{font-size:.97rem!important;font-weight:850!important;color:inherit!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice #practiceModuleTabs .practice-tab small{margin-top:5px!important;color:#778ba2!important;font-weight:700!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice #practiceModuleTabs .practice-tab:hover{transform:translateY(-1px)!important;border-color:rgba(127,175,237,.26)!important;background:linear-gradient(155deg,rgba(20,40,65,.96),rgba(11,27,46,.97))!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice #practiceModuleTabs .practice-tab::before,
+html.ff-premium-ui-v2 body.ff-authenticated #practice #practiceModuleTabs .practice-tab::after{pointer-events:none!important}
+
+html.ff-premium-ui-v2 body.ff-authenticated #practice #practiceModuleTabs [data-practice-module="dcn"].active{
+  color:#bfe7ff!important;border-color:rgba(88,177,235,.42)!important;background:linear-gradient(145deg,rgba(42,110,162,.36),rgba(21,51,82,.95))!important;box-shadow:0 14px 34px rgba(25,89,135,.16)!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated #practice #practiceModuleTabs [data-practice-module="ip"].active{
+  color:#e0d8ff!important;border-color:rgba(151,132,239,.46)!important;background:linear-gradient(145deg,rgba(93,74,177,.34),rgba(32,43,84,.95))!important;box-shadow:0 14px 34px rgba(77,62,157,.17)!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated #practice #practiceModuleTabs [data-practice-module="mc"].active{
+  color:#c9f2e7!important;border-color:rgba(91,194,165,.40)!important;background:linear-gradient(145deg,rgba(36,124,105,.31),rgba(20,59,62,.95))!important;box-shadow:0 14px 34px rgba(27,99,81,.15)!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated #practice #practiceModuleTabs [data-practice-module="fc"].active{
+  color:#ffe3bd!important;border-color:rgba(225,168,96,.40)!important;background:linear-gradient(145deg,rgba(145,94,43,.30),rgba(69,48,44,.94))!important;box-shadow:0 14px 34px rgba(122,76,33,.13)!important;
+}
+
+/* IP structure strip */
+.ff-v6-ip-structure{display:grid;grid-template-columns:minmax(220px,.8fr) minmax(330px,1.1fr);gap:12px 22px;align-items:center;margin:2px 0 4px;padding:17px 19px;border:1px solid rgba(123,171,233,.15);border-radius:18px;background:linear-gradient(145deg,rgba(16,34,57,.84),rgba(10,24,42,.90));box-shadow:0 16px 40px rgba(0,0,0,.12)}
+.ff-v6-ip-structure>div:first-child{display:grid;gap:4px}.ff-v6-ip-structure small{color:#7fb9fb;font-size:.68rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase}.ff-v6-ip-structure b{font-size:1rem;color:#edf4ff}.ff-v6-ip-structure>div:nth-child(2){display:flex;flex-wrap:wrap;gap:7px;justify-content:flex-end}.ff-v6-ip-structure span{padding:7px 9px;border:1px solid rgba(129,171,229,.13);border-radius:999px;background:rgba(95,141,207,.06);color:#abc1da;font-size:.72rem;font-weight:750}.ff-v6-ip-structure p{grid-column:1/-1;margin:0;color:#879cb4;font-size:.8rem;line-height:1.55}
+
+/* Ten papers need breathing room instead of tiny tiles. */
+html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-paper-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:13px!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-paper-card{min-height:220px!important;padding:20px!important;background:linear-gradient(150deg,rgba(15,32,53,.91),rgba(9,23,40,.95))!important;border-color:rgba(130,171,224,.13)!important;box-shadow:0 15px 38px rgba(0,0,0,.12)!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-paper-card:hover{transform:translateY(-2px)!important;border-color:rgba(113,166,234,.28)!important;box-shadow:0 22px 46px rgba(0,0,0,.17)!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-paper-index{color:rgba(124,168,226,.10)!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-paper-card p{color:#899eb5!important;line-height:1.58!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-paper-card .btn{min-height:44px!important;border-radius:12px!important;background:rgba(104,151,216,.07)!important;border-color:rgba(127,172,232,.15)!important;color:#dce8f6!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-paper-card .btn:hover{background:rgba(103,156,229,.12)!important;border-color:rgba(122,177,246,.27)!important}
+
+/* Softer exam reading surface. */
+html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-exam-app{background:linear-gradient(155deg,#091726,#0a192a)!important;border-color:rgba(137,176,225,.13)!important;box-shadow:0 28px 80px rgba(0,0,0,.22)!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-exam-rail{background:linear-gradient(180deg,#0b1b2d,#091725)!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-exam-question{color:var(--ff6-text)!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-exam-question>h2{max-width:1040px!important;color:#f0f5fb!important;line-height:1.28!important;letter-spacing:-.028em!important;white-space:pre-line!important;text-wrap:pretty!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-options label{min-height:76px!important;background:rgba(17,35,57,.74)!important;border-color:rgba(133,172,223,.13)!important;color:#dce7f3!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-options label:hover{transform:none!important;background:rgba(21,42,68,.86)!important;border-color:rgba(121,174,239,.25)!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-options label.selected{background:linear-gradient(100deg,rgba(61,126,211,.20),rgba(64,177,170,.065))!important;border-color:rgba(100,170,244,.42)!important;box-shadow:inset 3px 0 0 rgba(102,173,248,.74)!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .option-letter{background:rgba(83,126,191,.09)!important;color:#b9cdf0!important}
+
+/* Review feedback: wrong answer is red, correct answer is green. Correct attempts do not repeat the same answer twice. */
+html.ff-premium-ui-v2 body.ff-authenticated #practice .review-answer{margin-top:18px!important;padding:17px 18px!important;border-radius:16px!important;border:1px solid rgba(134,173,221,.13)!important;background:rgba(15,31,51,.78)!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .review-answer.correct{border-color:rgba(83,190,145,.28)!important;background:linear-gradient(135deg,rgba(45,132,98,.13),rgba(13,36,44,.80))!important;box-shadow:inset 3px 0 0 rgba(94,204,158,.72)!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .review-answer.correct>b{color:#84ddb6!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .review-answer.correct>span:first-of-type{color:#c8eadc!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .review-answer.correct>span:nth-of-type(2){display:none!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .review-answer.incorrect{border-color:rgba(235,123,139,.28)!important;background:linear-gradient(135deg,rgba(142,57,73,.13),rgba(35,23,39,.80))!important;box-shadow:inset 3px 0 0 rgba(235,123,139,.72)!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .review-answer.incorrect>b{color:#f0a2ad!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .review-answer.incorrect>span:first-of-type{display:block;margin-top:6px;padding:10px 12px;border-radius:11px;background:rgba(180,67,84,.10);color:#ffc0c8!important;font-weight:750}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .review-answer.incorrect>span:nth-of-type(2){display:block;margin-top:8px;padding:10px 12px;border-radius:11px;background:rgba(56,151,111,.10);color:#9de3bf!important;font-weight:800}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .review-answer p{color:#a5b8cd!important;line-height:1.65!important}
+
+/* Code questions should look like a calm coding workstation. */
+html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-code-workspace{max-width:1080px!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-native-code{min-height:420px!important;background:#07131f!important;color:#d9e8f4!important;border-color:rgba(130,171,224,.15)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.018)!important;line-height:1.65!important}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-code-trace{background:#081522!important;border-color:rgba(128,168,216,.14)!important}
+
+/* Light theme retains contrast without white glare. */
+html[data-theme="light"].ff-premium-ui-v2 body.ff-authenticated #practice #practiceModuleTabs .practice-tab{background:linear-gradient(150deg,#f3f7fc,#eaf1f8)!important;color:#344a63!important;border-color:#d6e1ec!important;box-shadow:0 8px 20px rgba(55,79,106,.07)!important}
+html[data-theme="light"].ff-premium-ui-v2 body.ff-authenticated #practice #practiceModuleTabs .practice-tab small{color:#71849a!important}
+html[data-theme="light"].ff-premium-ui-v2 body.ff-authenticated #practice #practiceModuleTabs [data-practice-module="ip"].active{color:#4f407f!important;background:linear-gradient(145deg,#ece7ff,#e8efff)!important;border-color:#c7bbef!important}
+html[data-theme="light"].ff-premium-ui-v2 body.ff-authenticated #practice .review-answer.correct{background:#eef9f3!important}.review-answer.incorrect{background:#fff2f4!important}
+
+@media(max-width:1280px){html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-paper-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+@media(max-width:940px){html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-paper-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.ff-v6-ip-structure{grid-template-columns:1fr}.ff-v6-ip-structure>div:nth-child(2){justify-content:flex-start}}
+@media(max-width:620px){html.ff-premium-ui-v2 body.ff-authenticated #practice #practiceModuleTabs{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}.practice-tab{min-width:0!important}.ff-v5-paper-grid{grid-template-columns:1fr!important}.ff-v5-paper-card{min-height:190px!important}.ff-v6-ip-structure{padding:15px}.ff-v6-ip-structure>div:nth-child(2){gap:6px}}
+@media(prefers-reduced-motion:reduce){html.ff-premium-ui-v2 body.ff-authenticated #practice .practice-tab,html.ff-premium-ui-v2 body.ff-authenticated #practice .ff-v5-paper-card{transition:none!important;transform:none!important}}
