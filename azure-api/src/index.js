@@ -3,6 +3,8 @@ import { app } from '@azure/functions';
 import { runVercelHandler } from './adapter.js';
 
 import signupHandler from './vercel/signup.js';
+import activateAccountHandler from './vercel/activate-account.js';
+import restartRegistrationHandler from './vercel/restart-registration.js';
 import rateHandler from './vercel/rate.js';
 import publicStatsHandler from './vercel/public-stats.js';
 import resourceUrlHandler from './vercel/resource-url.js';
@@ -15,7 +17,31 @@ app.http('signup', {
     runVercelHandler(
       signupHandler,
       request,
-      { maxBodyBytes: 2048 }
+      { maxBodyBytes: 1536 }
+    )
+});
+
+app.http('activate-account', {
+  methods: ['POST'],
+  authLevel: 'anonymous',
+  route: 'activate-account',
+  handler: async request =>
+    runVercelHandler(
+      activateAccountHandler,
+      request,
+      { maxBodyBytes: 512 }
+    )
+});
+
+app.http('restart-registration', {
+  methods: ['POST'],
+  authLevel: 'anonymous',
+  route: 'restart-registration',
+  handler: async request =>
+    runVercelHandler(
+      restartRegistrationHandler,
+      request,
+      { maxBodyBytes: 512 }
     )
 });
 
