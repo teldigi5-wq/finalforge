@@ -73,10 +73,12 @@ test('Java workspace styling is responsive, accessible and low motion',()=>{
   assert.doesNotMatch(css,/animation\s*:\s*[^;]*infinite/i);
 });
 
-test('production loader and service worker certify v72 Java workspace',()=>{
-  assert.match(loader,/product-v72-java-workspace/);
+test('v72 Java workspace remains production-certified through v73',()=>{
+  assert.match(loader,/product-v73-adaptive-practice/);
   assert.match(loader,/practice-code-workspace-v8\.css/);
   assert.match(loader,/practice-code-workspace-v8\.js/);
+  assert.match(loader,/practice-adaptive-v9\.js/);
+  assert.match(sw,/finalforge-v73-adaptive-practice/);
   assert.match(sw,/finalforge-v72-java-workspace/);
   assert.match(sw,/\.\/assets\/practice-code-workspace-v8\.js/);
   assert.match(sw,/\.\/assets\/practice-code-workspace-v8\.css/);
