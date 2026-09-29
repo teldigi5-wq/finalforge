@@ -1,4 +1,4 @@
-/* FinalForge private resource delivery v4.
+/* FinalForge private resource delivery v5.
    Browser sends only stable resource IDs; signed URLs and ID tokens are never persisted. */
 (()=>{
   'use strict';
@@ -56,7 +56,10 @@
     try{
       const response=await fetch('/api/resource-url',{
         method:'POST',
-        headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json','Accept':'application/json'},
+        // Azure Static Web Apps reserves the Authorization header for its own
+        // managed auth path. Use a FinalForge-specific same-origin header so the
+        // Firebase ID token arrives unchanged at the managed Function.
+        headers:{'X-FinalForge-ID-Token':token,'Content-Type':'application/json','Accept':'application/json'},
         body:JSON.stringify({resourceId}),
         credentials:'same-origin',
         cache:'no-store',
@@ -75,9 +78,6 @@
 
     let result=await signedUrlResponse(user,resourceId,{forceRefresh:true});
 
-    // A stale cached session should recover once without weakening server-side
-    // revocation checks. If the refreshed token is still rejected, surface the
-    // real server result instead of looping or silently downgrading verification.
     if(result.response.status===401){
       try{
         await user.reload();
