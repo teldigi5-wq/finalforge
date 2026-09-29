@@ -1,4 +1,4 @@
-/* FinalForge production loader — stability-first premium runtime. */
+/* FinalForge production loader — stability-first premium workspace runtime. */
 try{
   const saved=localStorage.getItem('finalforge_theme_v1');
   const initial=saved==='light'||saved==='dark'?saved:'dark';
@@ -24,7 +24,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
 })();
 
 (async()=>{
-  const VERSION='premium-stable-v1';
+  const VERSION='workspace-v3';
   const fail=msg=>{
     document.documentElement.classList.remove('ff-auth-restoring');
     console.error('[FinalForge]',msg);
@@ -89,7 +89,8 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
       loadStyle('assets/auth-system-v2.css'),
       loadStyle('assets/auth-responsive-hotfix-v1.css'),
       loadStyle('assets/stability-mode-v1.css'),
-      loadStyle('assets/premium-shell-v1.css')
+      loadStyle('assets/premium-shell-v1.css'),
+      loadStyle('assets/workspace-v3.css')
     ]);
 
     const firebaseSdkReady=(async()=>{
@@ -137,9 +138,11 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
     await loadScript('assets/theme-toggle-stability-v1.js');
     await loadScript('assets/practice-exam-v4.js');
     await loadScript('assets/ip-paper-extension-v1.js');
+    await loadScript('assets/ip-challenge-v2.js');
     await loadScript('assets/study-experience.js');
     await loadScript('assets/stability-runtime-v1.js');
     await loadScript('assets/premium-ui-v1.js');
+    await loadScript('assets/workspace-v3.js');
     await loadScript('assets/mobile-runtime-final-v1.js');
 
     /* Auth remains the only authentication owner. */

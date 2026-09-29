@@ -55,17 +55,21 @@ test('loader keeps stability mode and omits heavy decorative runtime layers',()=
   assert.doesNotMatch(loader,/await loadScript\('assets\/cloud-ui-stability-v1\.js'\)/);
 });
 
-test('service worker is bumped and stability plus premium runtime are network-fresh critical',()=>{
-  assert.match(sw,/finalforge-v53-premium-stable/);
+test('service worker is bumped and stability plus workspace runtime are network-fresh critical',()=>{
+  assert.match(sw,/finalforge-v54-workspace-v3/);
   assert.match(sw,/stability-runtime-v1\.js/);
   assert.match(sw,/stability-mode-v1\.css/);
   assert.match(sw,/premium-ui-v1\.js/);
   assert.match(sw,/premium-shell-v1\.css/);
   assert.match(sw,/ip-paper-extension-v1\.js/);
+  assert.match(sw,/workspace-v3\.js/);
+  assert.match(sw,/workspace-v3\.css/);
+  assert.match(sw,/ip-challenge-v2\.js/);
   const critical=sw.slice(sw.indexOf('const CRITICAL_RUNTIME'),sw.indexOf("self.addEventListener('install'"));
   assert.match(critical,/stability-runtime-v1\.js/);
   assert.match(critical,/auth\.js/);
   assert.match(critical,/theme-toggle-stability-v1\.js/);
   assert.match(critical,/premium-ui-v1\.js/);
-  assert.match(critical,/ip-paper-extension-v1\.js/);
+  assert.match(critical,/workspace-v3\.js/);
+  assert.match(critical,/ip-challenge-v2\.js/);
 });

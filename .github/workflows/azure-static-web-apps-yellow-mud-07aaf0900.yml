@@ -20,7 +20,7 @@ jobs:
           submodules: true
           lfs: false
 
-      - name: Verify auth runtime
+      - name: Verify auth and workspace runtime
         shell: bash
         run: |
           set -euo pipefail
@@ -30,6 +30,8 @@ jobs:
           node --check assets/stability-runtime-v1.js
           node --check assets/premium-ui-v1.js
           node --check assets/ip-paper-extension-v1.js
+          node --check assets/ip-challenge-v2.js
+          node --check assets/workspace-v3.js
           node --check assets/core-loader.js
           node --check sw.js
           node --test tests/auth-runtime-v2.test.js tests/auth-responsive-theme.test.js tests/premium-ui-ip-extension.test.js
@@ -63,12 +65,15 @@ jobs:
           test -f azure-static/assets/premium-shell-v1.css
           test -f azure-static/assets/premium-ui-v1.js
           test -f azure-static/assets/ip-paper-extension-v1.js
+          test -f azure-static/assets/ip-challenge-v2.js
+          test -f azure-static/assets/workspace-v3.css
+          test -f azure-static/assets/workspace-v3.js
           test -f azure-static/assets/appearance-v1.js
           test -f azure-static/assets/theme-toggle-stability-v1.js
           test -f azure-static/assets/resource-delivery-v1.js
           test -f azure-static/mock-papers/index.html
 
-          echo "Prepared allowlisted FinalForge premium stability bundle."
+          echo "Prepared allowlisted FinalForge Student Workspace v3 bundle."
 
       - name: Build And Deploy
         id: builddeploy
