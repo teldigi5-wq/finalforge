@@ -1,8 +1,8 @@
-/* FinalForge Premium UI v2.1 — calm, task-led, one-shot product refinement. */
+/* FinalForge Premium UI v2.2 — calm, task-led, premium study surface. */
 (()=>{
   'use strict';
   if(window.FINALFORGE_PREMIUM_UI_V2)return;
-  window.FINALFORGE_PREMIUM_UI_V2=Object.freeze({version:'2.1.0',mode:'task-led'});
+  window.FINALFORGE_PREMIUM_UI_V2=Object.freeze({version:'2.2.0',mode:'task-led'});
   window.FINALFORGE_PREMIUM_UI_V1=window.FINALFORGE_PREMIUM_UI_V2;
   const $=(s,r=document)=>r.querySelector(s);
   const $$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -18,6 +18,15 @@
     admin:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>'
   };
   const labels={home:'Home',modules:'Modules',resources:'Resources',practice:'Practice',schedule:'Schedule',planner:'Planner',roadmap:'Roadmap',analytics:'Analytics',admin:'Admin'};
+
+  function ensurePremiumSurface(){
+    if(document.querySelector('link[data-ff-premium-studyhub]'))return;
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='assets/premium-studyhub-v1.css?v=study-surface-1';
+    link.dataset.ffPremiumStudyhub='1';
+    document.head.appendChild(link);
+  }
 
   function ensureStateStyles(){
     if($('#ff-ui-state-normalizer'))return;
@@ -71,9 +80,9 @@
     const hero=$('.hero-copy',home);
     if(hero){
       const kicker=$('.kicker',hero),title=$('h1',hero),description=$('p.muted',hero);
-      if(kicker)kicker.textContent='Your academic command center';
-      if(title)title.innerHTML=`${daypart()}.<br><span class="gradient-text">Focus on what matters next.</span>`;
-      if(description)description.textContent='Your next exam, unfinished lessons and practice plan are organized here so you can start without deciding what to do first.';
+      if(kicker)kicker.textContent='SLIIT student workspace';
+      if(title)title.innerHTML=`${daypart()}.<br><span class="gradient-text">Build momentum for the next exam.</span>`;
+      if(description)description.textContent='Resources, mock exams, progress and your next study step are organised in one focused workspace.';
       const buttons=$$('.hero-actions .btn',hero);
       const copy=['Start practice','Study next','Build roadmap'];
       buttons.forEach((button,index)=>{if(copy[index])button.textContent=copy[index]});
@@ -94,6 +103,7 @@
 
   function refine(){
     document.documentElement.classList.add('ff-premium-ui-v2');
+    ensurePremiumSurface();
     ensureStateStyles();
     refineTopbar();
     refineNavigation();
