@@ -1,5 +1,5 @@
 /* FinalForge production loader — stability-first premium workspace runtime. */
-/* Previous certified loader: premium-timer-v61 */
+/* Previous certified loader: ip-library-premium-v62 */
 try{
   const saved=localStorage.getItem('finalforge_theme_v1');
   const initial=saved==='light'||saved==='dark'?saved:'dark';
@@ -38,7 +38,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
 })();
 
 (async()=>{
-  const VERSION='ip-library-premium-v62';
+  const VERSION='account-security-v63';
   const fail=msg=>{
     document.documentElement.classList.remove('ff-auth-restoring');
     console.error('[FinalForge]',msg);
@@ -111,7 +111,8 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
       loadStyle('assets/premium-comfort-v1.css'),
       loadStyle('assets/practice-interaction-fix-v1.css'),
       loadStyle('assets/premium-comfort-v2.css'),
-      loadStyle('assets/practice-premium-v6.css')
+      loadStyle('assets/practice-premium-v6.css'),
+      loadStyle('assets/account-security-v1.css')
     ]);
 
     const firebaseSdkReady=(async()=>{
@@ -173,6 +174,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
     /* Auth remains the only authentication owner. */
     await firebaseSdkReady;
     await loadScript('assets/auth.js');
+    await loadScript('assets/account-security-v1.js');
 
     /* Small functional navigation guards only; no decorative scanners/observers. */
     await loadScript('assets/practice-stability-v1.js');
