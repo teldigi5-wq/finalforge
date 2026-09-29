@@ -15,6 +15,7 @@ const compactCss=fs.readFileSync('assets/auth-mobile-compact-v8.css','utf8');
 const premiumAuthCss=fs.readFileSync('assets/auth-premium-v9.css','utf8');
 const mobilePremiumV10=fs.readFileSync('assets/auth-mobile-premium-v10.css','utf8');
 const desktopPremiumV11=fs.readFileSync('assets/auth-desktop-premium-v11.css','utf8');
+const unifiedAuthV12=fs.readFileSync('assets/auth-responsive-unified-v12.css','utf8');
 const viewportJs=fs.readFileSync('assets/auth-mobile-viewport-v1.js','utf8');
 const loader=fs.readFileSync('assets/core-loader.js','utf8');
 const rules=fs.readFileSync('firebase/firestore.rules','utf8');
@@ -64,12 +65,14 @@ test('browser auth uses only server activation and restart APIs',()=>{
   assert.doesNotMatch(auth,/transaction\.set\(claimRef/);
 });
 
-test('auth DOM layer is one-shot and removes manual SLIIT email editing',()=>{
+test('auth DOM layer is one-shot, removes manual email editing and loads final responsive contracts',()=>{
   assert.doesNotThrow(()=>new Function(dom));
   assert.match(dom,/derived\.closest\('label'\)/);
   assert.match(dom,/replaceWith\(identity\)/);
   assert.match(dom,/20 min/);
   assert.match(dom,/verifyRestartBtn/);
+  assert.match(dom,/auth-desktop-premium-v11\.css/);
+  assert.match(dom,/auth-responsive-unified-v12\.css/);
   assert.doesNotMatch(dom,/MutationObserver/);
   assert.doesNotMatch(dom,/setInterval/);
 });
@@ -144,6 +147,18 @@ test('desktop premium v11 removes nested auth scrolling and old overlapping hero
   assert.doesNotMatch(desktopPremiumV11,/animation\s*:\s*[^;]*infinite/i);
 });
 
+test('unified auth v12 keeps signup reachable across desktop, compact laptop, tablet and mobile',()=>{
+  assert.match(unifiedAuthV12,/Auth Responsive Unified v12/);
+  assert.match(unifiedAuthV12,/@media \(min-width:901px\)/);
+  assert.match(unifiedAuthV12,/@media \(min-width:1101px\) and \(max-height:900px\)/);
+  assert.match(unifiedAuthV12,/@media \(min-width:901px\) and \(max-width:1100px\)/);
+  assert.match(unifiedAuthV12,/@media \(max-width:900px\)/);
+  assert.match(unifiedAuthV12,/100dvh/);
+  assert.match(unifiedAuthV12,/overflow-y:auto!important/);
+  assert.match(unifiedAuthV12,/pointer-events:none!important/);
+  assert.doesNotMatch(unifiedAuthV12,/animation\s*:\s*[^;]*infinite/i);
+});
+
 test('mobile auth viewport recovery is event-driven and keyboard-aware',()=>{
   assert.doesNotThrow(()=>new Function(viewportJs));
   assert.match(viewportJs,/visualViewport/);
@@ -154,14 +169,15 @@ test('mobile auth viewport recovery is event-driven and keyboard-aware',()=>{
   assert.doesNotMatch(viewportJs,/setInterval/);
 });
 
-test('service worker advances v68 and treats desktop/mobile auth assets as critical',()=>{
-  assert.match(sw,/finalforge-v68-auth-desktop-premium/);
+test('service worker advances v69 and treats all final auth assets as critical',()=>{
+  assert.match(sw,/finalforge-v69-auth-responsive-unified/);
   assert.match(sw,/auth-flow-dom-v1\.js/);
   assert.match(sw,/mobile-premium-v7\.css/);
   assert.match(sw,/auth-mobile-compact-v8\.css/);
   assert.match(sw,/auth-premium-v9\.css/);
   assert.match(sw,/auth-mobile-premium-v10\.css/);
   assert.match(sw,/auth-desktop-premium-v11\.css/);
+  assert.match(sw,/auth-responsive-unified-v12\.css/);
   assert.match(sw,/auth-mobile-viewport-v1\.js/);
   assert.match(sw,/study-room\.webp/);
   assert.match(sw,/pathname\.startsWith\('\/api\/'\)/);
