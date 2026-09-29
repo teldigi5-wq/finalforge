@@ -1,5 +1,5 @@
 /* FinalForge production loader — stability-first premium workspace runtime. */
-/* Current product phase: Adaptive weak-area practice v73; Java workspace v72 remains the certified coding layer. */
+/* Current product phase: Student readiness + progress analytics v74; adaptive practice v73 and Java workspace v72 remain certified layers. */
 try{
   const saved=localStorage.getItem('finalforge_theme_v1');
   const initial=saved==='light'||saved==='dark'?saved:'dark';
@@ -38,7 +38,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
 })();
 
 (async()=>{
-  const VERSION='product-v73-adaptive-practice';
+  const VERSION='product-v74-student-readiness';
   const fail=msg=>{
     document.documentElement.classList.remove('ff-auth-restoring');
     console.error('[FinalForge]',msg);
@@ -115,6 +115,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
       loadStyle('assets/practice-review-v7.css'),
       loadStyle('assets/practice-code-workspace-v8.css'),
       loadStyle('assets/practice-adaptive-v9.css'),
+      loadStyle('assets/student-readiness-v10.css'),
       loadStyle('assets/account-security-v1.css'),
       loadStyle('assets/mobile-premium-v7.css'),
       loadStyle('assets/auth-mobile-compact-v8.css'),
@@ -166,7 +167,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
     await loadScript('assets/appearance-v1.js');
     await loadScript('assets/theme-toggle-stability-v1.js');
 
-    /* Exam Studio v5 remains the single paper runner; v7/v8/v9 add review, Java workspace and adaptive practice around it. */
+    /* Exam Studio v5 remains the single paper runner; later versions add review, coding, adaptive practice and analytics around it. */
     await loadScript('assets/ip-paper-extension-v1.js');
     await loadScript('assets/ip-challenge-v2.js');
     await loadScript('assets/ip-final-blueprint-v5.js');
@@ -193,6 +194,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
     await loadScript('assets/practice-review-v7.js');
     await loadScript('assets/practice-code-workspace-v8.js');
     await loadScript('assets/practice-adaptive-v9.js');
+    await loadScript('assets/student-readiness-v10.js');
     await loadScript('assets/mobile-navigation-runtime-v2.js');
     await loadScript('assets/mobile-scroll-recovery-v1.js');
 
