@@ -33,11 +33,10 @@ test('premium comfort v2 improves exam ergonomics without perpetual animation',(
   assert.doesNotMatch(comfort,/animation\s*:\s*[^;]*infinite/i);
 });
 
-test('production loader and service worker ship timer comfort v61 as critical runtime',()=>{
-  assert.match(loader,/premium-timer-v61/);
+test('production loader and current service worker keep timer comfort as critical runtime',()=>{
   assert.match(loader,/loadStyle\('assets\/premium-comfort-v2\.css'\)/);
   assert.match(loader,/loadScript\('assets\/practice-timer-runtime-v1\.js'\)/);
-  assert.match(sw,/finalforge-v61-practice-timer-comfort/);
+  assert.match(sw,/finalforge-v63-account-security/);
   assert.match(sw,/practice-timer-runtime-v1\.js/);
   assert.match(sw,/premium-comfort-v2\.css/);
   const critical=sw.slice(sw.indexOf('const CRITICAL_RUNTIME'),sw.indexOf("self.addEventListener('install'"));
