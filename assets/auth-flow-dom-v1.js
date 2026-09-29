@@ -2,7 +2,21 @@
 (()=>{
   'use strict';
   if(window.FINALFORGE_AUTH_FLOW_DOM_V1)return;
-  window.FINALFORGE_AUTH_FLOW_DOM_V1=Object.freeze({version:'1.0.0'});
+  window.FINALFORGE_AUTH_FLOW_DOM_V1=Object.freeze({version:'1.1.0'});
+
+  /* Auth is assembled from several historical visual layers. Load the certified
+     desktop + unified responsive contracts last so viewport behavior has one owner. */
+  function ensureFinalStyle(id,href){
+    if(document.getElementById(id))return;
+    const link=document.createElement('link');
+    link.id=id;
+    link.rel='stylesheet';
+    link.href=href;
+    link.dataset.finalforgeAuthFinal='1';
+    document.head.appendChild(link);
+  }
+  ensureFinalStyle('ff-auth-desktop-premium-v11','assets/auth-desktop-premium-v11.css?v=auth-responsive-v69');
+  ensureFinalStyle('ff-auth-responsive-unified-v12','assets/auth-responsive-unified-v12.css?v=auth-responsive-v69');
 
   function install(){
     const signup=document.getElementById('signupForm');
