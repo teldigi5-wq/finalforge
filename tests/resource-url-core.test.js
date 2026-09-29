@@ -134,10 +134,18 @@ test('missing/revoked token fails closed', async () => {
   assert.equal(missing.payload.code, 'AUTH_REQUIRED');
 
   const revoked = responseRecorder();
-  const revokedHandler = createResourceUrlHandler(deps({ verifyIdToken: async () => { throw new Error('revoked'); } }));
+  const revokedHandler = createResourceUrlHandler(deps({ verifyIdToken: async () => { throw Object.assign(new Error('revoked'), { code: 'auth/id-token-revoked' }); } }));
   await revokedHandler(req(), revoked);
   assert.equal(revoked.statusCode, 401);
   assert.equal(revoked.payload.code, 'AUTH_REQUIRED');
+});
+
+test('verification infrastructure failures are not misreported as a bad user session', async () => {
+  const unavailable = responseRecorder();
+  const handler = createResourceUrlHandler(deps({ verifyIdToken: async () => { throw Object.assign(new Error('permission denied'), { code: 'auth/insufficient-permission' }); } }));
+  await handler(req(), unavailable);
+  assert.equal(unavailable.statusCode, 503);
+  assert.deepEqual(unavailable.payload, { error: 'Authentication verification is temporarily unavailable.', code: 'AUTH_VERIFY_UNAVAILABLE' });
 });
 
 test('storage failure returns a safe categorized error without paths', async () => {
@@ -171,6 +179,9 @@ test('resource client uses a same-origin opening page instead of about:blank', (
   assert.match(client, /OPENING_PAGE='\/resource-opening\.html'/);
   assert.doesNotMatch(client, /window\.open\('about:blank'/);
   assert.match(client, /STORAGE_ORIGIN='https:\/\/jzgpwmxwekkbxdkhtsai\.supabase\.co'/);
+  assert.match(client, /getIdToken\(forceRefresh\)/);
+  assert.match(client, /user\.reload\(\)/);
   assert.match(openingPage, /Opening secure resource/);
+  assert.match(openingPage, /Return to FinalForge/);
   assert.match(openingPage, /Private resource delivery/);
 });
