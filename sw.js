@@ -1,14 +1,14 @@
-// Earlier certified caches: finalforge-v56-resource-access, finalforge-v57-premium-resource-session, finalforge-v58-exam-studio, finalforge-v59-premium-comfort, finalforge-v60-practice-interaction, finalforge-v61-practice-timer-comfort, finalforge-v62-ip-library-premium
-const C='finalforge-v63-account-security';
+// Earlier certified caches: finalforge-v56-resource-access, finalforge-v57-premium-resource-session, finalforge-v58-exam-studio, finalforge-v59-premium-comfort, finalforge-v60-practice-interaction, finalforge-v61-practice-timer-comfort, finalforge-v62-ip-library-premium, finalforge-v63-account-security
+const C='finalforge-v64-registration-mobile';
 
 const CORE=[
   './','./index.html','./verify.html','./resource-opening.html','./manifest.webmanifest',
   './assets/core-loader.js','./assets/account-storage-v1.js','./assets/resource-delivery-v1.js',
   './assets/app.js','./assets/past-papers-v1.js','./assets/appearance-v1.js','./assets/theme-toggle-stability-v1.js',
   './assets/ip-paper-extension-v1.js','./assets/ip-challenge-v2.js','./assets/ip-final-blueprint-v5.js','./assets/practice-exam-v5.js','./assets/ip-model-library-v6.js','./assets/study-experience.js','./assets/stability-runtime-v1.js',
-  './assets/premium-ui-v1.js','./assets/workspace-v3.js','./assets/mobile-runtime-final-v1.js','./assets/auth.js','./assets/account-security-v1.js','./assets/practice-stability-v1.js','./assets/practice-interaction-fix-v1.js','./assets/practice-timer-runtime-v1.js',
+  './assets/premium-ui-v1.js','./assets/workspace-v3.js','./assets/mobile-runtime-final-v1.js','./assets/auth-flow-dom-v1.js','./assets/auth.js','./assets/account-security-v1.js','./assets/practice-stability-v1.js','./assets/practice-interaction-fix-v1.js','./assets/practice-timer-runtime-v1.js',
   './assets/mobile-navigation-runtime-v2.js','./assets/mobile-scroll-recovery-v1.js',
-  './assets/auth-system-v2.css','./assets/auth-responsive-hotfix-v1.css','./assets/stability-mode-v1.css','./assets/premium-shell-v1.css','./assets/premium-studyhub-v1.css','./assets/premium-studyhub-v2.css','./assets/practice-premium-v5.css','./assets/premium-comfort-v1.css','./assets/practice-interaction-fix-v1.css','./assets/premium-comfort-v2.css','./assets/practice-premium-v6.css','./assets/account-security-v1.css','./assets/workspace-v3.css',
+  './assets/auth-system-v2.css','./assets/auth-responsive-hotfix-v1.css','./assets/stability-mode-v1.css','./assets/premium-shell-v1.css','./assets/premium-studyhub-v1.css','./assets/premium-studyhub-v2.css','./assets/practice-premium-v5.css','./assets/premium-comfort-v1.css','./assets/practice-interaction-fix-v1.css','./assets/premium-comfort-v2.css','./assets/practice-premium-v6.css','./assets/account-security-v1.css','./assets/mobile-premium-v7.css','./assets/workspace-v3.css',
   './assets/finalforge-logo.svg'
 ];
 
@@ -16,9 +16,9 @@ const CRITICAL_RUNTIME=new Set([
   '/assets/core-loader.js','/assets/account-storage-v1.js','/assets/resource-delivery-v1.js','/assets/app.js',
   '/assets/past-papers-v1.js','/assets/appearance-v1.js','/assets/theme-toggle-stability-v1.js',
   '/assets/ip-paper-extension-v1.js','/assets/ip-challenge-v2.js','/assets/ip-final-blueprint-v5.js','/assets/practice-exam-v5.js','/assets/ip-model-library-v6.js','/assets/study-experience.js','/assets/stability-runtime-v1.js',
-  '/assets/premium-ui-v1.js','/assets/workspace-v3.js','/assets/mobile-runtime-final-v1.js','/assets/auth.js','/assets/account-security-v1.js','/assets/practice-stability-v1.js','/assets/practice-interaction-fix-v1.js','/assets/practice-timer-runtime-v1.js',
+  '/assets/premium-ui-v1.js','/assets/workspace-v3.js','/assets/mobile-runtime-final-v1.js','/assets/auth-flow-dom-v1.js','/assets/auth.js','/assets/account-security-v1.js','/assets/practice-stability-v1.js','/assets/practice-interaction-fix-v1.js','/assets/practice-timer-runtime-v1.js',
   '/assets/mobile-navigation-runtime-v2.js','/assets/mobile-scroll-recovery-v1.js',
-  '/assets/auth-system-v2.css','/assets/auth-responsive-hotfix-v1.css','/assets/stability-mode-v1.css','/assets/premium-shell-v1.css','/assets/premium-studyhub-v1.css','/assets/premium-studyhub-v2.css','/assets/practice-premium-v5.css','/assets/premium-comfort-v1.css','/assets/practice-interaction-fix-v1.css','/assets/premium-comfort-v2.css','/assets/practice-premium-v6.css','/assets/account-security-v1.css','/assets/workspace-v3.css'
+  '/assets/auth-system-v2.css','/assets/auth-responsive-hotfix-v1.css','/assets/stability-mode-v1.css','/assets/premium-shell-v1.css','/assets/premium-studyhub-v1.css','/assets/premium-studyhub-v2.css','/assets/practice-premium-v5.css','/assets/premium-comfort-v1.css','/assets/practice-interaction-fix-v1.css','/assets/premium-comfort-v2.css','/assets/practice-premium-v6.css','/assets/account-security-v1.css','/assets/mobile-premium-v7.css','/assets/workspace-v3.css'
 ]);
 
 self.addEventListener('install',event=>event.waitUntil(
