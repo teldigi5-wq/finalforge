@@ -1,4 +1,5 @@
 const MAX_BODY_BYTES = 2048;
+const MAX_TOKEN_BYTES = 8192;
 const RESOURCE_ID_RE = /^(?:ffr1_[0-9a-f]{16}|official-timetable-v3-2026-09-15)$/;
 
 function header(req, name) {
@@ -13,6 +14,17 @@ function normalizeEmail(value) {
 export function tokenFromAuthorization(value) {
   const match = /^Bearer\s+([^\s]+)$/i.exec(String(value || '').trim());
   return match?.[1] || '';
+}
+
+export function tokenFromPrivateHeader(value) {
+  const token = String(value || '').trim();
+  if (!token || token.length > MAX_TOKEN_BYTES || /\s/.test(token)) return '';
+  return token;
+}
+
+export function tokenFromRequest(req) {
+  return tokenFromPrivateHeader(header(req, 'x-finalforge-id-token'))
+    || tokenFromAuthorization(header(req, 'authorization'));
 }
 
 export function isAuthorizedResourceUser(decoded, entitlement) {
@@ -41,7 +53,7 @@ export function isAuthorizedResourceUser(decoded, entitlement) {
 function setPrivateHeaders(res) {
   res.setHeader('Cache-Control', 'private, no-store, max-age=0');
   res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Vary', 'Authorization');
+  res.setHeader('Vary', 'Authorization, X-FinalForge-ID-Token');
   res.setHeader('X-Content-Type-Options', 'nosniff');
 }
 
@@ -91,7 +103,7 @@ export function createResourceUrlHandler({ verifyIdToken, loadStudentEntitlement
     const resourceId = String(body.resourceId || '').trim();
     if (!RESOURCE_ID_RE.test(resourceId)) return error(res, 400, 'Invalid resource ID.', 'INVALID_RESOURCE_ID');
 
-    const token = tokenFromAuthorization(header(req, 'authorization'));
+    const token = tokenFromRequest(req);
     if (!token) return error(res, 401, 'Authentication required.', 'AUTH_REQUIRED');
 
     let decoded;
