@@ -2,7 +2,7 @@
 (()=>{
   'use strict';
   if(window.FINALFORGE_AUTH_FLOW_DOM_V1)return;
-  window.FINALFORGE_AUTH_FLOW_DOM_V1=Object.freeze({version:'1.2.0'});
+  window.FINALFORGE_AUTH_FLOW_DOM_V1=Object.freeze({version:'1.3.0'});
 
   /* Auth accumulated several historical visual layers. v13 is the single final
      responsive/visual owner. Remove previous final-owner links, then load v13 last. */
@@ -16,6 +16,20 @@
     document.head.appendChild(link);
   }
   installFinalAuthStyle();
+
+  /* Auth Runtime v3 historically appends auth-system-v2.css when it cannot see the
+     loader copy. After the application finishes booting, de-duplicate that baseline
+     and move v13 to the end once. This prevents a late legacy stylesheet from
+     visually overriding the certified final responsive contract. */
+  function settleAuthStyleOrder(){
+    const baselines=[...document.querySelectorAll('link[rel="stylesheet"]')].filter(link=>/auth-system-v2\.css(?:\?|$)/.test(link.getAttribute('href')||''));
+    baselines.slice(1).forEach(link=>link.remove());
+    document.querySelectorAll('#ff-auth-desktop-premium-v11,#ff-auth-responsive-unified-v12').forEach(link=>link.remove());
+    const final=document.getElementById('ff-auth-responsive-premium-v13');
+    if(final)document.head.appendChild(final);
+    else installFinalAuthStyle();
+  }
+  window.addEventListener('finalforge-ready',settleAuthStyleOrder,{once:true});
 
   function install(){
     const signup=document.getElementById('signupForm');
