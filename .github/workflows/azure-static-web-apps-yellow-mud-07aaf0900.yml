@@ -26,6 +26,7 @@ jobs:
           set -euo pipefail
           node --check assets/auth.js
           node --check assets/auth-flow-dom-v1.js
+          node --check assets/auth-mobile-viewport-v1.js
           node --check assets/account-security-v1.js
           node --check assets/appearance-v1.js
           node --check assets/theme-toggle-stability-v1.js
@@ -78,6 +79,8 @@ jobs:
           test -f azure-static/staticwebapp.config.json
           test -f azure-static/assets/auth.js
           test -f azure-static/assets/auth-flow-dom-v1.js
+          test -f azure-static/assets/auth-mobile-viewport-v1.js
+          test -f azure-static/assets/auth-mobile-compact-v8.css
           test -f azure-static/assets/account-security-v1.js
           test -f azure-static/assets/account-security-v1.css
           test -f azure-static/assets/mobile-premium-v7.css
@@ -109,7 +112,7 @@ jobs:
           test -f azure-static/assets/resource-delivery-v1.js
           test -f azure-static/mock-papers/index.html
 
-          echo "Prepared allowlisted FinalForge registration/mobile v64, account security, IP model-library v6, premium review, timer/comfort, resource-access and Workspace v3 bundle."
+          echo "Prepared allowlisted FinalForge mobile-auth v65, registration v64, account security, IP model-library v6, premium review, timer/comfort, resource-access and Workspace v3 bundle."
 
       - name: Build And Deploy
         id: builddeploy
