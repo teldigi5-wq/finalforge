@@ -21,7 +21,9 @@ test('Java workspace v8 parses and remains event-driven',()=>{
 test('Java editor adds line numbers, safe indentation and syntax preview',()=>{
   assert.match(runtime,/data-v8-lines/);
   assert.match(runtime,/highlightJava/);
-  assert.match(runtime,/ff-v8-token-keyword/);
+  assert.match(runtime,/JAVA_KEYWORDS/);
+  assert.match(runtime,/cls='keyword'/);
+  assert.match(runtime,/ff-v8-token-\$\{cls\}/);
   assert.match(runtime,/event\.key==='Tab'/);
   assert.match(runtime,/autoIndent/);
   assert.match(runtime,/Ctrl\/⌘ \+ Enter/);
