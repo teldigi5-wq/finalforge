@@ -42,6 +42,8 @@ jobs:
           node --check assets/practice-code-workspace-v8.js
           node --check assets/practice-adaptive-v9.js
           node --check assets/student-readiness-v10.js
+          node --check assets/question-bank-v11.js
+          node --check assets/admin-question-studio-v11.js
           node --check assets/practice-stability-v1.js
           node --check assets/practice-interaction-fix-v1.js
           node --check assets/practice-timer-runtime-v1.js
@@ -51,13 +53,19 @@ jobs:
           node --check api/activate-account.js
           node --check api/restart-registration.js
           node --check api/_resource-url-core.js
+          node --check api/_question-bank-core.js
+          node --check api/admin-questions.js
+          node --check api/question-bank.js
           node --check azure-api/src/index.js
           node --check azure-api/src/vercel/signup.js
           node --check azure-api/src/vercel/activate-account.js
           node --check azure-api/src/vercel/restart-registration.js
           node --check azure-api/src/vercel/_resource-url-core.js
+          node --check azure-api/src/vercel/_question-bank-core.js
+          node --check azure-api/src/vercel/admin-questions.js
+          node --check azure-api/src/vercel/question-bank.js
           node --check sw.js
-          node --test tests/auth-runtime-v2.test.js tests/auth-responsive-theme.test.js tests/account-security-v1.test.js tests/registration-flow-v64.test.js tests/premium-ui-ip-extension.test.js tests/practice-exam-v5.test.js tests/practice-review-v7.test.js tests/practice-code-workspace-v8.test.js tests/practice-adaptive-v9.test.js tests/student-readiness-v10.test.js tests/practice-interaction-fix.test.js tests/practice-timer-comfort.test.js tests/ip-model-library-v6.test.js tests/resource-url-core.test.js tests/resource-delivery-boundary.test.js
+          node --test tests/auth-runtime-v2.test.js tests/auth-responsive-theme.test.js tests/account-security-v1.test.js tests/registration-flow-v64.test.js tests/premium-ui-ip-extension.test.js tests/practice-exam-v5.test.js tests/practice-review-v7.test.js tests/practice-code-workspace-v8.test.js tests/practice-adaptive-v9.test.js tests/student-readiness-v10.test.js tests/question-bank-v11.test.js tests/practice-interaction-fix.test.js tests/practice-timer-comfort.test.js tests/ip-model-library-v6.test.js tests/resource-url-core.test.js tests/resource-delivery-boundary.test.js
 
       - name: Prepare public frontend bundle
         shell: bash
@@ -115,6 +123,9 @@ jobs:
           test -f azure-static/assets/practice-adaptive-v9.css
           test -f azure-static/assets/student-readiness-v10.js
           test -f azure-static/assets/student-readiness-v10.css
+          test -f azure-static/assets/question-bank-v11.js
+          test -f azure-static/assets/admin-question-studio-v11.js
+          test -f azure-static/assets/admin-question-studio-v11.css
           test -f azure-static/assets/practice-stability-v1.js
           test -f azure-static/assets/practice-interaction-fix-v1.js
           test -f azure-static/assets/practice-interaction-fix-v1.css
@@ -128,7 +139,7 @@ jobs:
           test -f azure-static/assets/resource-delivery-v1.js
           test -f azure-static/mock-papers/index.html
 
-          echo "Prepared allowlisted FinalForge student-readiness v74, adaptive-practice v73, Java workspace v72, smart-review v71, responsive auth v70, registration v64, account security, IP model-library v6, timer/comfort, resource-access and Workspace v3 bundle."
+          echo "Prepared allowlisted FinalForge admin-question-studio v75, student-readiness v74, adaptive-practice v73, Java workspace v72, smart-review v71, responsive auth v70, registration v64, account security, IP model-library v6, timer/comfort, resource-access and Workspace v3 bundle."
 
       - name: Build And Deploy
         id: builddeploy
