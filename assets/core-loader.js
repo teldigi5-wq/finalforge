@@ -1,5 +1,5 @@
 /* FinalForge production loader — stability-first premium workspace runtime. */
-/* Previous certified loader: premium-comfort-v59 */
+/* Previous certified loader: premium-timer-v61 */
 try{
   const saved=localStorage.getItem('finalforge_theme_v1');
   const initial=saved==='light'||saved==='dark'?saved:'dark';
@@ -38,7 +38,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
 })();
 
 (async()=>{
-  const VERSION='premium-timer-v61';
+  const VERSION='ip-library-premium-v62';
   const fail=msg=>{
     document.documentElement.classList.remove('ff-auth-restoring');
     console.error('[FinalForge]',msg);
@@ -110,7 +110,8 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
       loadStyle('assets/practice-premium-v5.css'),
       loadStyle('assets/premium-comfort-v1.css'),
       loadStyle('assets/practice-interaction-fix-v1.css'),
-      loadStyle('assets/premium-comfort-v2.css')
+      loadStyle('assets/premium-comfort-v2.css'),
+      loadStyle('assets/practice-premium-v6.css')
     ]);
 
     const firebaseSdkReady=(async()=>{
@@ -177,6 +178,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
     await loadScript('assets/practice-stability-v1.js');
     await loadScript('assets/practice-interaction-fix-v1.js');
     await loadScript('assets/practice-timer-runtime-v1.js');
+    await loadScript('assets/ip-model-library-v6.js');
     await loadScript('assets/mobile-navigation-runtime-v2.js');
     await loadScript('assets/mobile-scroll-recovery-v1.js');
 
