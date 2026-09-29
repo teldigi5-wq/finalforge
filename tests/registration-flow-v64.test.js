@@ -13,6 +13,7 @@ const dom=fs.readFileSync('assets/auth-flow-dom-v1.js','utf8');
 const mobileCss=fs.readFileSync('assets/mobile-premium-v7.css','utf8');
 const compactCss=fs.readFileSync('assets/auth-mobile-compact-v8.css','utf8');
 const premiumAuthCss=fs.readFileSync('assets/auth-premium-v9.css','utf8');
+const mobilePremiumV10=fs.readFileSync('assets/auth-mobile-premium-v10.css','utf8');
 const viewportJs=fs.readFileSync('assets/auth-mobile-viewport-v1.js','utf8');
 const loader=fs.readFileSync('assets/core-loader.js','utf8');
 const rules=fs.readFileSync('firebase/firestore.rules','utf8');
@@ -117,6 +118,17 @@ test('premium auth v9 adds study imagery without regressing compact signup',()=>
   assert.doesNotMatch(premiumAuthCss,/animation\s*:\s*[^;]*infinite/i);
 });
 
+test('mobile premium v10 reduces vertical load and fixes remember-control sizing',()=>{
+  assert.match(mobilePremiumV10,/Auth Mobile Premium v10/);
+  assert.match(mobilePremiumV10,/ff-auth-runtime-status/);
+  assert.match(mobilePremiumV10,/height:20px!important/);
+  assert.match(mobilePremiumV10,/min-height:50px!important/);
+  assert.match(mobilePremiumV10,/padding-bottom:max\(96px/);
+  assert.match(mobilePremiumV10,/pointer-events:none!important/);
+  assert.match(mobilePremiumV10,/prefers-reduced-motion: reduce/);
+  assert.doesNotMatch(mobilePremiumV10,/animation\s*:\s*[^;]*infinite/i);
+});
+
 test('mobile auth viewport recovery is event-driven and keyboard-aware',()=>{
   assert.doesNotThrow(()=>new Function(viewportJs));
   assert.match(viewportJs,/visualViewport/);
@@ -127,17 +139,19 @@ test('mobile auth viewport recovery is event-driven and keyboard-aware',()=>{
   assert.doesNotMatch(viewportJs,/setInterval/);
 });
 
-test('service worker advances v66 and treats auth/mobile assets as critical',()=>{
-  assert.match(sw,/finalforge-v66-auth-premium/);
+test('service worker advances v67 and treats auth/mobile assets as critical',()=>{
+  assert.match(sw,/finalforge-v67-auth-mobile-premium/);
   assert.match(sw,/auth-flow-dom-v1\.js/);
   assert.match(sw,/mobile-premium-v7\.css/);
   assert.match(sw,/auth-mobile-compact-v8\.css/);
   assert.match(sw,/auth-premium-v9\.css/);
+  assert.match(sw,/auth-mobile-premium-v10\.css/);
   assert.match(sw,/auth-mobile-viewport-v1\.js/);
   assert.match(sw,/study-room\.webp/);
   assert.match(sw,/pathname\.startsWith\('\/api\/'\)/);
-  assert.match(loader,/auth-premium-v66/);
+  assert.match(loader,/auth-mobile-premium-v67/);
   assert.match(loader,/auth-mobile-compact-v8\.css/);
   assert.match(loader,/auth-premium-v9\.css/);
+  assert.match(loader,/auth-mobile-premium-v10\.css/);
   assert.match(loader,/auth-mobile-viewport-v1\.js/);
 });
