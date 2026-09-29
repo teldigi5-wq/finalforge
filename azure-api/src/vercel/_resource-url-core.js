@@ -29,8 +29,6 @@ export function isAuthorizedResourceUser(decoded, entitlement) {
 
   return /^IT\d{8}$/.test(studentId)
     && profile?.role === 'student'
-    // Legacy verified profiles may predate the disabled field. Only an explicit
-    // disabled=true is disabled; this matches the canonical auth runtime.
     && profile?.disabled !== true
     && profile?.emailVerified === true
     && normalizeEmail(profile?.sliitEmail) === email
@@ -54,6 +52,18 @@ function bodySize(body) {
 
 function error(res, status, message, code) {
   return res.status(status).json({ error: message, code });
+}
+
+function tokenFailure(errorValue) {
+  const code = String(errorValue?.code || '').toLowerCase();
+  return code === 'auth/argument-error'
+    || code === 'auth/invalid-argument'
+    || code === 'auth/invalid-id-token'
+    || code === 'auth/id-token-expired'
+    || code === 'auth/id-token-revoked'
+    || code === 'auth/user-disabled'
+    || code === 'auth/tenant-id-mismatch'
+    || code.startsWith('auth/id-token-');
 }
 
 export function createResourceUrlHandler({ verifyIdToken, loadStudentEntitlement, getResourceById, signResource }) {
@@ -87,8 +97,9 @@ export function createResourceUrlHandler({ verifyIdToken, loadStudentEntitlement
     let decoded;
     try {
       decoded = await verifyIdToken(token);
-    } catch {
-      return error(res, 401, 'Authentication required.', 'AUTH_REQUIRED');
+    } catch (verificationError) {
+      if (tokenFailure(verificationError)) return error(res, 401, 'Authentication required.', 'AUTH_REQUIRED');
+      return error(res, 503, 'Authentication verification is temporarily unavailable.', 'AUTH_VERIFY_UNAVAILABLE');
     }
 
     let entitlement = null;
