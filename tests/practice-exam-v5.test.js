@@ -5,7 +5,9 @@ import fs from 'node:fs';
 const blueprint=fs.readFileSync(new URL('../assets/ip-final-blueprint-v5.js',import.meta.url),'utf8');
 const runner=fs.readFileSync(new URL('../assets/practice-exam-v5.js',import.meta.url),'utf8');
 const css=fs.readFileSync(new URL('../assets/practice-premium-v5.css',import.meta.url),'utf8');
+const comfort=fs.readFileSync(new URL('../assets/premium-comfort-v1.css',import.meta.url),'utf8');
 const stability=fs.readFileSync(new URL('../assets/practice-stability-v1.js',import.meta.url),'utf8');
+const loader=fs.readFileSync(new URL('../assets/core-loader.js',import.meta.url),'utf8');
 const sw=fs.readFileSync(new URL('../sw.js',import.meta.url),'utf8');
 
 test('IP v5 blueprint parses and covers all ten coverage slots with code-tracing questions',()=>{
@@ -60,13 +62,26 @@ test('Exam Studio styling is premium, responsive and stability-first',()=>{
   assert.doesNotMatch(css,/animation\s*:\s*[^;]*infinite/i);
 });
 
-test('certified bootstrap and service worker ship all Exam Studio v5 assets',()=>{
+test('premium comfort layer protects click targets and reduces glare',()=>{
+  assert.match(comfort,/Premium Comfort v1/);
+  assert.match(comfort,/pointer-events:none!important/);
+  assert.match(comfort,/ff-v5-sticky-actions/);
+  assert.match(comfort,/button:not\(:disabled\)/);
+  assert.match(comfort,/prefers-reduced-motion:reduce/);
+  assert.doesNotMatch(comfort,/animation\s*:\s*[^;]*infinite/i);
+});
+
+test('certified bootstrap actively loads Exam Studio v5 and comfort assets',()=>{
   assert.doesNotThrow(()=>new Function(stability));
-  assert.match(stability,/ip-final-blueprint-v5\.js/);
-  assert.match(stability,/practice-exam-v5\.js/);
-  assert.match(stability,/practice-premium-v5\.css/);
-  assert.match(sw,/finalforge-v58-exam-studio/);
+  assert.match(loader,/ip-final-blueprint-v5\.js/);
+  assert.match(loader,/practice-exam-v5\.js/);
+  assert.match(loader,/practice-premium-v5\.css/);
+  assert.match(loader,/premium-studyhub-v2\.css/);
+  assert.match(loader,/premium-comfort-v1\.css/);
+  assert.match(loader,/premium-comfort-v59/);
+  assert.match(sw,/finalforge-v59-premium-comfort/);
   assert.match(sw,/ip-final-blueprint-v5\.js/);
   assert.match(sw,/practice-exam-v5\.js/);
   assert.match(sw,/practice-premium-v5\.css/);
+  assert.match(sw,/premium-comfort-v1\.css/);
 });
