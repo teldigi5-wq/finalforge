@@ -71,7 +71,7 @@ test('premium comfort layer protects click targets and reduces glare',()=>{
   assert.doesNotMatch(comfort,/animation\s*:\s*[^;]*infinite/i);
 });
 
-test('certified bootstrap keeps Exam Studio v5 and current IP/premium layers in v67',()=>{
+test('certified bootstrap keeps Exam Studio v5 and current smart-review v71 layers',()=>{
   assert.doesNotThrow(()=>new Function(stability));
   assert.match(loader,/ip-final-blueprint-v5\.js/);
   assert.match(loader,/practice-exam-v5\.js/);
@@ -81,10 +81,12 @@ test('certified bootstrap keeps Exam Studio v5 and current IP/premium layers in 
   assert.match(loader,/premium-comfort-v2\.css/);
   assert.match(loader,/ip-model-library-v6\.js/);
   assert.match(loader,/practice-premium-v6\.css/);
-  assert.match(loader,/auth-mobile-premium-v67/);
+  assert.match(loader,/practice-review-v7\.css/);
+  assert.match(loader,/practice-review-v7\.js/);
+  assert.match(loader,/product-v71-smart-review/);
   assert.match(loader,/auth-premium-v9\.css/);
   assert.match(loader,/auth-mobile-premium-v10\.css/);
-  assert.match(sw,/finalforge-v67-auth-mobile-premium/);
+  assert.match(sw,/finalforge-v71-smart-exam-review/);
   assert.match(sw,/ip-final-blueprint-v5\.js/);
   assert.match(sw,/practice-exam-v5\.js/);
   assert.match(sw,/practice-premium-v5\.css/);
@@ -92,4 +94,6 @@ test('certified bootstrap keeps Exam Studio v5 and current IP/premium layers in 
   assert.match(sw,/premium-comfort-v2\.css/);
   assert.match(sw,/ip-model-library-v6\.js/);
   assert.match(sw,/practice-premium-v6\.css/);
+  assert.match(sw,/practice-review-v7\.js/);
+  assert.match(sw,/practice-review-v7\.css/);
 });
