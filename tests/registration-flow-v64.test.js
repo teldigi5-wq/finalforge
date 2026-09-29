@@ -16,6 +16,7 @@ const premiumAuthCss=fs.readFileSync('assets/auth-premium-v9.css','utf8');
 const mobilePremiumV10=fs.readFileSync('assets/auth-mobile-premium-v10.css','utf8');
 const desktopPremiumV11=fs.readFileSync('assets/auth-desktop-premium-v11.css','utf8');
 const unifiedAuthV12=fs.readFileSync('assets/auth-responsive-unified-v12.css','utf8');
+const premiumAuthV13=fs.readFileSync('assets/auth-responsive-premium-v13.css','utf8');
 const viewportJs=fs.readFileSync('assets/auth-mobile-viewport-v1.js','utf8');
 const loader=fs.readFileSync('assets/core-loader.js','utf8');
 const rules=fs.readFileSync('firebase/firestore.rules','utf8');
@@ -65,14 +66,16 @@ test('browser auth uses only server activation and restart APIs',()=>{
   assert.doesNotMatch(auth,/transaction\.set\(claimRef/);
 });
 
-test('auth DOM layer is one-shot, removes manual email editing and loads final responsive contracts',()=>{
+test('auth DOM layer is one-shot, removes manual email editing and enforces one final style owner',()=>{
   assert.doesNotThrow(()=>new Function(dom));
   assert.match(dom,/derived\.closest\('label'\)/);
   assert.match(dom,/replaceWith\(identity\)/);
   assert.match(dom,/20 min/);
   assert.match(dom,/verifyRestartBtn/);
-  assert.match(dom,/auth-desktop-premium-v11\.css/);
-  assert.match(dom,/auth-responsive-unified-v12\.css/);
+  assert.match(dom,/auth-responsive-premium-v13\.css/);
+  assert.match(dom,/settleAuthStyleOrder/);
+  assert.match(dom,/auth-system-v2\\\.css/);
+  assert.match(dom,/finalforge-ready/);
   assert.doesNotMatch(dom,/MutationObserver/);
   assert.doesNotMatch(dom,/setInterval/);
 });
@@ -159,6 +162,21 @@ test('unified auth v12 keeps signup reachable across desktop, compact laptop, ta
   assert.doesNotMatch(unifiedAuthV12,/animation\s*:\s*[^;]*infinite/i);
 });
 
+test('premium auth v13 is the final fluid layout owner across desktop, tablet, phone and landscape',()=>{
+  assert.match(premiumAuthV13,/Auth Responsive Premium v13/);
+  assert.match(premiumAuthV13,/grid-template-columns:minmax\(0,\.92fr\) minmax\(560px,1\.08fr\)/);
+  assert.match(premiumAuthV13,/@media \(min-width:1181px\) and \(max-height:820px\)/);
+  assert.match(premiumAuthV13,/@media \(max-width:1180px\)/);
+  assert.match(premiumAuthV13,/@media \(max-width:720px\)/);
+  assert.match(premiumAuthV13,/@media \(max-width:950px\) and \(max-height:520px\) and \(orientation:landscape\)/);
+  assert.match(premiumAuthV13,/100dvh/);
+  assert.match(premiumAuthV13,/scroll-margin-bottom:42vh/);
+  assert.match(premiumAuthV13,/font-size:16px!important/);
+  assert.match(premiumAuthV13,/pointer-events:none!important/);
+  assert.match(premiumAuthV13,/prefers-reduced-motion:reduce/);
+  assert.doesNotMatch(premiumAuthV13,/animation\s*:\s*[^;]*infinite/i);
+});
+
 test('mobile auth viewport recovery is event-driven and keyboard-aware',()=>{
   assert.doesNotThrow(()=>new Function(viewportJs));
   assert.match(viewportJs,/visualViewport/);
@@ -169,15 +187,16 @@ test('mobile auth viewport recovery is event-driven and keyboard-aware',()=>{
   assert.doesNotMatch(viewportJs,/setInterval/);
 });
 
-test('service worker advances v69 and treats all final auth assets as critical',()=>{
-  assert.match(sw,/finalforge-v69-auth-responsive-unified/);
+test('service worker advances v70 and makes v13 the only final auth cache layer',()=>{
+  assert.match(sw,/finalforge-v70-auth-responsive-premium/);
   assert.match(sw,/auth-flow-dom-v1\.js/);
   assert.match(sw,/mobile-premium-v7\.css/);
   assert.match(sw,/auth-mobile-compact-v8\.css/);
   assert.match(sw,/auth-premium-v9\.css/);
   assert.match(sw,/auth-mobile-premium-v10\.css/);
-  assert.match(sw,/auth-desktop-premium-v11\.css/);
-  assert.match(sw,/auth-responsive-unified-v12\.css/);
+  assert.match(sw,/auth-responsive-premium-v13\.css/);
+  assert.doesNotMatch(sw,/\.\/assets\/auth-desktop-premium-v11\.css/);
+  assert.doesNotMatch(sw,/\.\/assets\/auth-responsive-unified-v12\.css/);
   assert.match(sw,/auth-mobile-viewport-v1\.js/);
   assert.match(sw,/study-room\.webp/);
   assert.match(sw,/pathname\.startsWith\('\/api\/'\)/);
