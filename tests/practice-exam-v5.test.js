@@ -71,7 +71,7 @@ test('premium comfort layer protects click targets and reduces glare',()=>{
   assert.doesNotMatch(comfort,/animation\s*:\s*[^;]*infinite/i);
 });
 
-test('certified bootstrap keeps Exam Studio v5, smart review and Java workspace through v73',()=>{
+test('certified bootstrap keeps Exam Studio v5, smart review, Java workspace and adaptive practice through v74',()=>{
   assert.doesNotThrow(()=>new Function(stability));
   assert.match(loader,/ip-final-blueprint-v5\.js/);
   assert.match(loader,/practice-exam-v5\.js/);
@@ -87,10 +87,12 @@ test('certified bootstrap keeps Exam Studio v5, smart review and Java workspace 
   assert.match(loader,/practice-code-workspace-v8\.js/);
   assert.match(loader,/practice-adaptive-v9\.css/);
   assert.match(loader,/practice-adaptive-v9\.js/);
-  assert.match(loader,/product-v73-adaptive-practice/);
+  assert.match(loader,/student-readiness-v10\.css/);
+  assert.match(loader,/student-readiness-v10\.js/);
+  assert.match(loader,/product-v74-student-readiness/);
   assert.match(loader,/auth-premium-v9\.css/);
   assert.match(loader,/auth-mobile-premium-v10\.css/);
-  assert.match(sw,/finalforge-v73-adaptive-practice/);
+  assert.match(sw,/finalforge-v74-student-readiness/);
   assert.match(sw,/ip-final-blueprint-v5\.js/);
   assert.match(sw,/practice-exam-v5\.js/);
   assert.match(sw,/practice-premium-v5\.css/);
@@ -104,4 +106,6 @@ test('certified bootstrap keeps Exam Studio v5, smart review and Java workspace 
   assert.match(sw,/practice-code-workspace-v8\.css/);
   assert.match(sw,/practice-adaptive-v9\.js/);
   assert.match(sw,/practice-adaptive-v9\.css/);
+  assert.match(sw,/student-readiness-v10\.js/);
+  assert.match(sw,/student-readiness-v10\.css/);
 });
