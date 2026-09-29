@@ -71,17 +71,23 @@ test('premium comfort layer protects click targets and reduces glare',()=>{
   assert.doesNotMatch(comfort,/animation\s*:\s*[^;]*infinite/i);
 });
 
-test('certified bootstrap actively loads Exam Studio v5 and comfort assets',()=>{
+test('certified bootstrap actively loads Exam Studio v5 plus current v62 IP/premium layers',()=>{
   assert.doesNotThrow(()=>new Function(stability));
   assert.match(loader,/ip-final-blueprint-v5\.js/);
   assert.match(loader,/practice-exam-v5\.js/);
   assert.match(loader,/practice-premium-v5\.css/);
   assert.match(loader,/premium-studyhub-v2\.css/);
   assert.match(loader,/premium-comfort-v1\.css/);
-  assert.match(loader,/premium-comfort-v59/);
-  assert.match(sw,/finalforge-v59-premium-comfort/);
+  assert.match(loader,/premium-comfort-v2\.css/);
+  assert.match(loader,/ip-model-library-v6\.js/);
+  assert.match(loader,/practice-premium-v6\.css/);
+  assert.match(loader,/ip-library-premium-v62/);
+  assert.match(sw,/finalforge-v62-ip-library-premium/);
   assert.match(sw,/ip-final-blueprint-v5\.js/);
   assert.match(sw,/practice-exam-v5\.js/);
   assert.match(sw,/practice-premium-v5\.css/);
   assert.match(sw,/premium-comfort-v1\.css/);
+  assert.match(sw,/premium-comfort-v2\.css/);
+  assert.match(sw,/ip-model-library-v6\.js/);
+  assert.match(sw,/practice-premium-v6\.css/);
 });
