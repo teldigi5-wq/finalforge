@@ -25,6 +25,7 @@ jobs:
         run: |
           set -euo pipefail
           node --check assets/auth.js
+          node --check assets/account-security-v1.js
           node --check assets/appearance-v1.js
           node --check assets/theme-toggle-stability-v1.js
           node --check assets/stability-runtime-v1.js
@@ -43,7 +44,7 @@ jobs:
           node --check api/_resource-url-core.js
           node --check azure-api/src/vercel/_resource-url-core.js
           node --check sw.js
-          node --test tests/auth-runtime-v2.test.js tests/auth-responsive-theme.test.js tests/premium-ui-ip-extension.test.js tests/practice-exam-v5.test.js tests/practice-interaction-fix.test.js tests/practice-timer-comfort.test.js tests/ip-model-library-v6.test.js tests/resource-url-core.test.js tests/resource-delivery-boundary.test.js
+          node --test tests/auth-runtime-v2.test.js tests/auth-responsive-theme.test.js tests/account-security-v1.test.js tests/premium-ui-ip-extension.test.js tests/practice-exam-v5.test.js tests/practice-interaction-fix.test.js tests/practice-timer-comfort.test.js tests/ip-model-library-v6.test.js tests/resource-url-core.test.js tests/resource-delivery-boundary.test.js
 
       - name: Prepare public frontend bundle
         shell: bash
@@ -68,6 +69,8 @@ jobs:
           test -f azure-static/resource-opening.html
           test -f azure-static/staticwebapp.config.json
           test -f azure-static/assets/auth.js
+          test -f azure-static/assets/account-security-v1.js
+          test -f azure-static/assets/account-security-v1.css
           test -f azure-static/assets/auth-system-v2.css
           test -f azure-static/assets/auth-responsive-hotfix-v1.css
           test -f azure-static/assets/stability-runtime-v1.js
@@ -96,7 +99,7 @@ jobs:
           test -f azure-static/assets/resource-delivery-v1.js
           test -f azure-static/mock-papers/index.html
 
-          echo "Prepared allowlisted FinalForge IP model-library v6, premium review, timer/comfort, resource-access and Workspace v3 bundle."
+          echo "Prepared allowlisted FinalForge account-security v63, IP model-library v6, premium review, timer/comfort, resource-access and Workspace v3 bundle."
 
       - name: Build And Deploy
         id: builddeploy
