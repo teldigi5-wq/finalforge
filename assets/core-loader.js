@@ -37,7 +37,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
 })();
 
 (async()=>{
-  const VERSION='premium-comfort-v59';
+  const VERSION='premium-interaction-v60';
   const fail=msg=>{
     document.documentElement.classList.remove('ff-auth-restoring');
     console.error('[FinalForge]',msg);
@@ -107,7 +107,8 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
       loadStyle('assets/premium-studyhub-v1.css'),
       loadStyle('assets/premium-studyhub-v2.css'),
       loadStyle('assets/practice-premium-v5.css'),
-      loadStyle('assets/premium-comfort-v1.css')
+      loadStyle('assets/premium-comfort-v1.css'),
+      loadStyle('assets/practice-interaction-fix-v1.css')
     ]);
 
     const firebaseSdkReady=(async()=>{
@@ -154,8 +155,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
     await loadScript('assets/appearance-v1.js');
     await loadScript('assets/theme-toggle-stability-v1.js');
 
-    /* Practice data extensions first, then Exam Studio v5 becomes the single active runner. */
-    await loadScript('assets/practice-exam-v4.js');
+    /* Exam Studio v5 is the only live practice runner. The v4 runner is intentionally retired. */
     await loadScript('assets/ip-paper-extension-v1.js');
     await loadScript('assets/ip-challenge-v2.js');
     await loadScript('assets/ip-final-blueprint-v5.js');
@@ -173,6 +173,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
 
     /* Small functional navigation guards only; no decorative scanners/observers. */
     await loadScript('assets/practice-stability-v1.js');
+    await loadScript('assets/practice-interaction-fix-v1.js');
     await loadScript('assets/mobile-navigation-runtime-v2.js');
     await loadScript('assets/mobile-scroll-recovery-v1.js');
 
