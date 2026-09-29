@@ -72,6 +72,7 @@ jobs:
           test -f azure-static/assets/premium-shell-v1.css
           test -f azure-static/assets/premium-studyhub-v1.css
           test -f azure-static/assets/premium-studyhub-v2.css
+          test -f azure-static/assets/premium-comfort-v1.css
           test -f azure-static/assets/premium-ui-v1.js
           test -f azure-static/assets/ip-paper-extension-v1.js
           test -f azure-static/assets/ip-challenge-v2.js
@@ -85,7 +86,7 @@ jobs:
           test -f azure-static/assets/resource-delivery-v1.js
           test -f azure-static/mock-papers/index.html
 
-          echo "Prepared allowlisted FinalForge premium resource-access, Student Workspace v3 and Exam Studio v5 bundle."
+          echo "Prepared allowlisted FinalForge premium comfort, resource-access, Student Workspace v3 and Exam Studio v5 bundle."
 
       - name: Build And Deploy
         id: builddeploy
