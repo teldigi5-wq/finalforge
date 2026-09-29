@@ -38,7 +38,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
 })();
 
 (async()=>{
-  const VERSION='registration-mobile-v64';
+  const VERSION='registration-mobile-v65';
   const fail=msg=>{
     document.documentElement.classList.remove('ff-auth-restoring');
     console.error('[FinalForge]',msg);
@@ -113,7 +113,8 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
       loadStyle('assets/premium-comfort-v2.css'),
       loadStyle('assets/practice-premium-v6.css'),
       loadStyle('assets/account-security-v1.css'),
-      loadStyle('assets/mobile-premium-v7.css')
+      loadStyle('assets/mobile-premium-v7.css'),
+      loadStyle('assets/auth-mobile-compact-v8.css')
     ]);
 
     const firebaseSdkReady=(async()=>{
@@ -176,6 +177,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
     await firebaseSdkReady;
     await loadScript('assets/auth-flow-dom-v1.js');
     await loadScript('assets/auth.js');
+    await loadScript('assets/auth-mobile-viewport-v1.js');
     await loadScript('assets/account-security-v1.js');
 
     /* Small functional navigation guards only; no decorative scanners/observers. */
