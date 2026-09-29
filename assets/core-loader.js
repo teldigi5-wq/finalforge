@@ -15,16 +15,29 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
   const style=document.createElement('style');
   style.id='ff-session-restore-critical';
   style.textContent=`
-    html.ff-auth-restoring body.auth-pending .auth-shell{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
-    html.ff-auth-restoring body.auth-pending #authGate{display:grid!important;place-items:center!important}
-    html.ff-auth-restoring body.auth-pending #authGate::after{content:'Restoring your session…'!important;position:fixed!important;z-index:80!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;padding:.78rem 1rem!important;border:1px solid rgba(120,158,213,.22)!important;border-radius:999px!important;background:rgba(8,18,33,.98)!important;color:#dce9f8!important;font:750 .82rem/1.2 Inter,ui-sans-serif,system-ui,sans-serif!important;pointer-events:none!important}
-    html[data-theme='light'].ff-auth-restoring body.auth-pending #authGate::after{border-color:#d0deeb!important;background:rgba(255,255,255,.98)!important;color:#27415f!important}
+    html.ff-auth-restoring body.auth-pending .auth-shell,
+    body.auth-pending #authGate[data-auth-state='initializing'] .auth-shell,
+    body.auth-pending #authGate[data-auth-state='authenticating'] .auth-shell{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+    html.ff-auth-restoring body.auth-pending #authGate,
+    body.auth-pending #authGate[data-auth-state='initializing'],
+    body.auth-pending #authGate[data-auth-state='authenticating']{display:grid!important;place-items:center!important}
+    html.ff-auth-restoring body.auth-pending #authGate::before,
+    body.auth-pending #authGate[data-auth-state='initializing']::before,
+    body.auth-pending #authGate[data-auth-state='authenticating']::before{content:''!important;position:fixed!important;z-index:80!important;left:50%!important;top:calc(50% - 30px)!important;width:34px!important;height:34px!important;margin:-17px 0 0 -17px!important;border:2px solid rgba(91,157,255,.18)!important;border-top-color:#5b9dff!important;border-radius:50%!important;animation:ffRestoreSpin .8s linear infinite!important;pointer-events:none!important}
+    html.ff-auth-restoring body.auth-pending #authGate::after,
+    body.auth-pending #authGate[data-auth-state='initializing']::after,
+    body.auth-pending #authGate[data-auth-state='authenticating']::after{content:'Restoring your secure session…'!important;position:fixed!important;z-index:80!important;left:50%!important;top:calc(50% + 30px)!important;transform:translate(-50%,-50%)!important;padding:.72rem .95rem!important;border:1px solid rgba(120,158,213,.18)!important;border-radius:12px!important;background:rgba(8,18,33,.92)!important;color:#dce9f8!important;box-shadow:0 18px 55px rgba(0,0,0,.22)!important;font:750 .8rem/1.2 Inter,ui-sans-serif,system-ui,sans-serif!important;letter-spacing:.01em!important;pointer-events:none!important}
+    html[data-theme='light'].ff-auth-restoring body.auth-pending #authGate::after,
+    html[data-theme='light'] body.auth-pending #authGate[data-auth-state='initializing']::after,
+    html[data-theme='light'] body.auth-pending #authGate[data-auth-state='authenticating']::after{border-color:#d0deeb!important;background:rgba(255,255,255,.96)!important;color:#27415f!important;box-shadow:0 18px 45px rgba(43,72,107,.12)!important}
+    @keyframes ffRestoreSpin{to{transform:rotate(360deg)}}
+    @media(prefers-reduced-motion:reduce){html.ff-auth-restoring body.auth-pending #authGate::before,body.auth-pending #authGate[data-auth-state='initializing']::before,body.auth-pending #authGate[data-auth-state='authenticating']::before{animation:none!important}}
   `;
   document.head.appendChild(style);
 })();
 
 (async()=>{
-  const VERSION='workspace-v3';
+  const VERSION='workspace-v3-1';
   const fail=msg=>{
     document.documentElement.classList.remove('ff-auth-restoring');
     console.error('[FinalForge]',msg);

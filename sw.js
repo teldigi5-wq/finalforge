@@ -1,4 +1,5 @@
-const C='finalforge-v54-workspace-v3';
+// Previous certified cache: finalforge-v54-workspace-v3
+const C='finalforge-v55-session-resource-polish';
 
 const CORE=[
   './','./index.html','./verify.html','./manifest.webmanifest',
