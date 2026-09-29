@@ -1,5 +1,5 @@
-/* FinalForge private resource delivery v3.
-   Browser sends only stable resource IDs; signed URLs are never persisted. */
+/* FinalForge private resource delivery v4.
+   Browser sends only stable resource IDs; signed URLs and ID tokens are never persisted. */
 (()=>{
   'use strict';
   const TIMETABLE_ID='official-timetable-v3-2026-09-15';
@@ -49,10 +49,8 @@
     }catch{}
   }
 
-  async function requestSignedUrl(resourceId){
-    const user=window.firebase?.apps?.length?window.firebase.auth().currentUser:null;
-    if(!user){const error=new Error('Authentication required.');error.code='AUTH_REQUIRED';error.status=401;throw error}
-    const token=await user.getIdToken();
+  async function signedUrlResponse(user,resourceId,{forceRefresh=true}={}){
+    const token=await user.getIdToken(forceRefresh);
     const controller=typeof AbortController!=='undefined'?new AbortController():null;
     const timer=controller?setTimeout(()=>controller.abort(),REQUEST_TIMEOUT_MS):0;
     try{
@@ -65,25 +63,50 @@
         signal:controller?.signal
       });
       const payload=await response.json().catch(()=>({}));
-      if(!response.ok||typeof payload.url!=='string'){
-        const error=new Error(payload.error||'Resource request failed.');
-        error.status=response.status;
-        error.code=String(payload.code||'RESOURCE_UNAVAILABLE');
-        throw error;
-      }
-      const target=new URL(payload.url);
-      if(target.protocol!=='https:'||target.origin!==STORAGE_ORIGIN)throw Object.assign(new Error('Invalid resource destination.'),{code:'INVALID_RESOURCE_URL'});
-      return target.href;
+      return {response,payload};
     }finally{
       if(timer)clearTimeout(timer);
     }
+  }
+
+  async function requestSignedUrl(resourceId){
+    let user=window.firebase?.apps?.length?window.firebase.auth().currentUser:null;
+    if(!user){const error=new Error('Authentication required.');error.code='AUTH_REQUIRED';error.status=401;throw error}
+
+    let result=await signedUrlResponse(user,resourceId,{forceRefresh:true});
+
+    // A stale cached session should recover once without weakening server-side
+    // revocation checks. If the refreshed token is still rejected, surface the
+    // real server result instead of looping or silently downgrading verification.
+    if(result.response.status===401){
+      try{
+        await user.reload();
+        user=window.firebase.auth().currentUser||user;
+        result=await signedUrlResponse(user,resourceId,{forceRefresh:true});
+      }catch(reloadError){
+        const error=new Error('Authentication required.');
+        error.code='AUTH_REQUIRED';error.status=401;error.cause=reloadError;
+        throw error;
+      }
+    }
+
+    const {response,payload}=result;
+    if(!response.ok||typeof payload.url!=='string'){
+      const error=new Error(payload.error||'Resource request failed.');
+      error.status=response.status;
+      error.code=String(payload.code||'RESOURCE_UNAVAILABLE');
+      throw error;
+    }
+    const target=new URL(payload.url);
+    if(target.protocol!=='https:'||target.origin!==STORAGE_ORIGIN)throw Object.assign(new Error('Invalid resource destination.'),{code:'INVALID_RESOURCE_URL'});
+    return target.href;
   }
 
   function errorReason(error){
     if(error?.name==='AbortError')return'timeout';
     if(error?.status===401||error?.code==='AUTH_REQUIRED')return'auth';
     if(error?.status===403||error?.code==='ACCESS_DENIED')return'access';
-    if(error?.code==='AUTHZ_UNAVAILABLE')return'authz';
+    if(error?.code==='AUTH_VERIFY_UNAVAILABLE'||error?.code==='AUTHZ_UNAVAILABLE')return'authz';
     if(error?.status===404||error?.code==='RESOURCE_NOT_FOUND')return'missing';
     if(error?.code==='STORAGE_UNAVAILABLE'||error?.status===503)return'storage';
     return'unavailable';
@@ -91,9 +114,9 @@
 
   function toastForReason(reason){
     return ({
-      auth:'Sign in again before opening protected resources.',
+      auth:'Your secure session needs to be renewed. Return to FinalForge and sign in again.',
       access:'Your approved student access could not be verified. Refresh once and try again.',
-      authz:'Resource verification is temporarily unavailable. Please try again.',
+      authz:'The secure verification service is temporarily unavailable. Please try again.',
       missing:'This resource is not currently available.',
       storage:'Private resource storage is temporarily unavailable. Please try again.',
       timeout:'Resource opening timed out. Please try again.',
