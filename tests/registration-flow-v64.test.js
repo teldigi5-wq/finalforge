@@ -187,8 +187,8 @@ test('mobile auth viewport recovery is event-driven and keyboard-aware',()=>{
   assert.doesNotMatch(viewportJs,/setInterval/);
 });
 
-test('v71 product cache keeps v13 as the single final auth owner',()=>{
-  assert.match(sw,/finalforge-v71-smart-exam-review/);
+test('v72 product cache keeps v13 as the single final auth owner',()=>{
+  assert.match(sw,/finalforge-v72-java-workspace/);
   assert.match(sw,/auth-flow-dom-v1\.js/);
   assert.match(sw,/mobile-premium-v7\.css/);
   assert.match(sw,/auth-mobile-compact-v8\.css/);
@@ -200,7 +200,7 @@ test('v71 product cache keeps v13 as the single final auth owner',()=>{
   assert.match(sw,/auth-mobile-viewport-v1\.js/);
   assert.match(sw,/study-room\.webp/);
   assert.match(sw,/pathname\.startsWith\('\/api\/'\)/);
-  assert.match(loader,/product-v71-smart-review/);
+  assert.match(loader,/product-v72-java-workspace/);
   assert.match(loader,/auth-mobile-compact-v8\.css/);
   assert.match(loader,/auth-premium-v9\.css/);
   assert.match(loader,/auth-mobile-premium-v10\.css/);
