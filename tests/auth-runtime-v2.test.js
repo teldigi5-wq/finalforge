@@ -11,9 +11,10 @@ function occurrences(source, needle) {
   return source.split(needle).length - 1;
 }
 
-test('auth runtime parses and declares one canonical v2 owner', () => {
+test('auth runtime parses and keeps one canonical Firebase owner', () => {
   assert.doesNotThrow(() => new Function(auth));
   assert.match(auth, /FINALFORGE_AUTH_RUNTIME_V2/);
+  assert.match(auth, /version: '3\.0\.0'/);
   assert.equal(occurrences(auth, 'onAuthStateChanged('), 1);
 });
 
@@ -34,18 +35,29 @@ test('auth operations are timeout-bounded and always recover form controls', () 
   assert.match(auth, /Secure sign-in is taking longer than expected/);
 });
 
-test('student entitlement checks remain fail closed', () => {
+test('student activation is server certified instead of browser-created claims', () => {
+  assert.match(auth, /fetch\(path/);
+  assert.match(auth, /'X-FinalForge-Token': token/);
+  assert.match(auth, /postAuthenticated\('\/api\/activate-account'/);
   assert.match(auth, /getIdTokenResult\(true\)/);
   assert.match(auth, /token\.claims\.email_verified !== true/);
-  assert.match(auth, /collection\('student_claims'\)/);
-  assert.match(auth, /data\.role !== 'student'/);
-  assert.match(auth, /data\.disabled === true/);
-  assert.match(auth, /claimSnap\.data\(\)\?\.uid !== fresh\.uid/);
+  assert.doesNotMatch(auth, /transaction\.set\(claimRef/);
+  assert.doesNotMatch(auth, /collection\('student_claims'\)\.doc/);
 });
 
-test('loader has one auth owner and no legacy auth interception layers', () => {
+test('signup derives SLIIT email and sends only Student ID plus password', () => {
+  assert.match(auth, /const email = validStudentId\(id\) \? studentEmail\(id\) : ''/);
+  assert.match(auth, /body: JSON\.stringify\(\{ studentId: id, password \}\)/);
+  assert.doesNotMatch(auth, /body: JSON\.stringify\(\{ studentId: id, sliitEmail/);
+  assert.match(auth, /20-minute/);
+  assert.match(auth, /verifyRestartBtn/);
+});
+
+test('loader has one auth owner and ships simplified auth flow UI', () => {
   assert.doesNotThrow(() => new Function(loader));
   assert.match(loader, /loadStyle\('assets\/auth-system-v2\.css'\)/);
+  assert.match(loader, /loadStyle\('assets\/mobile-premium-v7\.css'\)/);
+  assert.match(loader, /loadScript\('assets\/auth-flow-dom-v1\.js'\)/);
   assert.match(loader, /loadScript\('assets\/auth\.js'\)/);
   assert.doesNotMatch(loader, /loadScript\('assets\/session-restore-v1\.js'\)/);
   assert.doesNotMatch(loader, /loadScript\('assets\/signup-fix-v2\.js'\)/);
