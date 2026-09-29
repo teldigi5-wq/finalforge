@@ -29,7 +29,9 @@ export function isAuthorizedResourceUser(decoded, entitlement) {
 
   return /^IT\d{8}$/.test(studentId)
     && profile?.role === 'student'
-    && profile?.disabled === false
+    // Legacy verified profiles may predate the disabled field. Only an explicit
+    // disabled=true is disabled; this matches the canonical auth runtime.
+    && profile?.disabled !== true
     && profile?.emailVerified === true
     && normalizeEmail(profile?.sliitEmail) === email
     && allowlist?.active === true
@@ -50,6 +52,10 @@ function bodySize(body) {
   catch { return MAX_BODY_BYTES + 1; }
 }
 
+function error(res, status, message, code) {
+  return res.status(status).json({ error: message, code });
+}
+
 export function createResourceUrlHandler({ verifyIdToken, loadStudentEntitlement, getResourceById, signResource }) {
   if (![verifyIdToken, loadStudentEntitlement, getResourceById, signResource].every(fn => typeof fn === 'function')) {
     throw new TypeError('Resource handler dependencies are incomplete');
@@ -58,49 +64,49 @@ export function createResourceUrlHandler({ verifyIdToken, loadStudentEntitlement
   return async function resourceUrlHandler(req, res) {
     setPrivateHeaders(res);
 
-    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed.' });
+    if (req.method !== 'POST') return error(res, 405, 'Method not allowed.', 'METHOD_NOT_ALLOWED');
 
     const expectedOrigin = `https://${header(req, 'host') || ''}`;
-    if (header(req, 'origin') !== expectedOrigin) return res.status(403).json({ error: 'Invalid origin.' });
+    if (header(req, 'origin') !== expectedOrigin) return error(res, 403, 'Invalid origin.', 'INVALID_ORIGIN');
 
     const contentLength = Number(header(req, 'content-length') || 0);
     if (contentLength > MAX_BODY_BYTES || bodySize(req.body) > MAX_BODY_BYTES) {
-      return res.status(413).json({ error: 'Request too large.' });
+      return error(res, 413, 'Request too large.', 'REQUEST_TOO_LARGE');
     }
 
     const body = req.body && typeof req.body === 'object' && !Array.isArray(req.body) ? req.body : {};
     const fields = Object.keys(body);
-    if (fields.some(key => key !== 'resourceId')) return res.status(400).json({ error: 'Unsupported request fields.' });
+    if (fields.some(key => key !== 'resourceId')) return error(res, 400, 'Unsupported request fields.', 'INVALID_REQUEST');
 
     const resourceId = String(body.resourceId || '').trim();
-    if (!RESOURCE_ID_RE.test(resourceId)) return res.status(400).json({ error: 'Invalid resource ID.' });
+    if (!RESOURCE_ID_RE.test(resourceId)) return error(res, 400, 'Invalid resource ID.', 'INVALID_RESOURCE_ID');
 
     const token = tokenFromAuthorization(header(req, 'authorization'));
-    if (!token) return res.status(401).json({ error: 'Authentication required.' });
+    if (!token) return error(res, 401, 'Authentication required.', 'AUTH_REQUIRED');
 
     let decoded;
     try {
       decoded = await verifyIdToken(token);
     } catch {
-      return res.status(401).json({ error: 'Authentication required.' });
+      return error(res, 401, 'Authentication required.', 'AUTH_REQUIRED');
     }
 
     let entitlement = null;
     if (decoded?.admin !== true) {
       try { entitlement = await loadStudentEntitlement(decoded); }
-      catch { return res.status(503).json({ error: 'Resource authorization is temporarily unavailable.' }); }
+      catch { return error(res, 503, 'Resource authorization is temporarily unavailable.', 'AUTHZ_UNAVAILABLE'); }
     }
-    if (!isAuthorizedResourceUser(decoded, entitlement)) return res.status(403).json({ error: 'Resource access denied.' });
+    if (!isAuthorizedResourceUser(decoded, entitlement)) return error(res, 403, 'Resource access denied.', 'ACCESS_DENIED');
 
     const resource = getResourceById(resourceId);
-    if (!resource) return res.status(404).json({ error: 'Resource not found.' });
+    if (!resource) return error(res, 404, 'Resource not found.', 'RESOURCE_NOT_FOUND');
 
     try {
       const signed = await signResource(resource.storagePath);
       if (!signed || typeof signed.url !== 'string' || !signed.url.startsWith('https://')) throw new Error('Invalid signed URL');
       return res.status(200).json({ url: signed.url, expiresIn: signed.expiresIn });
     } catch {
-      return res.status(503).json({ error: 'Resource is temporarily unavailable.' });
+      return error(res, 503, 'Resource is temporarily unavailable.', 'STORAGE_UNAVAILABLE');
     }
   };
 }

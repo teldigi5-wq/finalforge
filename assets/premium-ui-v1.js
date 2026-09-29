@@ -1,9 +1,9 @@
-/* FinalForge Premium UI v2 — calm, task-led, one-shot product refinement. */
+/* FinalForge Premium UI v2.1 — calm, task-led, one-shot product refinement. */
 (()=>{
   'use strict';
   if(window.FINALFORGE_PREMIUM_UI_V2)return;
-  window.FINALFORGE_PREMIUM_UI_V2=Object.freeze({version:'2.0.0',mode:'task-led'});
-  window.FINALFORGE_PREMIUM_UI_V1=window.FINALFORGE_PREMIUM_UI_V2; // compatibility alias for existing runtime certification
+  window.FINALFORGE_PREMIUM_UI_V2=Object.freeze({version:'2.1.0',mode:'task-led'});
+  window.FINALFORGE_PREMIUM_UI_V1=window.FINALFORGE_PREMIUM_UI_V2;
   const $=(s,r=document)=>r.querySelector(s);
   const $$=(s,r=document)=>[...r.querySelectorAll(s)];
   const icons={
@@ -18,6 +18,26 @@
     admin:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>'
   };
   const labels={home:'Home',modules:'Modules',resources:'Resources',practice:'Practice',schedule:'Schedule',planner:'Planner',roadmap:'Roadmap',analytics:'Analytics',admin:'Admin'};
+
+  function ensureStateStyles(){
+    if($('#ff-ui-state-normalizer'))return;
+    const style=document.createElement('style');
+    style.id='ff-ui-state-normalizer';
+    style.textContent=`
+      body.ff-authenticated .nav button{position:relative!important;overflow:hidden!important}
+      body.ff-authenticated .nav button::before,body.ff-authenticated .nav button::after{content:none!important;display:none!important}
+      body.ff-authenticated .nav button.active{box-shadow:none!important;border-color:rgba(94,143,218,.24)!important;background:linear-gradient(90deg,rgba(75,125,202,.12),rgba(75,125,202,.055))!important}
+      body.ff-authenticated .nav button.active .ff-nav-icon{color:#7fb1f6!important}
+      body.ff-authenticated .nav button.active .ff-nav-icon::before,body.ff-authenticated .nav button.active .ff-nav-icon::after{content:none!important;display:none!important}
+      body.ff-authenticated .nav button:focus-visible{outline:2px solid rgba(91,140,255,.46)!important;outline-offset:2px!important}
+      body.ff-authenticated .ff-resource-row:focus-within{border-color:rgba(91,140,255,.28)!important}
+      body.ff-authenticated .ff-resource-actions .btn[aria-busy='true']{cursor:progress!important;opacity:.82!important}
+      body.ff-authenticated .ff-btn-spinner{animation:ffButtonSpin .75s linear infinite!important}
+      @keyframes ffButtonSpin{to{transform:rotate(360deg)}}
+      @media(prefers-reduced-motion:reduce){body.ff-authenticated .ff-btn-spinner{animation:none!important}}
+    `;
+    document.head.appendChild(style);
+  }
 
   function daypart(){
     const hour=new Date().getHours();
@@ -74,6 +94,7 @@
 
   function refine(){
     document.documentElement.classList.add('ff-premium-ui-v2');
+    ensureStateStyles();
     refineTopbar();
     refineNavigation();
     refineHome();

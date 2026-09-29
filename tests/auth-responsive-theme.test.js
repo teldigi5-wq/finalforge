@@ -56,7 +56,8 @@ test('loader keeps stability mode and omits heavy decorative runtime layers',()=
 });
 
 test('service worker is bumped and stability plus workspace runtime are network-fresh critical',()=>{
-  assert.match(sw,/finalforge-v54-workspace-v3/);
+  assert.match(sw,/finalforge-v56-resource-access/);
+  assert.match(sw,/resource-opening\.html/);
   assert.match(sw,/stability-runtime-v1\.js/);
   assert.match(sw,/stability-mode-v1\.css/);
   assert.match(sw,/premium-ui-v1\.js/);

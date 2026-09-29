@@ -1,8 +1,8 @@
-// Previous certified cache: finalforge-v54-workspace-v3
-const C='finalforge-v55-session-resource-polish';
+// Previous certified cache: finalforge-v55-session-resource-polish
+const C='finalforge-v56-resource-access';
 
 const CORE=[
-  './','./index.html','./verify.html','./manifest.webmanifest',
+  './','./index.html','./verify.html','./resource-opening.html','./manifest.webmanifest',
   './assets/core-loader.js','./assets/account-storage-v1.js','./assets/resource-delivery-v1.js',
   './assets/app.js','./assets/past-papers-v1.js','./assets/appearance-v1.js','./assets/theme-toggle-stability-v1.js',
   './assets/practice-exam-v4.js','./assets/ip-paper-extension-v1.js','./assets/ip-challenge-v2.js','./assets/study-experience.js','./assets/stability-runtime-v1.js',

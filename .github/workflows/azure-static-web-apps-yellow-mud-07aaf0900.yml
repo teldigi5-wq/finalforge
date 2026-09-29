@@ -20,7 +20,7 @@ jobs:
           submodules: true
           lfs: false
 
-      - name: Verify auth and workspace runtime
+      - name: Verify auth, resource and workspace runtime
         shell: bash
         run: |
           set -euo pipefail
@@ -29,12 +29,15 @@ jobs:
           node --check assets/theme-toggle-stability-v1.js
           node --check assets/stability-runtime-v1.js
           node --check assets/premium-ui-v1.js
+          node --check assets/resource-delivery-v1.js
           node --check assets/ip-paper-extension-v1.js
           node --check assets/ip-challenge-v2.js
           node --check assets/workspace-v3.js
           node --check assets/core-loader.js
+          node --check api/_resource-url-core.js
+          node --check azure-api/src/vercel/_resource-url-core.js
           node --check sw.js
-          node --test tests/auth-runtime-v2.test.js tests/auth-responsive-theme.test.js tests/premium-ui-ip-extension.test.js
+          node --test tests/auth-runtime-v2.test.js tests/auth-responsive-theme.test.js tests/premium-ui-ip-extension.test.js tests/resource-url-core.test.js tests/resource-delivery-boundary.test.js
 
       - name: Prepare public frontend bundle
         shell: bash
@@ -43,7 +46,7 @@ jobs:
           rm -rf azure-static
           mkdir -p azure-static
 
-          cp index.html verify.html 404.html manifest.webmanifest sw.js staticwebapp.config.json azure-static/
+          cp index.html verify.html resource-opening.html 404.html manifest.webmanifest sw.js staticwebapp.config.json azure-static/
           cp -R assets azure-static/assets
           cp -R mock-papers azure-static/mock-papers
 
@@ -56,6 +59,7 @@ jobs:
           done
 
           test -f azure-static/index.html
+          test -f azure-static/resource-opening.html
           test -f azure-static/staticwebapp.config.json
           test -f azure-static/assets/auth.js
           test -f azure-static/assets/auth-system-v2.css
@@ -73,7 +77,7 @@ jobs:
           test -f azure-static/assets/resource-delivery-v1.js
           test -f azure-static/mock-papers/index.html
 
-          echo "Prepared allowlisted FinalForge Student Workspace v3 bundle."
+          echo "Prepared allowlisted FinalForge resource-access and Student Workspace v3 bundle."
 
       - name: Build And Deploy
         id: builddeploy

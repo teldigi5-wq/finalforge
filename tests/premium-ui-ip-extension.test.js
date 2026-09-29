@@ -20,6 +20,7 @@ test('premium and workspace UI layers parse and remain observer-free', () => {
     assert.doesNotMatch(source, /MutationObserver|setInterval/);
   }
   assert.match(premium, /FINALFORGE_PREMIUM_UI_V1/);
+  assert.match(premium, /ff-ui-state-normalizer/);
   assert.match(workspace, /FINALFORGE_WORKSPACE_V3/);
 });
 
@@ -77,7 +78,8 @@ test('loader and service worker ship workspace v3 without restoring heavy runtim
   assert.doesNotMatch(loader, /loadScript\('assets\/product-motion-v5\.js'\)/);
   assert.doesNotMatch(loader, /loadScript\('assets\/tailwind-runtime-v6\.js'\)/);
   assert.doesNotMatch(loader, /loadScript\('assets\/professional-workspace-v2\.js'\)/);
-  assert.match(sw, /finalforge-v54-workspace-v3/);
+  assert.match(sw, /finalforge-v56-resource-access/);
+  assert.match(sw, /resource-opening\.html/);
   assert.match(sw, /workspace-v3\.css/);
   assert.match(sw, /workspace-v3\.js/);
   assert.match(sw, /ip-challenge-v2\.js/);

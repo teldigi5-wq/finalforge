@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="color-scheme" content="dark light">
+  <title>FinalForge · Secure resource</title>
+  <style>
+    :root{--bg:#07111f;--panel:#0c1b2e;--panel2:#0a1728;--text:#f4f8ff;--muted:#91a6bf;--line:rgba(139,180,235,.16);--line2:rgba(91,157,255,.30);--blue:#5b9dff;--cyan:#58d8e8;--danger:#ff8796;--shadow:0 24px 70px rgba(0,0,0,.24)}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    body{min-height:100dvh;display:grid;place-items:center;padding:clamp(18px,4vw,48px);overflow-x:hidden;background:radial-gradient(720px 420px at 50% 20%,rgba(65,126,211,.12),transparent 70%),linear-gradient(145deg,#06101d,#081526)}
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;background-image:linear-gradient(rgba(128,164,214,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(128,164,214,.035) 1px,transparent 1px);background-size:56px 56px;mask-image:linear-gradient(to bottom,#000,transparent 80%)}
+    .shell{position:relative;width:min(520px,100%);padding:clamp(26px,5vw,42px);border:1px solid var(--line);border-radius:22px;background:linear-gradient(155deg,rgba(14,31,52,.97),rgba(8,20,36,.98));box-shadow:var(--shadow);text-align:left;overflow:hidden}
+    .shell::before{content:"";position:absolute;inset:0 0 auto;height:1px;background:linear-gradient(90deg,transparent,var(--blue),rgba(88,216,232,.55),transparent);opacity:.65}
+    .brand{display:flex;align-items:center;gap:11px;margin-bottom:32px;font-weight:820;letter-spacing:-.025em}.brand img{width:34px;height:34px;object-fit:contain;filter:drop-shadow(0 8px 18px rgba(56,138,255,.22))}
+    .state{display:grid;grid-template-columns:54px minmax(0,1fr);gap:17px;align-items:start}.visual{width:54px;height:54px;display:grid;place-items:center;border:1px solid var(--line);border-radius:16px;background:rgba(91,157,255,.08);color:#75b0ff}.visual svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.spinner{width:24px;height:24px;border:2px solid rgba(91,157,255,.18);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+    .copy{min-width:0}.eyebrow{margin:1px 0 8px;color:#7eb4fa;font-size:.69rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase}.copy h1{margin:0;font-size:clamp(1.35rem,4.4vw,1.75rem);line-height:1.12;letter-spacing:-.035em}.copy p{margin:11px 0 0;color:var(--muted);font-size:.92rem;line-height:1.65}.detail{margin-top:24px;padding-top:20px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:15px;color:var(--muted);font-size:.76rem}.secure{display:inline-flex;align-items:center;gap:8px}.secure i{width:7px;height:7px;border-radius:50%;background:#59d2aa;box-shadow:0 0 0 4px rgba(89,210,170,.08)}
+    .actions{display:none;margin-top:24px;gap:10px;flex-wrap:wrap}.actions.show{display:flex}.btn{min-height:44px;padding:0 16px;border:1px solid var(--line);border-radius:11px;background:rgba(116,152,205,.06);color:var(--text);font:750 .84rem/1 system-ui;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}.btn.primary{background:#4f82e8;border-color:rgba(91,140,255,.46);color:#fff}.btn:hover{border-color:var(--line2)}.error .visual{color:var(--danger);background:rgba(255,98,122,.07);border-color:rgba(255,117,137,.18)}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @media(max-width:520px){.shell{border-radius:18px}.state{grid-template-columns:1fr}.detail{align-items:flex-start;flex-direction:column}.actions.show{display:grid;grid-template-columns:1fr}.btn{width:100%}}
+    @media(prefers-reduced-motion:reduce){.spinner{animation:none;border-top-color:var(--blue)}}
+    @media(prefers-color-scheme:light){:root{--bg:#f2f6fb;--panel:#fff;--panel2:#f8fbff;--text:#15283f;--muted:#63788e;--line:rgba(45,78,118,.14);--line2:rgba(61,112,183,.28);--shadow:0 24px 60px rgba(48,77,111,.12)}body{background:radial-gradient(720px 420px at 50% 20%,rgba(65,126,211,.11),transparent 70%),linear-gradient(145deg,#f8fbff,#edf4fb)}.shell{background:linear-gradient(155deg,#fff,#f7fbff)}}
+  </style>
+</head>
+<body>
+  <main id="shell" class="shell" role="status" aria-live="polite">
+    <div class="brand"><img src="/assets/finalforge-logo.svg" alt=""><span>FinalForge</span></div>
+    <section class="state">
+      <div class="visual" id="visual"><span class="spinner" aria-hidden="true"></span></div>
+      <div class="copy"><div class="eyebrow" id="eyebrow">Protected library</div><h1 id="title">Opening secure resource</h1><p id="message">Verifying your access and preparing a short-lived protected link. This usually takes only a moment.</p></div>
+    </section>
+    <div class="actions" id="actions"><button class="btn primary" type="button" onclick="location.reload()">Try again</button><button class="btn" type="button" onclick="window.close()">Close tab</button></div>
+    <div class="detail"><span class="secure"><i aria-hidden="true"></i><span>Private resource delivery</span></span><span>FinalForge · Forge Your Academic Edge.</span></div>
+  </main>
+  <script>
+    (()=>{
+      const q=new URLSearchParams(location.search);const state=q.get('state')==='error'?'error':'loading';const reason=q.get('reason')||'';
+      if(state!=='error')return;
+      const messages={
+        auth:['Session needs attention','Return to FinalForge and sign in again before opening this resource.'],
+        access:['Access could not be verified','Your signed-in account could not be matched to an active approved student entitlement. Refresh FinalForge once, then try again.'],
+        authz:['Verification service unavailable','FinalForge could not verify your resource entitlement right now. Please try again in a moment.'],
+        missing:['Resource unavailable','This resource is not currently available in the protected library.'],
+        storage:['Resource service unavailable','Your account was verified, but the private file service could not prepare this resource. Please try again.'],
+        timeout:['Request took too long','The secure resource request timed out. Check your connection and try again.'],
+        unavailable:['Resource could not be opened','The protected resource could not be prepared. Please try again.']
+      };
+      const [title,message]=messages[reason]||messages.unavailable;document.getElementById('shell').classList.add('error');document.getElementById('eyebrow').textContent='Secure resource';document.getElementById('title').textContent=title;document.getElementById('message').textContent=message;document.getElementById('visual').innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5m0 3h.01M10.3 3.8 2.5 17.3A2 2 0 0 0 4.2 20h15.6a2 2 0 0 0 1.7-2.7L13.7 3.8a2 2 0 0 0-3.4 0Z"/></svg>';document.getElementById('actions').classList.add('show');
+    })();
+  </script>
+</body>
+</html>
