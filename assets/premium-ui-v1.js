@@ -1,10 +1,11 @@
-/* FinalForge Premium UI v2.3 — role-aware, stability-first premium study surface. */
+/* FinalForge Premium UI v2.3.1 — role-aware, event-driven, stability-first premium study surface. */
 (()=>{
   'use strict';
-  if(window.FINALFORGE_PREMIUM_UI_V23)return;
-  window.FINALFORGE_PREMIUM_UI_V23=Object.freeze({version:'2.3.0',mode:'role-aware-premium'});
-  window.FINALFORGE_PREMIUM_UI_V2=window.FINALFORGE_PREMIUM_UI_V23;
-  window.FINALFORGE_PREMIUM_UI_V1=window.FINALFORGE_PREMIUM_UI_V23;
+  if(window.FINALFORGE_PREMIUM_UI_V231)return;
+  window.FINALFORGE_PREMIUM_UI_V231=Object.freeze({version:'2.3.1',mode:'role-aware-premium'});
+  window.FINALFORGE_PREMIUM_UI_V23=window.FINALFORGE_PREMIUM_UI_V231;
+  window.FINALFORGE_PREMIUM_UI_V2=window.FINALFORGE_PREMIUM_UI_V231;
+  window.FINALFORGE_PREMIUM_UI_V1=window.FINALFORGE_PREMIUM_UI_V231;
 
   const $=(s,r=document)=>r.querySelector(s);
   const $$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -21,7 +22,6 @@
   };
   const labels={home:'Home',modules:'Modules',resources:'Resources',practice:'Practice',schedule:'Schedule',planner:'Planner',roadmap:'Roadmap',analytics:'Analytics',admin:'Admin'};
   const originalGo=typeof window.go==='function'?window.go.bind(window):null;
-  let roleObserver=null;
   let accessScheduled=false;
 
   function ensurePremiumSurface(){
@@ -30,7 +30,7 @@
     if(link)link.remove();
     link=document.createElement('link');
     link.rel='stylesheet';
-    link.href='assets/premium-studyhub-v2.css?v=role-premium-23';
+    link.href='assets/premium-studyhub-v2.css?v=role-premium-231';
     link.dataset.ffPremiumStudyhub='2';
     document.head.appendChild(link);
   }
@@ -48,7 +48,10 @@
       body.ff-authenticated .ff-resource-row:focus-within{border-color:rgba(91,140,255,.28)!important}
       body.ff-authenticated .ff-resource-actions .btn[aria-busy='true']{cursor:progress!important;opacity:.82!important}
       body.ff-authenticated .ff-btn-spinner{animation:ffButtonSpin .75s linear infinite!important}
+      body.ff-role-student #home .quick-dock{grid-template-columns:repeat(3,minmax(0,1fr))!important}
       @keyframes ffButtonSpin{to{transform:rotate(360deg)}}
+      @media(max-width:900px){body.ff-role-student #home .quick-dock{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+      @media(max-width:620px){body.ff-role-student #home .quick-dock{grid-template-columns:1fr!important}}
       @media(prefers-reduced-motion:reduce){body.ff-authenticated .ff-btn-spinner{animation:none!important}}
     `;
     document.head.appendChild(style);
@@ -89,9 +92,7 @@
     body.classList.toggle('ff-role-admin',admin);
     body.classList.toggle('ff-role-student',!admin);
 
-    if(!admin){
-      $$('[data-go="admin"]').forEach(node=>node.remove());
-    }
+    if(!admin)$$('[data-go="admin"]').forEach(node=>node.remove());
 
     roadmapControls().forEach(node=>{
       node.dataset.ffRoadmapControl='1';
@@ -117,6 +118,10 @@
     requestAnimationFrame(applyRoleAccess);
   }
 
+  function roleRefreshBurst(){
+    [0,220,650,1300,2600].forEach(delay=>setTimeout(scheduleRoleAccess,delay));
+  }
+
   function installRouteGuard(){
     if(window.FINALFORGE_ADMIN_ROUTE_GUARD||!originalGo)return;
     window.FINALFORGE_ADMIN_ROUTE_GUARD=true;
@@ -130,14 +135,16 @@
     };
   }
 
-  function observeRoleSignals(){
-    if(roleObserver)return;
-    roleObserver=new MutationObserver(scheduleRoleAccess);
-    const body=document.body,nav=$('#nav'),mobile=$('#mobileNav'),primary=$('#accountPrimary');
-    if(body)roleObserver.observe(body,{attributes:true,attributeFilter:['class']});
-    if(nav)roleObserver.observe(nav,{childList:true,subtree:false});
-    if(mobile)roleObserver.observe(mobile,{childList:true,subtree:false});
-    if(primary)roleObserver.observe(primary,{childList:true,characterData:true,subtree:true});
+  function bindRoleEvents(){
+    if(window.FINALFORGE_ROLE_EVENTS_BOUND)return;
+    window.FINALFORGE_ROLE_EVENTS_BOUND=true;
+    document.addEventListener('submit',roleRefreshBurst,true);
+    document.addEventListener('click',event=>{
+      if(event.target.closest?.('#authGate,#accountChip,[data-go],.account-menu'))roleRefreshBurst();
+    },true);
+    addEventListener('focus',scheduleRoleAccess,{passive:true});
+    addEventListener('pageshow',roleRefreshBurst,{passive:true});
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)roleRefreshBurst()});
   }
 
   function refineNavigation(){
@@ -192,12 +199,12 @@
     ensurePremiumSurface();
     ensureStateStyles();
     installRouteGuard();
-    observeRoleSignals();
+    bindRoleEvents();
     refineTopbar();
     refineNavigation();
     refineHome();
     refineQuickDock();
-    scheduleRoleAccess();
+    roleRefreshBurst();
   }
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',refine,{once:true});else refine();
@@ -205,7 +212,6 @@
   addEventListener('finalforge-after-navigate',event=>{
     if(['home','analytics','roadmap'].includes(event?.detail?.id))requestAnimationFrame(refineNavigation);
     if(event?.detail?.id==='home')requestAnimationFrame(()=>{refineHome();refineQuickDock()});
-    scheduleRoleAccess();
+    roleRefreshBurst();
   });
-  addEventListener('pageshow',scheduleRoleAccess,{passive:true});
 })();
