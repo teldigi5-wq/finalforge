@@ -2,21 +2,20 @@
 (()=>{
   'use strict';
   if(window.FINALFORGE_AUTH_FLOW_DOM_V1)return;
-  window.FINALFORGE_AUTH_FLOW_DOM_V1=Object.freeze({version:'1.1.0'});
+  window.FINALFORGE_AUTH_FLOW_DOM_V1=Object.freeze({version:'1.2.0'});
 
-  /* Auth is assembled from several historical visual layers. Load the certified
-     desktop + unified responsive contracts last so viewport behavior has one owner. */
-  function ensureFinalStyle(id,href){
-    if(document.getElementById(id))return;
+  /* Auth accumulated several historical visual layers. v13 is the single final
+     responsive/visual owner. Remove previous final-owner links, then load v13 last. */
+  function installFinalAuthStyle(){
+    document.querySelectorAll('link[data-finalforge-auth-final],#ff-auth-desktop-premium-v11,#ff-auth-responsive-unified-v12,#ff-auth-responsive-premium-v13').forEach(link=>link.remove());
     const link=document.createElement('link');
-    link.id=id;
+    link.id='ff-auth-responsive-premium-v13';
     link.rel='stylesheet';
-    link.href=href;
+    link.href='assets/auth-responsive-premium-v13.css?v=auth-responsive-v70';
     link.dataset.finalforgeAuthFinal='1';
     document.head.appendChild(link);
   }
-  ensureFinalStyle('ff-auth-desktop-premium-v11','assets/auth-desktop-premium-v11.css?v=auth-responsive-v69');
-  ensureFinalStyle('ff-auth-responsive-unified-v12','assets/auth-responsive-unified-v12.css?v=auth-responsive-v69');
+  installFinalAuthStyle();
 
   function install(){
     const signup=document.getElementById('signupForm');
