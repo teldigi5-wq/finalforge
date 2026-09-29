@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { createResourceUrlHandler, isAuthorizedResourceUser, tokenFromAuthorization } from '../api/_resource-url-core.js';
+import { createResourceUrlHandler, isAuthorizedResourceUser, tokenFromAuthorization, tokenFromPrivateHeader, tokenFromRequest } from '../api/_resource-url-core.js';
 
 function responseRecorder() {
   return {
@@ -19,7 +19,7 @@ function req(body = { resourceId: 'ffr1_0123456789abcdef' }, extra = {}) {
     headers: {
       host: 'finalforge-weld.vercel.app',
       origin: 'https://finalforge-weld.vercel.app',
-      authorization: 'Bearer valid-token',
+      'x-finalforge-id-token': 'valid-token',
       'content-length': '64',
       ...extraHeaders
     },
@@ -45,10 +45,18 @@ function deps(overrides = {}) {
   };
 }
 
-test('Bearer parser is strict', () => {
+test('Bearer parser is strict and dedicated token header is bounded', () => {
   assert.equal(tokenFromAuthorization('Bearer abc.def'), 'abc.def');
   assert.equal(tokenFromAuthorization('Basic abc'), '');
   assert.equal(tokenFromAuthorization('Bearer a b'), '');
+  assert.equal(tokenFromPrivateHeader('abc.def.ghi'), 'abc.def.ghi');
+  assert.equal(tokenFromPrivateHeader('abc def'), '');
+  assert.equal(tokenFromPrivateHeader('x'.repeat(9000)), '');
+});
+
+test('dedicated FinalForge token header is preferred with Authorization fallback', () => {
+  assert.equal(tokenFromRequest({ headers: { 'x-finalforge-id-token': 'private-token', authorization: 'Bearer fallback-token' } }), 'private-token');
+  assert.equal(tokenFromRequest({ headers: { authorization: 'Bearer fallback-token' } }), 'fallback-token');
 });
 
 test('student authorization mirrors verified profile/allowlist/claim boundary', () => {
@@ -81,6 +89,7 @@ test('handler returns only short-lived signed URL and private no-store headers',
   assert.equal(signedPath, 'resources/dcn/example.pdf');
   assert.match(res.headers['Cache-Control'], /no-store/);
   assert.match(res.headers['Cache-Control'], /private/);
+  assert.match(res.headers.Vary, /X-FinalForge-ID-Token/);
   assert.equal(JSON.stringify(res.payload).includes('resources/dcn/example.pdf'), false);
 });
 
@@ -100,7 +109,7 @@ test('resource existence is not disclosed before authentication and authorizatio
 
   const missingAuth = responseRecorder();
   const handler = createResourceUrlHandler(deps({ getResourceById }));
-  await handler(req({ resourceId: 'ffr1_ffffffffffffffff' }, { headers: { authorization: '' } }), missingAuth);
+  await handler(req({ resourceId: 'ffr1_ffffffffffffffff' }, { headers: { 'x-finalforge-id-token': '', authorization: '' } }), missingAuth);
   assert.equal(missingAuth.statusCode, 401);
   assert.equal(missingAuth.payload.code, 'AUTH_REQUIRED');
   assert.equal(lookedUp, false);
@@ -129,7 +138,7 @@ test('unknown stable resource IDs never reach storage signing', async () => {
 test('missing/revoked token fails closed', async () => {
   const missing = responseRecorder();
   const handler = createResourceUrlHandler(deps());
-  await handler(req(undefined, { headers: { authorization: '' } }), missing);
+  await handler(req(undefined, { headers: { 'x-finalforge-id-token': '', authorization: '' } }), missing);
   assert.equal(missing.statusCode, 401);
   assert.equal(missing.payload.code, 'AUTH_REQUIRED');
 
@@ -175,10 +184,11 @@ test('origin mismatch and unsupported methods fail before authorization', async 
 const client = fs.readFileSync(new URL('../assets/resource-delivery-v1.js', import.meta.url), 'utf8');
 const openingPage = fs.readFileSync(new URL('../resource-opening.html', import.meta.url), 'utf8');
 
-test('resource client uses a same-origin opening page instead of about:blank', () => {
+test('resource client uses a same-origin opening page and dedicated token header', () => {
   assert.match(client, /OPENING_PAGE='\/resource-opening\.html'/);
   assert.doesNotMatch(client, /window\.open\('about:blank'/);
   assert.match(client, /STORAGE_ORIGIN='https:\/\/jzgpwmxwekkbxdkhtsai\.supabase\.co'/);
+  assert.match(client, /'X-FinalForge-ID-Token':token/);
   assert.match(client, /getIdToken\(forceRefresh\)/);
   assert.match(client, /user\.reload\(\)/);
   assert.match(openingPage, /Opening secure resource/);
