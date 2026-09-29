@@ -1,5 +1,5 @@
 /* FinalForge production loader — stability-first premium workspace runtime. */
-/* Current product phase: Student readiness + progress analytics v74; adaptive practice v73 and Java workspace v72 remain certified layers. */
+/* Current product phase: Admin Question Studio + bank analytics v75; student readiness v74, adaptive practice v73 and Java workspace v72 remain certified layers. */
 try{
   const saved=localStorage.getItem('finalforge_theme_v1');
   const initial=saved==='light'||saved==='dark'?saved:'dark';
@@ -38,7 +38,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
 })();
 
 (async()=>{
-  const VERSION='product-v74-student-readiness';
+  const VERSION='product-v75-admin-question-studio';
   const fail=msg=>{
     document.documentElement.classList.remove('ff-auth-restoring');
     console.error('[FinalForge]',msg);
@@ -116,6 +116,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
       loadStyle('assets/practice-code-workspace-v8.css'),
       loadStyle('assets/practice-adaptive-v9.css'),
       loadStyle('assets/student-readiness-v10.css'),
+      loadStyle('assets/admin-question-studio-v11.css'),
       loadStyle('assets/account-security-v1.css'),
       loadStyle('assets/mobile-premium-v7.css'),
       loadStyle('assets/auth-mobile-compact-v8.css'),
@@ -167,7 +168,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
     await loadScript('assets/appearance-v1.js');
     await loadScript('assets/theme-toggle-stability-v1.js');
 
-    /* Exam Studio v5 remains the single paper runner; later versions add review, coding, adaptive practice and analytics around it. */
+    /* Exam Studio v5 remains the single paper runner; later versions add review, coding, adaptive practice, analytics and server-authorized question publishing around it. */
     await loadScript('assets/ip-paper-extension-v1.js');
     await loadScript('assets/ip-challenge-v2.js');
     await loadScript('assets/ip-final-blueprint-v5.js');
@@ -186,7 +187,7 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
     await loadScript('assets/auth-mobile-viewport-v1.js');
     await loadScript('assets/account-security-v1.js');
 
-    /* Small functional navigation guards only; no decorative scanners. */
+    /* Product layers subscribe to auth state but never replace the auth owner. */
     await loadScript('assets/practice-stability-v1.js');
     await loadScript('assets/practice-interaction-fix-v1.js');
     await loadScript('assets/practice-timer-runtime-v1.js');
@@ -195,6 +196,8 @@ document.documentElement.classList.add('ff-auth-restoring','ff-stability-mode');
     await loadScript('assets/practice-code-workspace-v8.js');
     await loadScript('assets/practice-adaptive-v9.js');
     await loadScript('assets/student-readiness-v10.js');
+    await loadScript('assets/question-bank-v11.js');
+    await loadScript('assets/admin-question-studio-v11.js');
     await loadScript('assets/mobile-navigation-runtime-v2.js');
     await loadScript('assets/mobile-scroll-recovery-v1.js');
 
