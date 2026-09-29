@@ -1,4 +1,5 @@
 /* FinalForge production loader — stability-first premium workspace runtime. */
+/* Previous certified loader: premium-comfort-v59 */
 try{
   const saved=localStorage.getItem('finalforge_theme_v1');
   const initial=saved==='light'||saved==='dark'?saved:'dark';
