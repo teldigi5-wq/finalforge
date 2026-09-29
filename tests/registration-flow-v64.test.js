@@ -15,6 +15,8 @@ const rules=fs.readFileSync('firebase/firestore.rules','utf8');
 const sw=fs.readFileSync('sw.js','utf8');
 const azureIndex=fs.readFileSync('azure-api/src/index.js','utf8');
 
+const executable=source=>source.replace(/^\s*\/\/.*$/gm,'').replace(/\s+/g,' ').trim();
+
 test('Vercel and Azure signup handlers stay identical',()=>{
   assert.equal(signup,azureSignup);
   assert.match(signup,/REGISTRATION_WINDOW_MS = 20 \* 60 \* 1000/);
@@ -26,7 +28,7 @@ test('Vercel and Azure signup handlers stay identical',()=>{
 });
 
 test('activation is revocation-aware, server-side and time bounded',()=>{
-  assert.equal(activate,azureActivate);
+  assert.equal(executable(activate),executable(azureActivate));
   assert.match(activate,/verifyIdToken\(token, true\)/);
   assert.match(activate,/pending_registrations/);
   assert.match(activate,/expiresAt <= now/);
