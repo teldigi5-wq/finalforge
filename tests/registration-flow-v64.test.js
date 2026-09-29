@@ -11,6 +11,9 @@ const azureRestart=fs.readFileSync('azure-api/src/vercel/restart-registration.js
 const auth=fs.readFileSync('assets/auth.js','utf8');
 const dom=fs.readFileSync('assets/auth-flow-dom-v1.js','utf8');
 const mobileCss=fs.readFileSync('assets/mobile-premium-v7.css','utf8');
+const compactCss=fs.readFileSync('assets/auth-mobile-compact-v8.css','utf8');
+const viewportJs=fs.readFileSync('assets/auth-mobile-viewport-v1.js','utf8');
+const loader=fs.readFileSync('assets/core-loader.js','utf8');
 const rules=fs.readFileSync('firebase/firestore.rules','utf8');
 const sw=fs.readFileSync('sw.js','utf8');
 const azureIndex=fs.readFileSync('azure-api/src/index.js','utf8');
@@ -93,9 +96,35 @@ test('mobile premium layer is responsive and low-motion',()=>{
   assert.doesNotMatch(mobileCss,/animation\s*:\s*[^;]*infinite/i);
 });
 
-test('service worker advances v64 and treats auth/mobile assets as critical',()=>{
-  assert.match(sw,/finalforge-v64-registration-mobile/);
+test('mobile signup is compact, scrollable and keeps confirm-password reachable',()=>{
+  assert.match(compactCss,/#signupForm/);
+  assert.match(compactCss,/overflow-y:auto!important/);
+  assert.match(compactCss,/scroll-padding-bottom/);
+  assert.match(compactCss,/scroll-margin-bottom:42vh/);
+  assert.match(compactCss,/auth-mobile/i);
+  assert.match(compactCss,/#signupForm>\.password-hint/);
+  assert.match(compactCss,/pointer-events:none!important/);
+  assert.doesNotMatch(compactCss,/animation\s*:\s*[^;]*infinite/i);
+});
+
+test('mobile auth viewport recovery is event-driven and keyboard-aware',()=>{
+  assert.doesNotThrow(()=>new Function(viewportJs));
+  assert.match(viewportJs,/visualViewport/);
+  assert.match(viewportJs,/focusin/);
+  assert.match(viewportJs,/scrollIntoView/);
+  assert.match(viewportJs,/keyboardLikely/);
+  assert.doesNotMatch(viewportJs,/MutationObserver/);
+  assert.doesNotMatch(viewportJs,/setInterval/);
+});
+
+test('service worker advances v65 and treats auth/mobile assets as critical',()=>{
+  assert.match(sw,/finalforge-v65-mobile-auth-viewport/);
   assert.match(sw,/auth-flow-dom-v1\.js/);
   assert.match(sw,/mobile-premium-v7\.css/);
+  assert.match(sw,/auth-mobile-compact-v8\.css/);
+  assert.match(sw,/auth-mobile-viewport-v1\.js/);
   assert.match(sw,/pathname\.startsWith\('\/api\/'\)/);
+  assert.match(loader,/registration-mobile-v65/);
+  assert.match(loader,/auth-mobile-compact-v8\.css/);
+  assert.match(loader,/auth-mobile-viewport-v1\.js/);
 });
