@@ -8,6 +8,8 @@ import restartRegistrationHandler from './vercel/restart-registration.js';
 import rateHandler from './vercel/rate.js';
 import publicStatsHandler from './vercel/public-stats.js';
 import resourceUrlHandler from './vercel/resource-url.js';
+import adminQuestionsHandler from './vercel/admin-questions.js';
+import questionBankHandler from './vercel/question-bank.js';
 
 app.http('signup', {
   methods: ['POST'],
@@ -77,5 +79,28 @@ app.http('resource-url', {
       resourceUrlHandler,
       request,
       { maxBodyBytes: 2048 }
+    )
+});
+
+app.http('admin-questions', {
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  authLevel: 'anonymous',
+  route: 'admin-questions',
+  handler: async request =>
+    runVercelHandler(
+      adminQuestionsHandler,
+      request,
+      { maxBodyBytes: 32768 }
+    )
+});
+
+app.http('question-bank', {
+  methods: ['GET'],
+  authLevel: 'anonymous',
+  route: 'question-bank',
+  handler: async request =>
+    runVercelHandler(
+      questionBankHandler,
+      request
     )
 });
