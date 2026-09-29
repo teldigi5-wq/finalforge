@@ -1,0 +1,386 @@
+/* FinalForge Mobile Premium v7 — eye-comfort auth + signed-in responsive finish. */
+:root{
+  --ff7-bg:#07111f;
+  --ff7-surface:#0b192b;
+  --ff7-surface-2:#0e2035;
+  --ff7-border:rgba(137,177,224,.16);
+  --ff7-text:#f3f7fc;
+  --ff7-muted:#9eb1c8;
+  --ff7-accent:#6da7ff;
+  --ff7-accent-2:#8b7cff;
+  --ff7-success:#55d6ad;
+  --ff7-danger:#ff7f92;
+}
+
+html[data-theme='light']{
+  --ff7-bg:#eef4fa;
+  --ff7-surface:#ffffff;
+  --ff7-surface-2:#f7faff;
+  --ff7-border:rgba(61,89,124,.15);
+  --ff7-text:#16263a;
+  --ff7-muted:#61748b;
+  --ff7-accent:#3e7ee8;
+  --ff7-accent-2:#7058dc;
+  --ff7-success:#168a68;
+  --ff7-danger:#c8475f;
+}
+
+/* -------------------- Auth surface -------------------- */
+#authGate.auth-gate{
+  background:
+    radial-gradient(circle at 18% 14%,rgba(83,145,255,.10),transparent 34%),
+    radial-gradient(circle at 82% 78%,rgba(126,97,255,.08),transparent 28%),
+    var(--ff7-bg)!important;
+}
+
+#authGate .auth-shell{
+  border-color:var(--ff7-border)!important;
+  background:color-mix(in srgb,var(--ff7-surface) 94%,transparent)!important;
+  box-shadow:0 28px 90px rgba(0,0,0,.28)!important;
+}
+
+#authGate .auth-card{
+  background:linear-gradient(180deg,color-mix(in srgb,var(--ff7-surface) 98%,transparent),color-mix(in srgb,var(--ff7-surface-2) 96%,transparent))!important;
+}
+
+#authGate .ff-auth-intro h2,
+#authGate .auth-view h2{color:var(--ff7-text)!important;letter-spacing:-.035em!important}
+#authGate .ff-auth-intro p,
+#authGate .auth-view .muted{color:var(--ff7-muted)!important}
+
+#authGate .auth-tabs,
+#authGate .auth-role-toggle{
+  padding:4px!important;
+  border:1px solid var(--ff7-border)!important;
+  border-radius:15px!important;
+  background:color-mix(in srgb,var(--ff7-bg) 62%,transparent)!important;
+  box-shadow:none!important;
+}
+
+#authGate .auth-tabs>button,
+#authGate .auth-role-toggle>button{
+  min-height:44px!important;
+  border-radius:11px!important;
+  color:var(--ff7-muted)!important;
+  font-weight:780!important;
+  transition:background-color .16s ease,color .16s ease,border-color .16s ease!important;
+}
+#authGate .auth-tabs>button.active,
+#authGate .auth-role-toggle>button.active{
+  color:var(--ff7-text)!important;
+  background:linear-gradient(135deg,rgba(89,149,255,.16),rgba(123,102,255,.14))!important;
+  box-shadow:inset 0 0 0 1px rgba(115,164,255,.16)!important;
+}
+
+#authGate .auth-view label{color:var(--ff7-text)!important;font-weight:720!important}
+#authGate input,
+#authGate .password-wrap{
+  border-color:var(--ff7-border)!important;
+  background:color-mix(in srgb,var(--ff7-bg) 72%,transparent)!important;
+  color:var(--ff7-text)!important;
+  box-shadow:none!important;
+}
+#authGate input{
+  min-height:52px!important;
+  border-radius:13px!important;
+  font-size:16px!important;
+}
+#authGate input:focus,
+#authGate .password-wrap:focus-within{
+  border-color:color-mix(in srgb,var(--ff7-accent) 66%,transparent)!important;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--ff7-accent) 14%,transparent)!important;
+  outline:none!important;
+}
+
+#authGate .auth-submit{
+  min-height:52px!important;
+  border:0!important;
+  border-radius:14px!important;
+  background:linear-gradient(135deg,var(--ff7-accent),var(--ff7-accent-2))!important;
+  color:white!important;
+  font-weight:850!important;
+  box-shadow:0 12px 28px rgba(65,116,219,.20)!important;
+}
+#authGate .auth-submit:hover{transform:translateY(-1px)!important}
+#authGate .auth-submit:active{transform:none!important}
+#authGate button:disabled{opacity:.56!important;cursor:not-allowed!important;transform:none!important}
+
+#authGate .text-btn{
+  min-height:40px!important;
+  color:color-mix(in srgb,var(--ff7-accent) 86%,var(--ff7-text))!important;
+  text-decoration:none!important;
+}
+
+#authGate .ff-derived-identity{
+  display:grid;
+  gap:4px;
+  margin:0 0 14px;
+  padding:13px 14px;
+  border:1px solid var(--ff7-border);
+  border-radius:14px;
+  background:color-mix(in srgb,var(--ff7-accent) 5%,var(--ff7-surface-2));
+}
+#authGate .ff-derived-identity>span{
+  color:var(--ff7-muted);
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+#authGate .ff-derived-identity>strong{
+  color:var(--ff7-text);
+  font-size:.92rem;
+  overflow-wrap:anywhere;
+}
+#authGate .ff-derived-identity>small{color:var(--ff7-muted);line-height:1.45}
+
+#authGate .auth-stepper{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:6px!important;
+  margin-bottom:14px!important;
+}
+#authGate .auth-stepper span{
+  min-width:0!important;
+  padding:8px 7px!important;
+  border:1px solid var(--ff7-border)!important;
+  border-radius:10px!important;
+  background:transparent!important;
+  color:var(--ff7-muted)!important;
+  font-size:.67rem!important;
+  text-align:center!important;
+}
+#authGate .auth-stepper span.active{
+  color:var(--ff7-text)!important;
+  background:rgba(92,150,255,.10)!important;
+}
+
+#authGate .ff-verify-countdown{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:48px;
+  margin:14px 0;
+  padding:10px 14px;
+  border:1px solid var(--ff7-border);
+  border-radius:14px;
+  background:color-mix(in srgb,var(--ff7-surface-2) 96%,transparent);
+  color:var(--ff7-text);
+  font-weight:900;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.02em;
+}
+#authGate .ff-verify-countdown[data-state='active']{border-color:rgba(85,214,173,.26);color:var(--ff7-success)}
+#authGate .ff-verify-countdown[data-state='expired']{border-color:rgba(255,127,146,.32);color:var(--ff7-danger)}
+#authGate .ff-restart-verification{
+  width:100%!important;
+  min-height:48px!important;
+  margin-top:6px!important;
+  border:1px solid color-mix(in srgb,var(--ff7-accent) 32%,var(--ff7-border))!important;
+  border-radius:13px!important;
+  background:color-mix(in srgb,var(--ff7-accent) 8%,var(--ff7-surface-2))!important;
+  color:var(--ff7-text)!important;
+}
+
+#authGate .auth-alert{
+  border-radius:12px!important;
+  line-height:1.45!important;
+}
+#authGate .ff-auth-runtime-status,
+#authGate .ff-auth-security{
+  color:var(--ff7-muted)!important;
+}
+
+/* -------------------- Signed-in mobile -------------------- */
+@media(max-width:900px){
+  html,body{max-width:100%!important;overflow-x:hidden!important}
+
+  #authGate.auth-gate{
+    min-height:100dvh!important;
+    padding:0!important;
+    overflow-y:auto!important;
+    overscroll-behavior-y:contain!important;
+  }
+  #authGate .auth-shell{
+    width:100%!important;
+    max-width:none!important;
+    min-height:100dvh!important;
+    display:block!important;
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    overflow:visible!important;
+  }
+  #authGate .auth-brand-panel{
+    min-height:66px!important;
+    padding:max(12px,env(safe-area-inset-top)) 16px 10px!important;
+    display:flex!important;
+    align-items:center!important;
+    background:transparent!important;
+    border:0!important;
+  }
+  #authGate .ff-auth-brandbar{width:100%!important}
+  #authGate .ff-auth-brandcontent,
+  #authGate .ff-auth-foot,
+  #authGate .ff-auth-help{display:none!important}
+  #authGate .ff-auth-brandlockup img{width:34px!important;height:34px!important}
+  #authGate .ff-auth-brandlockup span{font-size:1rem!important}
+
+  #authGate .auth-card{
+    width:min(100%,560px)!important;
+    min-height:auto!important;
+    margin:0 auto!important;
+    padding:18px 16px calc(30px + env(safe-area-inset-bottom))!important;
+    overflow:visible!important;
+    border:0!important;
+    background:transparent!important;
+  }
+  #authGate .ff-auth-intro{margin-bottom:14px!important}
+  #authGate .ff-auth-intro h2{font-size:clamp(1.8rem,8vw,2.35rem)!important;line-height:1.02!important}
+  #authGate .ff-auth-intro p{font-size:.92rem!important;line-height:1.5!important}
+  #authGate .auth-tabs{margin-bottom:12px!important}
+  #authGate .auth-role-toggle{margin-bottom:13px!important}
+  #authGate .ff-auth-runtime-status{margin-bottom:10px!important}
+  #authGate .auth-view label{margin-bottom:11px!important}
+  #authGate .ff-remember{min-height:40px!important;align-items:center!important}
+  #authGate .auth-submit{width:100%!important}
+  #authGate .ff-auth-security{margin-top:16px!important;padding-top:13px!important}
+
+  body:not(.auth-pending) .main{background:var(--ff7-bg)!important}
+  body:not(.auth-pending) .topbar{
+    min-height:62px!important;
+    padding:10px 12px!important;
+    border-bottom:1px solid var(--ff7-border)!important;
+    background:color-mix(in srgb,var(--ff7-bg) 94%,transparent)!important;
+    backdrop-filter:blur(10px)!important;
+    -webkit-backdrop-filter:blur(10px)!important;
+  }
+  body:not(.auth-pending) .section{
+    padding:16px 14px 26px!important;
+  }
+  body:not(.auth-pending) .section-head{
+    gap:12px!important;
+    flex-wrap:wrap!important;
+  }
+  body:not(.auth-pending) .section-head h2{
+    font-size:clamp(1.55rem,7vw,2.05rem)!important;
+    letter-spacing:-.03em!important;
+  }
+  body:not(.auth-pending) .card,
+  body:not(.auth-pending) .notice,
+  body:not(.auth-pending) .practice-hero,
+  body:not(.auth-pending) .planner-card,
+  body:not(.auth-pending) .exam-card,
+  body:not(.auth-pending) .feature-card,
+  body:not(.auth-pending) .admin-panel{
+    border-radius:18px!important;
+    border-color:var(--ff7-border)!important;
+    box-shadow:none!important;
+  }
+
+  body:not(.auth-pending) .quick-dock,
+  body:not(.auth-pending) .grid4{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:9px!important;
+  }
+  body:not(.auth-pending) .quick-dock>button{
+    min-height:78px!important;
+    border-radius:16px!important;
+  }
+  body:not(.auth-pending) .module-grid,
+  body:not(.auth-pending) .resource-grid,
+  body:not(.auth-pending) .exam-grid,
+  body:not(.auth-pending) .planner-grid,
+  body:not(.auth-pending) .admin-grid,
+  body:not(.auth-pending) .feature-grid{
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+  }
+
+  body:not(.auth-pending) .resources-toolbar,
+  body:not(.auth-pending) #practiceModuleTabs{
+    display:flex!important;
+    width:100%!important;
+    gap:8px!important;
+    overflow-x:auto!important;
+    overscroll-behavior-inline:contain!important;
+    scroll-snap-type:x proximity!important;
+    scrollbar-width:none!important;
+    padding-bottom:4px!important;
+  }
+  body:not(.auth-pending) .resources-toolbar::-webkit-scrollbar,
+  body:not(.auth-pending) #practiceModuleTabs::-webkit-scrollbar{display:none!important}
+  body:not(.auth-pending) .resources-toolbar>* ,
+  body:not(.auth-pending) #practiceModuleTabs>*{
+    flex:0 0 auto!important;
+    scroll-snap-align:start!important;
+  }
+
+  body:not(.auth-pending) .search,
+  body:not(.auth-pending) select,
+  body:not(.auth-pending) input,
+  body:not(.auth-pending) textarea{
+    max-width:100%!important;
+    font-size:16px!important;
+  }
+  body:not(.auth-pending) .admin-table-wrap{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
+
+  body:not(.auth-pending) .account-menu{
+    position:fixed!important;
+    top:70px!important;
+    right:10px!important;
+    left:10px!important;
+    width:auto!important;
+    max-width:none!important;
+    border-radius:18px!important;
+    z-index:260!important;
+  }
+
+  body:not(.auth-pending) #practiceWorkbench button,
+  body:not(.auth-pending) #mockLibrary button,
+  body:not(.auth-pending) .btn{
+    min-height:44px!important;
+    touch-action:manipulation!important;
+  }
+
+  body:not(.auth-pending) .hero-main{
+    background:
+      linear-gradient(180deg,rgba(9,28,48,.74),rgba(7,20,35,.88)),
+      var(--ff7-surface)!important;
+  }
+
+  body:not(.auth-pending) .cursor-glow,
+  body:not(.auth-pending) .hero-mesh,
+  body:not(.auth-pending) .ff-v2-ambient,
+  body:not(.auth-pending) [class*='aurora']{
+    pointer-events:none!important;
+  }
+}
+
+@media(max-width:520px){
+  #authGate .auth-card{padding-left:14px!important;padding-right:14px!important}
+  #authGate .auth-stepper span{font-size:.61rem!important;padding-inline:4px!important}
+  body:not(.auth-pending) .section{padding-inline:12px!important}
+  body:not(.auth-pending) .quick-dock,
+  body:not(.auth-pending) .grid4{grid-template-columns:1fr!important}
+  body:not(.auth-pending) .topbar{padding-inline:10px!important}
+  body:not(.auth-pending) #mobileNav .mobile-nav-bar{left:7px!important;right:7px!important;border-radius:19px!important}
+}
+
+@media(max-width:360px){
+  #authGate .auth-card{padding-left:11px!important;padding-right:11px!important}
+  #authGate .auth-tabs>button,#authGate .auth-role-toggle>button{font-size:.72rem!important}
+}
+
+@media(orientation:landscape) and (max-height:540px) and (max-width:980px){
+  #authGate .auth-brand-panel{display:none!important}
+  #authGate .auth-card{padding-top:12px!important;padding-bottom:16px!important}
+  #authGate .ff-auth-intro p{display:none!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  #authGate *,body:not(.auth-pending) *{
+    scroll-behavior:auto!important;
+  }
+  #authGate .auth-submit:hover{transform:none!important}
+}
