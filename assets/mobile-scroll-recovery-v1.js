@@ -1,7 +1,6 @@
 /* FinalForge Mobile Scroll Recovery v3 — one Android document scroller + feature-safe positioning. */
 
-/* v76 visual bootstrap. Keep this here because this runtime is loaded after all
-   legacy visual layers; the reference stylesheet must be the final CSS owner. */
+/* v76 visual bootstrap. Keep authenticated workspace styling certified. */
 (()=>{
   if(window.__FINALFORGE_REFERENCE_UI_V76_BOOTSTRAP)return;
   window.__FINALFORGE_REFERENCE_UI_V76_BOOTSTRAP=true;
@@ -18,6 +17,28 @@
     script.src='assets/reference-ui-v76.js?v=reference-ui-v76';
     script.async=true;
     script.dataset.ffReferenceUiV76='1';
+    document.body.appendChild(script);
+  }
+})();
+
+/* v77 is intentionally injected after v76. It owns only the exact public/auth
+   reference surfaces while v76 remains the authenticated workspace owner. */
+(()=>{
+  if(window.__FINALFORGE_REFERENCE_UI_V77_BOOTSTRAP)return;
+  window.__FINALFORGE_REFERENCE_UI_V77_BOOTSTRAP=true;
+  document.documentElement.classList.add('ff-reference-ui-v77');
+  if(!document.querySelector('link[data-ff-reference-ui-v77]')){
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='assets/reference-ui-v77.css?v=reference-ui-v77';
+    link.dataset.ffReferenceUiV77='1';
+    document.head.appendChild(link);
+  }
+  if(!document.querySelector('script[data-ff-reference-ui-v77]')){
+    const script=document.createElement('script');
+    script.src='assets/reference-ui-v77.js?v=reference-ui-v77';
+    script.async=true;
+    script.dataset.ffReferenceUiV77='1';
     document.body.appendChild(script);
   }
 })();
