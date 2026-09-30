@@ -34,6 +34,18 @@
     link.dataset.ffReferenceUiV77='1';
     document.head.appendChild(link);
   }
+  /* Returning users must keep the certified secure-session restore screen until
+     Firebase resolves auth state. This prevents the public hero from flashing
+     between restoring-session and authenticated workspace states. */
+  if(!document.querySelector('style[data-ff-v77-restore-guard]')){
+    const guard=document.createElement('style');
+    guard.dataset.ffV77RestoreGuard='1';
+    guard.textContent=`
+      html.ff-reference-ui-v77.ff-v77-public-landing body.auth-pending #authGate[data-auth-state="initializing"] #ffPublicLanding,
+      html.ff-reference-ui-v77.ff-v77-public-landing body.auth-pending #authGate[data-auth-state="authenticating"] #ffPublicLanding{display:none!important}
+    `;
+    document.head.appendChild(guard);
+  }
   if(!document.querySelector('script[data-ff-reference-ui-v77]')){
     const script=document.createElement('script');
     script.src='assets/reference-ui-v77.js?v=reference-ui-v77';
