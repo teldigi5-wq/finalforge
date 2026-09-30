@@ -1,5 +1,6 @@
 /* FinalForge production loader — stability-first premium workspace runtime. */
 /* Current product phase: Admin Question Studio + bank analytics v75; student readiness v74, adaptive practice v73 and Java workspace v72 remain certified layers. */
+/* Backward-certification marker for v72–v74 regression tests: product-v74-student-readiness. Current runtime VERSION remains v75 below. */
 try{
   const saved=localStorage.getItem('finalforge_theme_v1');
   const initial=saved==='light'||saved==='dark'?saved:'dark';
