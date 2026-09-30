@@ -21,6 +21,8 @@ test('combined signup preserves the focused responsive form below desktop width'
 });
 
 test('combined signup ships through a fresh offline cache',()=>{
-  assert.match(sw,/finalforge-v80-combined-signup/);
+  assert.match(sw,/finalforge-v81-combined-signup-layout/);
+  assert.match(css,/body\.auth-pending #authGate\.auth-gate>\.auth-shell/);
+  assert.match(css,/max-width:none!important/);
   assert.match(sw,/finalforge-v78-premium-polish/);
 });
