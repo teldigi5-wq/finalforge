@@ -82,10 +82,15 @@ app.http('resource-url', {
     )
 });
 
-app.http('admin-questions', {
+/*
+ * Azure Functions reserves root paths that begin with /admin for host APIs.
+ * Static Web Apps exposes this externally under /api, so keep the function
+ * route neutral and let the handler enforce the real admin claim boundary.
+ */
+app.http('question-studio-admin', {
   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
   authLevel: 'anonymous',
-  route: 'admin-questions',
+  route: 'question-studio-admin',
   handler: async request =>
     runVercelHandler(
       adminQuestionsHandler,
