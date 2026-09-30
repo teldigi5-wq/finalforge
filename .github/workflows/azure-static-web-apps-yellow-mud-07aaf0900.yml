@@ -20,6 +20,10 @@ jobs:
           submodules: true
           lfs: false
 
+      - name: Install locked verification dependencies
+        shell: bash
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
       - name: Verify auth, registration, resource and workspace runtime
         shell: bash
         run: |
