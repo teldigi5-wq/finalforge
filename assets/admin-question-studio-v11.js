@@ -5,6 +5,7 @@
   window.FINALFORGE_ADMIN_QUESTION_STUDIO_V11=Object.freeze({version:'11.0.0',mode:'admin-question-studio'});
 
   const SOURCE='admin-v75';
+  const ADMIN_API='/api/question-studio-admin';
   const $=(selector,root=document)=>root.querySelector(selector);
   const $$=(selector,root=document)=>[...root.querySelectorAll(selector)];
   const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -102,7 +103,7 @@
     const user=await verifiedAdmin();
     if(!user)throw new Error('Administrator session is no longer valid.');
     const token=await user.getIdToken(false);
-    const response=await fetch('/api/admin-questions',{method,headers:apiHeaders(token),credentials:'same-origin',cache:'no-store',body:body===null?undefined:JSON.stringify(body)});
+    const response=await fetch(ADMIN_API,{method,headers:apiHeaders(token),credentials:'same-origin',cache:'no-store',body:body===null?undefined:JSON.stringify(body)});
     const text=await response.text();let result={};try{result=text?JSON.parse(text):{}}catch{}
     if(!response.ok)throw new Error(result?.error||'Question service request failed.');
     return result;
