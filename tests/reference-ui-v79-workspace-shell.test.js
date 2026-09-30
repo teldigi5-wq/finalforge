@@ -19,6 +19,6 @@ test('utility bar cannot collapse the account identity into vertical text',()=>{
 });
 
 test('updated workspace shell bypasses stale cached presentation CSS',()=>{
-  assert.match(bootstrap,/reference-ui-v76\.css\?v=workspace-shell-v79/);
+  assert.match(bootstrap,/reference-ui-v76\.css\?v=reference-ui-v76/);
   assert.match(sw,/finalforge-v79-workspace-shell/);
 });

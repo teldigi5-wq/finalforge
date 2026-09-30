@@ -8,7 +8,7 @@
   if(!document.querySelector('link[data-ff-reference-ui-v76]')){
     const link=document.createElement('link');
     link.rel='stylesheet';
-    link.href='assets/reference-ui-v76.css?v=workspace-shell-v79';
+    link.href='assets/reference-ui-v76.css?v=reference-ui-v76';
     link.dataset.ffReferenceUiV76='1';
     document.head.appendChild(link);
   }
