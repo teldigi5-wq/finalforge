@@ -6,6 +6,7 @@ import { normalizeQuestion } from '../api/_question-bank-core.js';
 const rootCore=fs.readFileSync('api/_question-bank-core.js','utf8');
 const azureCore=fs.readFileSync('azure-api/src/vercel/_question-bank-core.js','utf8');
 const rootAdmin=fs.readFileSync('api/admin-questions.js','utf8');
+const rootAdminAlias=fs.readFileSync('api/question-studio-admin.js','utf8');
 const azureAdmin=fs.readFileSync('azure-api/src/vercel/admin-questions.js','utf8');
 const rootBank=fs.readFileSync('api/question-bank.js','utf8');
 const azureBank=fs.readFileSync('azure-api/src/vercel/question-bank.js','utf8');
@@ -21,6 +22,7 @@ test('question-bank server core is byte-identical across Vercel and Azure adapte
   assert.equal(rootCore,azureCore);
   assert.equal(rootAdmin,azureAdmin);
   assert.equal(rootBank,azureBank);
+  assert.match(rootAdminAlias,/export \{ default \} from '\.\/admin-questions\.js'/);
 });
 
 test('server authorization verifies revoked tokens and preserves student isolation',()=>{
@@ -66,11 +68,12 @@ test('question validation rejects unsafe or malformed MCQs and coding questions'
   assert.deepEqual(code.p,['Return a double']);
 });
 
-test('Azure registers both v75 question routes with bounded write bodies',()=>{
-  assert.match(azureIndex,/app\.http\('admin-questions'/);
+test('Azure registers both v75 question routes without the reserved admin route prefix',()=>{
+  assert.match(azureIndex,/app\.http\('question-studio-admin'/);
   assert.match(azureIndex,/methods: \['GET', 'POST', 'PATCH', 'DELETE'\]/);
-  assert.match(azureIndex,/route: 'admin-questions'/);
+  assert.match(azureIndex,/route: 'question-studio-admin'/);
   assert.match(azureIndex,/maxBodyBytes: 32768/);
+  assert.doesNotMatch(azureIndex,/route: 'admin-questions'/);
   assert.match(azureIndex,/app\.http\('question-bank'/);
   assert.match(azureIndex,/route: 'question-bank'/);
 });
@@ -87,12 +90,14 @@ test('published-question browser runtime only merges server-returned published b
   assert.doesNotMatch(publishedRuntime,/Supabase|FINALFORGE_SUPABASE_SECRET_KEY/);
 });
 
-test('admin studio rechecks admin claim and labels analytics as bank health',()=>{
+test('admin studio rechecks admin claim, uses neutral API route and labels analytics as bank health',()=>{
   assert.doesNotThrow(()=>new Function(adminRuntime));
   assert.match(adminRuntime,/getIdTokenResult\(true\)/);
   assert.match(adminRuntime,/claims\?\.admin===true/);
   assert.match(adminRuntime,/claims\?\.email_verified===true/);
-  assert.match(adminRuntime,/fetch\('\/api\/admin-questions'/);
+  assert.match(adminRuntime,/ADMIN_API='\/api\/question-studio-admin'/);
+  assert.match(adminRuntime,/fetch\(ADMIN_API/);
+  assert.doesNotMatch(adminRuntime,/\/api\/admin-questions/);
   assert.match(adminRuntime,/Bank-quality metric, not a student score/);
   assert.match(adminRuntime,/does not currently centralize per-question student performance/);
   assert.match(adminRuntime,/Drafts & published questions/);
