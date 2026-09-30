@@ -1,8 +1,9 @@
-/* FinalForge Product Motion v5 — restrained interaction layer; performance-hardened. */
+/* FinalForge Product Motion v6 — event-driven polish with no app-wide mutation observer. */
 (()=>{
+  'use strict';
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>[...r.querySelectorAll(s)];
-  const seen=new WeakSet(), progressSeen=new WeakSet(), numberSeen=new WeakSet();
+  const seen=new WeakSet(), progressSeen=new WeakSet();
 
   const ICONS={
     home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/>',
@@ -14,19 +15,14 @@
     roadmap:'<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M6 17c0-5 12-5 12-10"/><path d="m13 7 3-2-3-2"/>',
     admin:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/>',
     search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
-    arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
     clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
     file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>',
     spark:'<path d="m12 3-1.4 4.1a2 2 0 0 1-1.3 1.3L5 10l4.3 1.6a2 2 0 0 1 1.3 1.3L12 17l1.4-4.1a2 2 0 0 1 1.3-1.3L19 10l-4.3-1.6a2 2 0 0 1-1.3-1.3Z"/>',
-    user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
-    more:'<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>',
     book:'<path d="M2 4h6a4 4 0 0 1 4 4v12a4 4 0 0 0-4-4H2Z"/><path d="M22 4h-6a4 4 0 0 0-4 4v12a4 4 0 0 1 4-4h6Z"/>'
   };
   const svg=(name,cls='ff-icon')=>`<svg class="${cls}" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]||ICONS.spark}</svg>`;
-
   function iconNameFor(el){
-    const go=el.dataset?.go;
-    if(go&&ICONS[go])return go;
+    const go=el.dataset?.go;if(go&&ICONS[go])return go;
     const t=(el.textContent||'').toLowerCase();
     if(t.includes('home')||t.includes('dashboard'))return 'home';
     if(t.includes('module'))return 'modules';
@@ -40,8 +36,18 @@
     if(t.includes('resume')||t.includes('time'))return 'clock';
     return 'spark';
   }
+  const cleanLeadingEmoji=text=>String(text||'').replace(/^\s*[\p{Extended_Pictographic}\uFE0F\u200D]+\s*/u,'').trim();
 
-  function cleanLeadingEmoji(text){return String(text||'').replace(/^\s*[\p{Extended_Pictographic}\uFE0F\u200D]+\s*/u,'').trim()}
+  function ensureSlidingIndicator(nav){
+    if(!nav||innerWidth<=900)return;
+    let ind=q('.ff-nav-indicator',nav);
+    if(!ind){
+      ind=document.createElement('i');ind.className='ff-nav-indicator';
+      Object.assign(ind.style,{position:'absolute',left:'0',right:'0',height:'44px',borderRadius:'11px',background:'linear-gradient(90deg,rgba(79,124,255,.10),rgba(118,87,255,.07))',border:'1px solid rgba(111,123,255,.14)',pointerEvents:'none',transition:reduce?'none':'transform 180ms ease, height 180ms ease',zIndex:'0'});
+      nav.prepend(ind);qa('button[data-go]',nav).forEach(b=>b.style.zIndex='1');
+    }
+    const active=q('button.active[data-go]',nav);if(active){ind.style.height=`${active.offsetHeight}px`;ind.style.transform=`translateY(${active.offsetTop}px)`}
+  }
 
   function upgradeNav(root){
     if(!root)return;
@@ -50,105 +56,41 @@
       const label=q('span',b)?.textContent||cleanLeadingEmoji(b.textContent);
       b.innerHTML=`${svg(iconNameFor(b))}<span>${label}</span>`;
     });
-    if(innerWidth>900)ensureSlidingIndicator(root);
-  }
-
-  function ensureSlidingIndicator(nav){
-    if(!nav)return;
-    let ind=q('.ff-nav-indicator',nav);
-    if(!ind){
-      ind=document.createElement('i');ind.className='ff-nav-indicator';
-      Object.assign(ind.style,{position:'absolute',left:'0',right:'0',height:'44px',borderRadius:'11px',background:'linear-gradient(90deg,rgba(79,124,255,.10),rgba(118,87,255,.07))',border:'1px solid rgba(111,123,255,.14)',pointerEvents:'none',transition:'transform 220ms cubic-bezier(.22,1,.36,1), height 220ms cubic-bezier(.22,1,.36,1)',zIndex:'0'});
-      nav.prepend(ind);
-      qa('button[data-go]',nav).forEach(b=>b.style.zIndex='1');
-    }
-    const active=q('button.active[data-go]',nav);
-    if(active){ind.style.height=`${active.offsetHeight}px`;ind.style.transform=`translateY(${active.offsetTop}px)`}
+    ensureSlidingIndicator(root);
   }
 
   function upgradeQuickActions(){
-    qa('.quick-dock>button').forEach(b=>{
-      const slot=b.firstElementChild;
-      if(slot&&!q('svg',slot)){slot.className='ff-icon-wrap';slot.innerHTML=svg(iconNameFor(b));}
-    });
-    qa('.hero-actions .btn').forEach(b=>{
-      if(q('svg',b))return;
-      const text=cleanLeadingEmoji(b.textContent);b.innerHTML=`${svg(iconNameFor(b))}<span>${text}</span>`;
-      b.style.display='inline-flex';b.style.alignItems='center';b.style.gap='8px';
-    });
+    qa('.quick-dock>button').forEach(b=>{const slot=b.firstElementChild;if(slot&&!q('svg',slot)){slot.className='ff-icon-wrap';slot.innerHTML=svg(iconNameFor(b))}});
+    qa('.hero-actions .btn').forEach(b=>{if(q('svg',b))return;const text=cleanLeadingEmoji(b.textContent);b.innerHTML=`${svg(iconNameFor(b))}<span>${text}</span>`;b.style.display='inline-flex';b.style.alignItems='center';b.style.gap='8px'});
     qa('.module-icon').forEach(x=>{if(!q('svg',x))x.innerHTML=svg('book')});
   }
 
-  function installSearchIcon(){
-    qa('.ff-global-search').forEach(box=>{
-      const first=box.firstChild;
-      if(!q('svg',box))box.insertAdjacentHTML('afterbegin',svg('search'));
-      if(first?.nodeType===3&&first.textContent.trim())first.textContent='';
-    });
-  }
+  function installSearchIcon(){qa('.ff-global-search').forEach(box=>{const first=box.firstChild;if(!q('svg',box))box.insertAdjacentHTML('afterbegin',svg('search'));if(first?.nodeType===3&&first.textContent.trim())first.textContent=''})}
 
+  const entranceObserver=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('ff-entered');entranceObserver.unobserve(e.target)}}),{threshold:.06,rootMargin:'0px 0px -2% 0px'}):null;
   function revealScan(root=document){
-    if(reduce)return;
-    const nodes=qa('.card,.quick-dock>button,.timeline-row,.task,.section-head',root).filter(n=>!seen.has(n));
-    nodes.forEach((el,i)=>{
-      seen.add(el);el.classList.add('ff-enter');el.style.transitionDelay=`${Math.min(i%5,4)*40}ms`;
-      entranceObserver.observe(el);
-    });
+    if(reduce||!entranceObserver)return;
+    qa('.card,.quick-dock>button,.timeline-row,.task,.section-head',root).filter(n=>!seen.has(n)).forEach((el,i)=>{seen.add(el);el.classList.add('ff-enter');el.style.transitionDelay=`${Math.min(i%5,4)*30}ms`;entranceObserver.observe(el)});
   }
-  const entranceObserver=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('ff-entered');entranceObserver.unobserve(e.target)}}),{threshold:.06,rootMargin:'0px 0px -2% 0px'});
-
   function animateProgress(root=document){
     if(reduce)return;
-    qa('.progressbar i,.mock-progress i',root).forEach(el=>{
-      if(progressSeen.has(el))return;progressSeen.add(el);
-      const target=el.style.width||getComputedStyle(el).width;
-      if(!target||target==='0px')return;
-      el.dataset.ffTargetWidth=target;el.style.width='0%';
-      requestAnimationFrame(()=>requestAnimationFrame(()=>{el.style.width=target}));
-    });
+    qa('.progressbar i,.mock-progress i',root).forEach(el=>{if(progressSeen.has(el))return;progressSeen.add(el);const target=el.style.width||'';if(!target)return;el.style.width='0%';requestAnimationFrame(()=>{el.style.width=target})});
   }
 
-  function animateStat(el){
-    if(reduce||numberSeen.has(el))return;numberSeen.add(el);
-    const raw=(el.textContent||'').trim(),m=raw.match(/^([\d,.]+)(%?)$/);if(!m)return;
-    const target=Number(m[1].replace(/,/g,''));if(!Number.isFinite(target)||target>5000)return;
-    const suffix=m[2]||'',start=performance.now(),dur=560;
-    const step=now=>{const p=Math.min(1,(now-start)/dur),ease=1-Math.pow(1-p,3),v=Math.round(target*ease);el.textContent=v.toLocaleString()+suffix;if(p<1)requestAnimationFrame(step)};
-    requestAnimationFrame(step);
-  }
-  function animateNumbers(root=document){qa('.stat strong,#overall,#resCount,#moduleCount,#examCount',root).forEach(animateStat)}
-
-  function installSkeletonHooks(){
-    const body=q('#adminUsersBody');if(!body||body.dataset.ffSkeletonHook)return;body.dataset.ffSkeletonHook='1';
-    new MutationObserver(()=>{qa('tr',body).forEach(tr=>{if((tr.textContent||'').includes('Loading'))tr.classList.add('ff-skeleton')})}).observe(body,{childList:true,subtree:true});
-  }
-
-  function refresh(){
-    upgradeNav(q('#nav'));upgradeNav(q('#mobileNav'));upgradeQuickActions();installSearchIcon();revealScan();animateProgress();animateNumbers();installSkeletonHooks();
-  }
-
-  /* Removed continuous hero tilt + global pointer parallax. They duplicated another
-     interaction layer and forced style work every pointer frame at 100% zoom. */
-
-  document.addEventListener('click',e=>{
-    const b=e.target.closest('[data-go]');if(b)requestAnimationFrame(()=>{ensureSlidingIndicator(q('#nav'));refresh()});
-  });
+  function refresh(root=document){upgradeNav(q('#nav'));upgradeNav(q('#mobileNav'));upgradeQuickActions();installSearchIcon();revealScan(root);animateProgress(root)}
 
   let queued=false;
-  const scheduleRefresh=()=>{
+  function scheduleRefresh(root=document){
     if(queued)return;
     queued=true;
-    const run=()=>{queued=false;if(!document.body.classList.contains('auth-pending'))refresh()};
-    if('requestIdleCallback' in window)requestIdleCallback(run,{timeout:160});
-    else setTimeout(run,70);
-  };
-  const mo=new MutationObserver(muts=>{
-    if(document.body.classList.contains('auth-pending')||!muts.some(m=>m.addedNodes.length))return;
-    scheduleRefresh();
-  });
-  addEventListener('finalforge-ready',()=>{if(!document.body.classList.contains('auth-pending'))refresh();const app=q('.app');if(app)mo.observe(app,{childList:true,subtree:true});});
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{if(!document.body.classList.contains('auth-pending'))refresh()},{once:true});
-  else if(!document.body.classList.contains('auth-pending'))refresh();
+    requestAnimationFrame(()=>{queued=false;if(!document.body.classList.contains('auth-pending'))refresh(root)});
+  }
+  window.finalforgeRefreshEffects=scheduleRefresh;
+
+  document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)requestAnimationFrame(()=>{ensureSlidingIndicator(q('#nav'));scheduleRefresh(document.getElementById(b.dataset.go)||document)})});
+  addEventListener('finalforge-ready',()=>{if(!document.body.classList.contains('auth-pending'))scheduleRefresh()});
+  addEventListener('finalforge-cloud-render-complete',()=>scheduleRefresh());
+  if(document.readyState!=='loading'&&!document.body.classList.contains('auth-pending'))scheduleRefresh();
 
   let resizeQueued=false;
   addEventListener('resize',()=>{if(resizeQueued)return;resizeQueued=true;requestAnimationFrame(()=>{resizeQueued=false;upgradeNav(q('#nav'));upgradeNav(q('#mobileNav'));ensureSlidingIndicator(q('#nav'))})},{passive:true});

@@ -1,0 +1,170 @@
+name: Azure Static Web Apps CI/CD
+
+on:
+  push:
+    branches:
+      - fix/private-resource-delivery-v1
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - fix/private-resource-delivery-v1
+
+jobs:
+  build_and_deploy_job:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Build and Deploy Job
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          lfs: false
+
+      - name: Install locked verification dependencies
+        shell: bash
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Verify auth, registration, resource and workspace runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check assets/auth.js
+          node --check assets/auth-flow-dom-v1.js
+          node --check assets/auth-mobile-viewport-v1.js
+          node --check assets/account-security-v1.js
+          node --check assets/appearance-v1.js
+          node --check assets/theme-toggle-stability-v1.js
+          node --check assets/stability-runtime-v1.js
+          node --check assets/premium-ui-v1.js
+          node --check assets/resource-delivery-v1.js
+          node --check assets/ip-paper-extension-v1.js
+          node --check assets/ip-challenge-v2.js
+          node --check assets/ip-final-blueprint-v5.js
+          node --check assets/ip-model-library-v6.js
+          node --check assets/practice-exam-v5.js
+          node --check assets/practice-review-v7.js
+          node --check assets/practice-code-workspace-v8.js
+          node --check assets/practice-adaptive-v9.js
+          node --check assets/student-readiness-v10.js
+          node --check assets/question-bank-v11.js
+          node --check assets/admin-question-studio-v11.js
+          node --check assets/practice-stability-v1.js
+          node --check assets/practice-interaction-fix-v1.js
+          node --check assets/practice-timer-runtime-v1.js
+          node --check assets/workspace-v3.js
+          node --check assets/core-loader.js
+          node --check api/signup.js
+          node --check api/activate-account.js
+          node --check api/restart-registration.js
+          node --check api/_resource-url-core.js
+          node --check api/_question-bank-core.js
+          node --check api/admin-questions.js
+          node --check api/question-bank.js
+          node --check azure-api/src/index.js
+          node --check azure-api/src/vercel/signup.js
+          node --check azure-api/src/vercel/activate-account.js
+          node --check azure-api/src/vercel/restart-registration.js
+          node --check azure-api/src/vercel/_resource-url-core.js
+          node --check azure-api/src/vercel/_question-bank-core.js
+          node --check azure-api/src/vercel/admin-questions.js
+          node --check azure-api/src/vercel/question-bank.js
+          node --check sw.js
+          node --test tests/auth-runtime-v2.test.js tests/auth-responsive-theme.test.js tests/account-security-v1.test.js tests/registration-flow-v64.test.js tests/premium-ui-ip-extension.test.js tests/practice-exam-v5.test.js tests/practice-review-v7.test.js tests/practice-code-workspace-v8.test.js tests/practice-adaptive-v9.test.js tests/student-readiness-v10.test.js tests/question-bank-v11.test.js tests/practice-interaction-fix.test.js tests/practice-timer-comfort.test.js tests/ip-model-library-v6.test.js tests/resource-url-core.test.js tests/resource-delivery-boundary.test.js
+
+      - name: Prepare public frontend bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf azure-static
+          mkdir -p azure-static
+
+          cp index.html verify.html resource-opening.html 404.html manifest.webmanifest sw.js staticwebapp.config.json azure-static/
+          cp -R assets azure-static/assets
+          cp -R mock-papers azure-static/mock-papers
+
+          forbidden=(package.json package-lock.json api azure-api firebase tests docs PRIVATE_RESOURCE_DELIVERY.md AUTH_AND_DEPLOY_SETUP.md BUILD_STEPS.md README.md vercel.json tailwind.config.cjs)
+          for path in "${forbidden[@]}"; do
+            if [ -e "azure-static/$path" ]; then
+              echo "::error::Forbidden deployment path present: $path"
+              exit 1
+            fi
+          done
+
+          test -f azure-static/index.html
+          test -f azure-static/resource-opening.html
+          test -f azure-static/staticwebapp.config.json
+          test -f azure-static/assets/auth.js
+          test -f azure-static/assets/auth-flow-dom-v1.js
+          test -f azure-static/assets/auth-mobile-viewport-v1.js
+          test -f azure-static/assets/auth-mobile-compact-v8.css
+          test -f azure-static/assets/auth-premium-v9.css
+          test -f azure-static/assets/auth-mobile-premium-v10.css
+          test -f azure-static/assets/auth-responsive-premium-v13.css
+          test -f azure-static/assets/study-room.webp
+          test -f azure-static/assets/account-security-v1.js
+          test -f azure-static/assets/account-security-v1.css
+          test -f azure-static/assets/mobile-premium-v7.css
+          test -f azure-static/assets/auth-system-v2.css
+          test -f azure-static/assets/auth-responsive-hotfix-v1.css
+          test -f azure-static/assets/stability-runtime-v1.js
+          test -f azure-static/assets/stability-mode-v1.css
+          test -f azure-static/assets/premium-shell-v1.css
+          test -f azure-static/assets/premium-studyhub-v1.css
+          test -f azure-static/assets/premium-studyhub-v2.css
+          test -f azure-static/assets/premium-comfort-v1.css
+          test -f azure-static/assets/premium-comfort-v2.css
+          test -f azure-static/assets/premium-ui-v1.js
+          test -f azure-static/assets/ip-paper-extension-v1.js
+          test -f azure-static/assets/ip-challenge-v2.js
+          test -f azure-static/assets/ip-final-blueprint-v5.js
+          test -f azure-static/assets/ip-model-library-v6.js
+          test -f azure-static/assets/practice-exam-v5.js
+          test -f azure-static/assets/practice-review-v7.js
+          test -f azure-static/assets/practice-review-v7.css
+          test -f azure-static/assets/practice-code-workspace-v8.js
+          test -f azure-static/assets/practice-code-workspace-v8.css
+          test -f azure-static/assets/practice-adaptive-v9.js
+          test -f azure-static/assets/practice-adaptive-v9.css
+          test -f azure-static/assets/student-readiness-v10.js
+          test -f azure-static/assets/student-readiness-v10.css
+          test -f azure-static/assets/question-bank-v11.js
+          test -f azure-static/assets/admin-question-studio-v11.js
+          test -f azure-static/assets/admin-question-studio-v11.css
+          test -f azure-static/assets/practice-stability-v1.js
+          test -f azure-static/assets/practice-interaction-fix-v1.js
+          test -f azure-static/assets/practice-interaction-fix-v1.css
+          test -f azure-static/assets/practice-timer-runtime-v1.js
+          test -f azure-static/assets/practice-premium-v5.css
+          test -f azure-static/assets/practice-premium-v6.css
+          test -f azure-static/assets/workspace-v3.css
+          test -f azure-static/assets/workspace-v3.js
+          test -f azure-static/assets/appearance-v1.js
+          test -f azure-static/assets/theme-toggle-stability-v1.js
+          test -f azure-static/assets/resource-delivery-v1.js
+          test -f azure-static/mock-papers/index.html
+
+          echo "Prepared allowlisted FinalForge admin-question-studio v75, student-readiness v74, adaptive-practice v73, Java workspace v72, smart-review v71, responsive auth v70, registration v64, account security, IP model-library v6, timer/comfort, resource-access and Workspace v3 bundle."
+
+      - name: Build And Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_YELLOW_MUD_07AAF0900 }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "azure-static"
+          skip_app_build: true
+          api_location: "azure-api"
+          output_location: ""
+
+  close_pull_request_job:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: Close Pull Request Job
+    steps:
+      - name: Close Pull Request
+        id: closepullrequest
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_YELLOW_MUD_07AAF0900 }}
+          action: "close"

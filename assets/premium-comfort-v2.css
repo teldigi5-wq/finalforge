@@ -1,0 +1,245 @@
+/* FinalForge Premium Comfort v2 — softer contrast, clearer hierarchy, stronger exam ergonomics. */
+:root{
+  --ffpc2-bg:#08131f;
+  --ffpc2-panel:#0d1b2b;
+  --ffpc2-panel-2:#112236;
+  --ffpc2-line:rgba(138,172,214,.14);
+  --ffpc2-line-strong:rgba(126,169,224,.24);
+  --ffpc2-text:#eaf2fb;
+  --ffpc2-soft:#afc0d2;
+  --ffpc2-muted:#8296ad;
+  --ffpc2-accent:#79aef2;
+  --ffpc2-accent-2:#79c9c0;
+  --ffpc2-shadow:0 22px 60px rgba(0,0,0,.20);
+}
+
+html.ff-premium-ui-v2 body.ff-authenticated{
+  background:
+    radial-gradient(760px 420px at 14% -6%,rgba(72,125,190,.09),transparent 70%),
+    radial-gradient(680px 380px at 92% 0%,rgba(105,91,176,.06),transparent 72%),
+    linear-gradient(145deg,#07101a 0%,#081522 55%,#091724 100%)!important;
+  color:var(--ffpc2-text)!important;
+}
+
+html.ff-premium-ui-v2 body.ff-authenticated .main{max-width:1760px}
+html.ff-premium-ui-v2 body.ff-authenticated .topbar{
+  background:rgba(9,20,32,.92)!important;
+  border-color:rgba(137,169,210,.11)!important;
+  backdrop-filter:blur(12px)!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .sidebar{
+  background:linear-gradient(180deg,rgba(6,14,23,.99),rgba(8,18,29,.98))!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .card,
+html.ff-premium-ui-v2 body.ff-authenticated .practice-hero,
+html.ff-premium-ui-v2 body.ff-authenticated .planner-card,
+html.ff-premium-ui-v2 body.ff-authenticated .exam-card,
+html.ff-premium-ui-v2 body.ff-authenticated .admin-panel{
+  background:linear-gradient(155deg,rgba(15,30,47,.97),rgba(10,22,35,.98))!important;
+  border-color:var(--ffpc2-line)!important;
+  box-shadow:0 12px 34px rgba(0,0,0,.13)!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated h1,
+html.ff-premium-ui-v2 body.ff-authenticated h2,
+html.ff-premium-ui-v2 body.ff-authenticated h3{letter-spacing:-.025em!important}
+html.ff-premium-ui-v2 body.ff-authenticated p,
+html.ff-premium-ui-v2 body.ff-authenticated .muted{color:var(--ffpc2-soft)!important}
+
+/* Calm premium controls. */
+html.ff-premium-ui-v2 body.ff-authenticated .btn,
+html.ff-premium-ui-v2 body.ff-authenticated button.btn{
+  min-height:46px!important;
+  padding:.72rem 1.02rem!important;
+  border-radius:13px!important;
+  border-color:rgba(133,170,217,.16)!important;
+  background:linear-gradient(180deg,rgba(23,42,65,.90),rgba(17,33,52,.92))!important;
+  color:#e8f1fb!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+  font-weight:800!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .btn:hover:not(:disabled){
+  transform:translateY(-1px)!important;
+  border-color:rgba(125,174,235,.28)!important;
+  background:linear-gradient(180deg,rgba(29,51,78,.94),rgba(20,39,61,.95))!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .btn.primary{
+  background:linear-gradient(112deg,#4d82ce,#568fd8 58%,#7067c4)!important;
+  border-color:rgba(137,178,230,.26)!important;
+  box-shadow:0 10px 24px rgba(45,84,145,.18)!important;
+}
+
+/* Practice hub: remove visual crowding and keep reading rhythm comfortable. */
+#practice .ff-v5-practice-hub{gap:22px!important}
+#practice .practice-hero{padding:clamp(26px,3.4vw,44px)!important}
+#practice .ff-v5-paper-grid{gap:14px!important}
+#practice .ff-v5-paper-card{
+  min-height:220px!important;
+  padding:20px!important;
+  border-radius:20px!important;
+  background:linear-gradient(155deg,rgba(16,32,51,.96),rgba(10,23,38,.98))!important;
+}
+#practice .ff-v5-paper-card:hover{transform:translateY(-1px)!important;box-shadow:0 16px 38px rgba(0,0,0,.15)!important}
+#practice .ff-v5-paper-index{color:rgba(136,177,224,.075)!important}
+#practice .ff-v5-how{background:rgba(10,23,38,.70)!important;border-color:rgba(130,171,220,.11)!important}
+#practice .ff-v5-how-grid article{background:rgba(16,32,51,.62)!important}
+#practice .ff-v5-tools button{background:rgba(14,29,47,.80)!important;border-color:rgba(128,166,215,.12)!important}
+
+/* Exam shell: comfortable long-session reading. */
+#practice .ff-v5-exam-app{
+  border-radius:22px!important;
+  border-color:rgba(130,168,216,.15)!important;
+  background:linear-gradient(150deg,#0a1827,#08131f)!important;
+  box-shadow:var(--ffpc2-shadow)!important;
+}
+#practice .ff-v5-exam-top{
+  min-height:72px!important;
+  padding:14px 20px!important;
+  background:rgba(8,18,30,.95)!important;
+  border-bottom-color:rgba(132,168,214,.11)!important;
+}
+#practice .ff-v5-exam-layout{grid-template-columns:minmax(245px,290px) minmax(0,1fr)!important;min-height:720px!important}
+#practice .ff-v5-exam-rail{
+  padding:24px 20px!important;
+  background:linear-gradient(180deg,rgba(10,23,38,.98),rgba(8,18,30,.99))!important;
+  border-right-color:rgba(132,169,215,.11)!important;
+}
+#practice .ff-v5-exam-question{
+  padding:clamp(28px,4vw,58px)!important;
+  background:linear-gradient(180deg,rgba(11,24,39,.38),rgba(8,19,31,.16))!important;
+}
+#practice .ff-v5-exam-question>h2{
+  max-width:900px!important;
+  margin:24px 0 28px!important;
+  font-size:clamp(1.55rem,2.5vw,2.35rem)!important;
+  line-height:1.22!important;
+  letter-spacing:-.028em!important;
+  color:#edf4fb!important;
+  text-wrap:pretty!important;
+}
+#practice .ff-v5-exam-question .question-meta{color:#8ba2b9!important}
+#practice .ff-v5-options{max-width:940px!important;gap:12px!important}
+#practice .ff-v5-options label{
+  min-height:72px!important;
+  padding:15px 18px!important;
+  border-radius:16px!important;
+  border-color:rgba(135,171,217,.14)!important;
+  background:rgba(17,34,54,.72)!important;
+  color:#dfe8f2!important;
+}
+#practice .ff-v5-options label:hover{
+  transform:none!important;
+  border-color:rgba(120,169,228,.27)!important;
+  background:rgba(21,41,64,.84)!important;
+}
+#practice .ff-v5-options label.selected{
+  border-color:rgba(113,166,229,.38)!important;
+  background:linear-gradient(100deg,rgba(65,116,183,.17),rgba(77,151,144,.05))!important;
+  box-shadow:inset 0 0 0 1px rgba(117,166,223,.05)!important;
+}
+#practice .ff-v5-options .option-letter{background:rgba(10,22,36,.65)!important}
+
+/* Timer: readable at a glance, with deadline sync and calm urgency states. */
+#practice .ff-v5-exam-rail .exam-clock-label{
+  color:#8298ae!important;
+  font-size:.72rem!important;
+  font-weight:850!important;
+  letter-spacing:.11em!important;
+  text-transform:uppercase!important;
+}
+#practice .ff-v5-exam-rail .exam-clock{
+  display:block!important;
+  margin-top:6px!important;
+  color:#edf5fd!important;
+  font-variant-numeric:tabular-nums!important;
+  font-feature-settings:'tnum' 1!important;
+  font-size:clamp(1.9rem,2.6vw,2.55rem)!important;
+  line-height:1!important;
+  letter-spacing:.025em!important;
+  text-shadow:none!important;
+}
+#practice .ff-timer-meta{
+  margin:9px 0 18px!important;
+  color:#7f96ad!important;
+  font-size:.72rem!important;
+  line-height:1.4!important;
+}
+#practice .ff-v5-exam-rail.ff-timer-warning .exam-clock{color:#e8c98b!important}
+#practice .ff-v5-exam-rail.ff-timer-urgent .exam-clock{color:#ee9da7!important}
+#practice .ff-v5-exam-rail.ff-timer-expired .exam-clock{color:#ef8998!important}
+#practice .ff-v5-exam-rail.ff-timer-urgent .ff-timer-meta,
+#practice .ff-v5-exam-rail.ff-timer-expired .ff-timer-meta{color:#c898a1!important}
+
+#practice .ff-v5-exam-rail .exam-progress{height:7px!important;border-radius:999px!important;background:rgba(126,163,211,.08)!important}
+#practice .ff-v5-exam-rail .exam-progress i{border-radius:999px!important;box-shadow:none!important}
+#practice .ff-v5-exam-rail .exam-nav{gap:8px!important}
+#practice .ff-v5-exam-rail .exam-nav button{
+  min-width:38px!important;
+  min-height:38px!important;
+  border-radius:11px!important;
+  background:rgba(18,36,57,.76)!important;
+}
+#practice .ff-v5-exam-rail .exam-nav button.current{box-shadow:inset 0 0 0 1px rgba(116,171,238,.12)!important}
+
+#practice .ff-v5-sticky-actions{
+  margin-top:34px!important;
+  padding-top:18px!important;
+  gap:10px!important;
+  background:linear-gradient(180deg,rgba(8,19,31,0),rgba(8,19,31,.96) 28%)!important;
+}
+#practice .exam-written,
+#practice .ff-v5-native-code{
+  min-height:300px!important;
+  border-radius:16px!important;
+  background:#08131f!important;
+  color:#e3edf7!important;
+  border-color:rgba(127,166,216,.15)!important;
+  line-height:1.65!important;
+}
+
+/* Prevent any decorative layer from ever sitting over study controls. */
+#practice::before,
+#practice::after,
+#practice .card::before,
+#practice .card::after,
+#practice .practice-hero::before,
+#practice .practice-hero::after,
+#practice .ff-v5-paper-index,
+#practice .ff-v5-pattern-card::before{pointer-events:none!important}
+#practice button,
+#practice input,
+#practice textarea,
+#practice label,
+#practice a{position:relative;z-index:2}
+
+@media(max-width:980px){
+  #practice .ff-v5-exam-layout{grid-template-columns:1fr!important}
+  #practice .ff-v5-exam-rail{border-right:0!important;border-bottom:1px solid rgba(132,169,215,.11)!important}
+  #practice .ff-v5-paper-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:640px){
+  #practice .ff-v5-paper-grid,
+  #practice .ff-v5-action-grid,
+  #practice .ff-v5-special-row,
+  #practice .ff-v5-tools,
+  #practice .ff-v5-how-grid{grid-template-columns:1fr!important}
+  #practice .ff-v5-exam-question{padding:22px 16px 30px!important}
+  #practice .ff-v5-exam-rail{padding:18px 15px!important}
+  #practice .ff-v5-options label{min-height:66px!important;padding:14px!important}
+  #practice .ff-v5-sticky-actions{display:grid!important;grid-template-columns:1fr 1fr!important}
+  #practice .ff-v5-sticky-actions .btn.primary{grid-column:1/-1!important}
+}
+
+html[data-theme='light'].ff-premium-ui-v2 body.ff-authenticated{
+  background:linear-gradient(145deg,#eef4f9,#f7f9fc)!important;
+  color:#23384f!important;
+}
+html[data-theme='light'].ff-premium-ui-v2 body.ff-authenticated .card,
+html[data-theme='light'].ff-premium-ui-v2 body.ff-authenticated .practice-hero{
+  background:linear-gradient(155deg,#fbfdff,#f3f7fb)!important;
+  border-color:rgba(77,109,146,.13)!important;
+  box-shadow:0 12px 30px rgba(53,78,107,.08)!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  #practice *,html.ff-premium-ui-v2 body.ff-authenticated .btn{scroll-behavior:auto!important;transition:none!important}
+}

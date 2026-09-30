@@ -43,11 +43,15 @@ jobs:
         run: |
           node --check assets/core-loader.js
           node --check assets/app.js
+          node --check assets/resource-delivery-v1.js
           node --check assets/mobile-runtime-final-v1.js
           node --check assets/mobile-navigation-runtime-v2.js
           node --check assets/mobile-scroll-recovery-v1.js
           node --check assets/practice-stability-v1.js
           node --check assets/professional-workspace-v2.js
+          node --check api/_resource-manifest-v1.js
+          node --check api/_resource-url-core.js
+          node --check api/resource-url.js
           node --check api/signup.js
           node --check api/rate.js
           node --check api/public-stats.js

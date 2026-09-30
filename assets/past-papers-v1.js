@@ -94,7 +94,7 @@
       <div class="past-card-head"><div><div class="kicker">${esc(mod.short)} · ${esc(p.code)}</div><h3>${esc(p.title)}</h3></div><span class="past-badge ${esc(p.status)}">${esc(statusLabel(p.status))}</span></div>
       <div class="past-meta"><span>${esc(p.year)}</span><span>${esc(p.source)}</span><span>${esc(p.pages)}</span></div>
       <p class="past-note">${esc(p.note)}</p>
-      <div class="past-actions"><a class="btn primary" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">Open source ↗</a><button class="btn" type="button" onclick="finalforgePastPaperPractice('${esc(p.module)}')">Practise ${esc(mod.short)}</button></div>
+      <div class="past-actions"><a class="btn primary" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">View external source ↗</a><button class="btn" type="button" onclick="finalforgePastPaperPractice('${esc(p.module)}')">Practise ${esc(mod.short)}</button></div>
     </article>`;
   }
 
@@ -112,7 +112,7 @@
       </div>
       <div class="past-tabs">${[['all','All'],['dcn','DCN'],['ip','IP'],['mc','MC'],['fc','FC']].map(([k,l])=>`<button class="btn filter-btn ${active===k?'active':''}" type="button" onclick="setPastPaperFilter('${k}')">${l}</button>`).join('')}</div>
       <div class="past-grid">${rows.map(card).join('')}${fcNotice}</div>
-      <div class="past-disclaimer"><b>Source & copyright note:</b> FinalForge does not claim ownership of linked papers and does not mirror their full contents. External resources may require an account or may change. “Legacy syllabus” means the source uses an older module code; always verify current SLIIT announcements, assessment structure and allowed materials before an exam.</div>`;
+      <div class="past-disclaimer"><b>External-source note:</b> FinalForge does not claim ownership of linked papers and does not mirror their full contents. Third-party resources may require an account, change, or disappear. “Legacy syllabus” means the source uses an older module code; always verify current SLIIT announcements, assessment structure and allowed materials before an exam.</div>`;
     window.finalforgeRefreshEffects?.();
   }
 

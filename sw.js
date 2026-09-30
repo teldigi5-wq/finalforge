@@ -1,217 +1,84 @@
-const C='finalforge-v48-professional-hardening';
+// Earlier certified caches: finalforge-v56-resource-access, finalforge-v57-premium-resource-session, finalforge-v58-exam-studio, finalforge-v59-premium-comfort, finalforge-v60-practice-interaction, finalforge-v61-practice-timer-comfort, finalforge-v62-ip-library-premium, finalforge-v63-account-security, finalforge-v64-registration-mobile, finalforge-v65-mobile-auth-viewport, finalforge-v66-auth-premium, finalforge-v67-auth-mobile-premium, finalforge-v68-auth-desktop-premium, finalforge-v69-auth-responsive-unified, finalforge-v70-auth-responsive-premium, finalforge-v71-smart-exam-review, finalforge-v72-java-workspace, finalforge-v73-adaptive-practice, finalforge-v74-student-readiness, finalforge-v75-admin-question-studio, finalforge-v76-reference-ui, finalforge-v77-exact-public-auth, finalforge-v78-premium-polish, finalforge-v79-workspace-shell
+// Historical certified cache marker: finalforge-v80-combined-signup
+const C='finalforge-v81-combined-signup-layout';
 
-// Cache the shell and critical runtime at install. Feature assets are cached as requested.
 const CORE=[
-  './',
-  './index.html',
-  './verify.html',
-  './manifest.webmanifest',
-  './assets/core-loader.js',
-  './assets/account-storage-v1.js',
-  './assets/ui-responsive-v2.css',
-  './assets/auth-experience-v4.css',
-  './assets/experience-v9.css',
-  './assets/auth-world-v1.css',
-  './assets/theme-coherence-v1.css',
-  './assets/responsive-hardening-v2.css',
-  './assets/auth-neon-rounded-v1.css',
-  './assets/past-papers-v1.css',
-  './assets/past-papers-v1.js',
-  './assets/student-experience-v2.css',
-  './assets/student-experience-v2.js',
-  './assets/visual-system-v2.css',
-  './assets/mobile-auth-v5.css',
-  './assets/mobile-modern-v4.css',
-  './assets/runtime-stability-v1.css',
-  './assets/mobile-runtime-final-v1.css',
-  './assets/mobile-runtime-final-v1.js',
-  './assets/mobile-scroll-recovery-v1.css',
-  './assets/mobile-scroll-recovery-v1.js',
-  './assets/mobile-navigation-runtime-v2.js',
-  './assets/practice-stability-v1.js',
-  './assets/session-restore-v1.js',
-  './assets/signup-fix-v2.js',
-  './assets/verification-handoff-v1.js',
-  './assets/cloud-ui-stability-v1.js',
-  './assets/professional-workspace-v2.css',
-  './assets/professional-accessibility-v1.css',
-  './assets/professional-workspace-v2.js',
-  './assets/ux-hardening-v1.js',
-  './assets/finalforge-logo.svg',
-  './assets/dcn-2024-pattern-v1.js'
+  './','./index.html','./verify.html','./resource-opening.html','./manifest.webmanifest',
+  './assets/core-loader.js','./assets/account-storage-v1.js','./assets/resource-delivery-v1.js',
+  './assets/app.js','./assets/past-papers-v1.js','./assets/appearance-v1.js','./assets/theme-toggle-stability-v1.js',
+  './assets/ip-paper-extension-v1.js','./assets/ip-challenge-v2.js','./assets/ip-final-blueprint-v5.js','./assets/practice-exam-v5.js','./assets/ip-model-library-v6.js','./assets/practice-review-v7.js','./assets/practice-code-workspace-v8.js','./assets/practice-adaptive-v9.js','./assets/student-readiness-v10.js','./assets/question-bank-v11.js','./assets/admin-question-studio-v11.js','./assets/study-experience.js','./assets/stability-runtime-v1.js',
+  './assets/premium-ui-v1.js','./assets/workspace-v3.js','./assets/mobile-runtime-final-v1.js','./assets/auth-flow-dom-v1.js','./assets/auth.js','./assets/auth-mobile-viewport-v1.js','./assets/account-security-v1.js','./assets/practice-stability-v1.js','./assets/practice-interaction-fix-v1.js','./assets/practice-timer-runtime-v1.js',
+  './assets/mobile-navigation-runtime-v2.js','./assets/mobile-scroll-recovery-v1.js','./assets/reference-ui-v76.js','./assets/reference-ui-v77.js',
+  './assets/auth-system-v2.css','./assets/auth-responsive-hotfix-v1.css','./assets/stability-mode-v1.css','./assets/premium-shell-v1.css','./assets/premium-studyhub-v1.css','./assets/premium-studyhub-v2.css','./assets/practice-premium-v5.css','./assets/premium-comfort-v1.css','./assets/practice-interaction-fix-v1.css','./assets/premium-comfort-v2.css','./assets/practice-premium-v6.css','./assets/practice-review-v7.css','./assets/practice-code-workspace-v8.css','./assets/practice-adaptive-v9.css','./assets/student-readiness-v10.css','./assets/admin-question-studio-v11.css','./assets/account-security-v1.css','./assets/mobile-premium-v7.css','./assets/auth-mobile-compact-v8.css','./assets/auth-premium-v9.css','./assets/auth-mobile-premium-v10.css','./assets/auth-responsive-premium-v13.css','./assets/workspace-v3.css','./assets/reference-ui-v76.css','./assets/reference-ui-v77.css',
+  './assets/finalforge-logo.svg','./assets/finalforge-logo-256.webp','./assets/study-room.webp','./assets/campus-banner.webp'
 ];
 
-const INSTANT=new Set([
-  '/',
-  '/index.html',
-  '/verify.html',
-  '/manifest.webmanifest',
-  '/assets/account-storage-v1.js',
-  '/assets/ui-responsive-v2.css',
-  '/assets/auth-experience-v4.css',
-  '/assets/auth-experience-v4.js',
-  '/assets/auth-world-v1.css',
-  '/assets/auth-world-v1.js',
-  '/assets/theme-coherence-v1.css',
-  '/assets/responsive-hardening-v2.css',
-  '/assets/auth-neon-rounded-v1.css',
-  '/assets/past-papers-v1.css',
-  '/assets/past-papers-v1.js',
-  '/assets/student-experience-v2.css',
-  '/assets/student-experience-v2.js',
-  '/assets/visual-system-v2.css',
-  '/assets/mobile-auth-v5.css',
-  '/assets/runtime-stability-v1.css',
-  '/assets/mobile-runtime-final-v1.css',
-  '/assets/mobile-runtime-final-v1.js',
-  '/assets/mobile-scroll-recovery-v1.css',
-  '/assets/mobile-scroll-recovery-v1.js',
-  '/assets/mobile-navigation-runtime-v2.js',
-  '/assets/practice-stability-v1.js',
-  '/assets/session-restore-v1.js',
-  '/assets/signup-fix-v2.js',
-  '/assets/verification-handoff-v1.js',
-  '/assets/cloud-ui-stability-v1.js',
-  '/assets/professional-workspace-v2.css',
-  '/assets/professional-accessibility-v1.css',
-  '/assets/professional-workspace-v2.js',
-  '/assets/ux-hardening-v1.js',
-  '/assets/auth-premium-v5.css',
-  '/assets/auth-premium-v5.js',
-  '/assets/dashboard-modern-v3.css',
-  '/assets/mobile-modern-v4.css',
-  '/assets/mobile-experience-v4.js',
-  '/assets/product-ui-v4.css',
-  '/assets/product-ui-v4.js',
-  '/assets/product-ui-v5.css',
-  '/assets/product-motion-v5.js',
-  '/assets/reference-refresh.css',
-  '/assets/reference-enhancements.js',
-  '/assets/experience-v9.css',
-  '/assets/appearance-v1.js',
-  '/assets/practice-exam-v4.js',
-  '/assets/dcn-2024-pattern-v1.js',
-  '/assets/study-room.webp',
-  '/assets/campus-banner.webp',
-  '/assets/tailwind.generated.css',
-  '/assets/tailwind-runtime-v6.js',
-  '/assets/firebase-config.js',
-  '/assets/auth.js',
-  '/assets/app.js',
-  '/assets/finalforge-logo.svg',
-  '/assets/finalforge-logo-256.webp',
-  '/assets/icon-192.png',
-  '/assets/icon-512.png'
-]);
-
 const CRITICAL_RUNTIME=new Set([
-  '/assets/core-loader.js',
-  '/assets/account-storage-v1.js',
-  '/assets/app.js',
-  '/assets/auth.js',
-  '/assets/session-restore-v1.js',
-  '/assets/firebase-config.js',
-  '/assets/cloud-ui-stability-v1.js',
-  '/assets/mobile-modern-v4.css',
-  '/assets/reference-enhancements.js',
-  '/assets/runtime-stability-v1.css',
-  '/assets/mobile-runtime-final-v1.css',
-  '/assets/mobile-runtime-final-v1.js',
-  '/assets/mobile-scroll-recovery-v1.css',
-  '/assets/mobile-scroll-recovery-v1.js',
-  '/assets/mobile-navigation-runtime-v2.js',
-  '/assets/practice-stability-v1.js',
-  '/assets/practice-exam-v4.js',
-  '/assets/professional-workspace-v2.css',
-  '/assets/professional-accessibility-v1.css',
-  '/assets/professional-workspace-v2.js'
+  '/assets/core-loader.js','/assets/account-storage-v1.js','/assets/resource-delivery-v1.js','/assets/app.js',
+  '/assets/past-papers-v1.js','/assets/appearance-v1.js','/assets/theme-toggle-stability-v1.js',
+  '/assets/ip-paper-extension-v1.js','/assets/ip-challenge-v2.js','/assets/ip-final-blueprint-v5.js','/assets/practice-exam-v5.js','/assets/ip-model-library-v6.js','/assets/practice-review-v7.js','/assets/practice-code-workspace-v8.js','/assets/practice-adaptive-v9.js','/assets/student-readiness-v10.js','/assets/question-bank-v11.js','/assets/admin-question-studio-v11.js','/assets/study-experience.js','/assets/stability-runtime-v1.js',
+  '/assets/premium-ui-v1.js','/assets/workspace-v3.js','/assets/mobile-runtime-final-v1.js','/assets/auth-flow-dom-v1.js','/assets/auth.js','/assets/auth-mobile-viewport-v1.js','/assets/account-security-v1.js','/assets/practice-stability-v1.js','/assets/practice-interaction-fix-v1.js','/assets/practice-timer-runtime-v1.js',
+  '/assets/mobile-navigation-runtime-v2.js','/assets/mobile-scroll-recovery-v1.js','/assets/reference-ui-v76.js','/assets/reference-ui-v77.js',
+  '/assets/auth-system-v2.css','/assets/auth-responsive-hotfix-v1.css','/assets/stability-mode-v1.css','/assets/premium-shell-v1.css','/assets/premium-studyhub-v1.css','/assets/premium-studyhub-v2.css','/assets/practice-premium-v5.css','/assets/premium-comfort-v1.css','/assets/practice-interaction-fix-v1.css','/assets/premium-comfort-v2.css','/assets/practice-premium-v6.css','/assets/practice-review-v7.css','/assets/practice-code-workspace-v8.css','/assets/practice-adaptive-v9.css','/assets/student-readiness-v10.css','/assets/admin-question-studio-v11.css','/assets/account-security-v1.css','/assets/mobile-premium-v7.css','/assets/auth-mobile-compact-v8.css','/assets/auth-premium-v9.css','/assets/auth-mobile-premium-v10.css','/assets/auth-responsive-premium-v13.css','/assets/workspace-v3.css','/assets/reference-ui-v76.css','/assets/reference-ui-v77.css'
 ]);
 
 self.addEventListener('install',event=>event.waitUntil(
-  caches.open(C)
-    .then(cache=>cache.addAll(CORE))
-    .then(()=>self.skipWaiting())
+  caches.open(C).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting())
 ));
 
 self.addEventListener('activate',event=>event.waitUntil(
-  caches.keys()
-    .then(keys=>Promise.all(keys.filter(key=>key!==C).map(key=>caches.delete(key))))
-    .then(()=>self.clients.claim())
+  caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==C).map(key=>caches.delete(key)))).then(()=>self.clients.claim())
 ));
 
+function protectedPath(pathname){return pathname.startsWith('/api/')||pathname.startsWith('/resource/')}
+function cacheable(response){
+  if(!response?.ok)return false;
+  const control=response.headers?.get?.('Cache-Control')||'';
+  return !/(?:no-store|private)/i.test(control);
+}
 function fetchOptions(){
   const options={cache:'no-cache'};
   if(typeof AbortSignal!=='undefined'&&typeof AbortSignal.timeout==='function')options.signal=AbortSignal.timeout(8000);
   return options;
 }
 
-async function staleWhileRevalidate(request,fallback){
+async function fresh(request,fallback){
   const cache=await caches.open(C);
-  const cached=await cache.match(request)||(fallback?await cache.match(fallback):null);
-  const network=fetch(request).then(response=>{
-    if(response?.ok)cache.put(request,response.clone());
+  try{
+    const response=await fetch(request,fetchOptions());
+    if(cacheable(response))await cache.put(request,response.clone());
     return response;
-  }).catch(()=>null);
-
-  if(cached){
-    network.catch(()=>{});
-    return cached;
+  }catch{
+    return await cache.match(request)||await cache.match(fallback||'./index.html')||Response.error();
   }
-  const fresh=await network;
-  if(fresh)return fresh;
-  if(fallback){
-    const cachedFallback=await cache.match(fallback);
-    if(cachedFallback)return cachedFallback;
-  }
-  return Response.error();
 }
 
-async function freshNavigation(request){
+async function cachedThenNetwork(request){
   const cache=await caches.open(C);
+  const cached=await cache.match(request);
+  if(cached)return cached;
   try{
-    const response=await fetch(request,fetchOptions());
-    if(response.ok){
-      await cache.put(request,response.clone());
-      return response;
-    }
-  }catch{}
-  return await cache.match(request)||await cache.match('./index.html')||Response.error();
-}
-
-async function freshRuntime(request){
-  const cache=await caches.open(C);
-  try{
-    const response=await fetch(request,fetchOptions());
-    if(response.ok){
-      await cache.put(request,response.clone());
-      return response;
-    }
-  }catch{}
-  return await cache.match(request)||Response.error();
+    const response=await fetch(request);
+    if(cacheable(response))cache.put(request,response.clone());
+    return response;
+  }catch{return Response.error()}
 }
 
 self.addEventListener('fetch',event=>{
-  if(event.request.method!=='GET')return;
   const url=new URL(event.request.url);
   if(url.origin!==location.origin)return;
-
+  if(protectedPath(url.pathname)){
+    event.respondWith(fetch(event.request,{cache:'no-store'}));
+    return;
+  }
+  if(event.request.method!=='GET')return;
   if(event.request.mode==='navigate'){
-    event.respondWith(freshNavigation(event.request));
+    event.respondWith(fresh(event.request,'./index.html'));
     return;
   }
   if(CRITICAL_RUNTIME.has(url.pathname)){
-    event.respondWith(freshRuntime(event.request));
+    event.respondWith(fresh(event.request));
     return;
   }
-  if(INSTANT.has(url.pathname)){
-    event.respondWith(staleWhileRevalidate(event.request));
-    return;
-  }
-
-  event.respondWith(
-    caches.match(event.request).then(cached=>cached||fetch(event.request).then(response=>{
-      if(response?.ok)caches.open(C).then(cache=>cache.put(event.request,response.clone()));
-      return response;
-    }))
-  );
+  event.respondWith(cachedThenNetwork(event.request));
 });

@@ -1,0 +1,73 @@
+/* FinalForge Practice Interaction Fix v1 — keep visual layers decorative and controls reachable. */
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe{
+  position:relative!important;
+  isolation:isolate!important;
+}
+
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe::before,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe::after,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe #practiceWorkbench::before,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe #practiceWorkbench::after,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe .ff-v5-practice-hub::before,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe .ff-v5-practice-hub::after,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe .ff-v5-paper-card::before,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe .ff-v5-paper-card::after,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe .ff-v5-action-card::before,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe .ff-v5-action-card::after,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe .ff-v5-how::before,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe .ff-v5-how::after,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe .ff-v5-source-note::before,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe .ff-v5-source-note::after,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe .ff-v5-paper-index,
+html.ff-premium-ui-v2 body.ff-authenticated .cursor-glow,
+html.ff-premium-ui-v2 body.ff-authenticated .page-progress,
+html.ff-premium-ui-v2 body.ff-authenticated .hero-mesh{
+  pointer-events:none!important;
+}
+
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe > *,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe #practiceWorkbench,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe .ff-v5-practice-hub,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe .ff-v5-paper-grid,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe .ff-v5-special-row,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe .ff-v5-tools{
+  position:relative!important;
+  z-index:1!important;
+}
+
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe button:not(:disabled),
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe a[href],
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe input,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe textarea,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe select,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe label:has(input){
+  position:relative!important;
+  z-index:8!important;
+  pointer-events:auto!important;
+}
+
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe [data-start-mode],
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe [data-go-tool],
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe [data-practice-module],
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe [data-question-index],
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe [data-exam-next],
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe [data-exam-prev],
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe [data-exam-submit],
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe [data-exam-finish]{
+  cursor:pointer!important;
+  touch-action:manipulation!important;
+}
+
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe #weaknessPanel:empty,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe #refBuilder:empty,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe #practiceGuide:empty,
+html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe #mockLibrary:empty{
+  display:none!important;
+  pointer-events:none!important;
+  margin:0!important;
+  min-height:0!important;
+}
+
+@media(max-width:900px){
+  html.ff-premium-ui-v2 body.ff-authenticated #practice.ff-practice-interaction-safe .ff-v5-paper-grid{z-index:2!important}
+}

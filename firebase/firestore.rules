@@ -16,6 +16,7 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/student_allowlist/$(studentId))
         && get(/databases/$(database)/documents/student_allowlist/$(studentId)).data.active == true
         && get(/databases/$(database)/documents/student_allowlist/$(studentId)).data.sliitEmail == request.auth.token.email
+        && exists(/databases/$(database)/documents/student_claims/$(studentId))
         && get(/databases/$(database)/documents/student_claims/$(studentId)).data.uid == uid;
     }
 
@@ -23,32 +24,23 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
+    match /pending_registrations/{uid} {
+      // Created and maintained only by the trusted signup/restart backend.
+      allow read, write: if false;
+    }
+
     match /student_claims/{studentId} {
       allow read: if isAdmin() || (verifiedEmail() && resource.data.uid == request.auth.uid);
-      allow create: if verifiedEmail()
-        && !exists(/databases/$(database)/documents/student_claims/$(studentId))
-        && exists(/databases/$(database)/documents/student_allowlist/$(studentId))
-        && get(/databases/$(database)/documents/student_allowlist/$(studentId)).data.active == true
-        && get(/databases/$(database)/documents/student_allowlist/$(studentId)).data.sliitEmail == request.auth.token.email
-        && request.resource.data.studentId == studentId
-        && request.resource.data.uid == request.auth.uid;
-      allow update: if false;
+      // Account activation is now server-certified so a browser cannot bypass
+      // the 20-minute pending-registration boundary by writing its own claim.
+      allow create, update: if false;
       allow delete: if isAdmin();
     }
 
     match /profiles/{uid} {
       allow read: if isAdmin() || (verifiedEmail() && own(uid));
-      allow create: if own(uid)
-        && verifiedEmail()
-        && request.resource.data.role == 'student'
-        && request.resource.data.studentId is string
-        && request.resource.data.sliitEmail == request.auth.token.email
-        && request.resource.data.emailVerified == true
-        && request.resource.data.disabled == false
-        && exists(/databases/$(database)/documents/student_allowlist/$(request.resource.data.studentId))
-        && get(/databases/$(database)/documents/student_allowlist/$(request.resource.data.studentId)).data.active == true
-        && get(/databases/$(database)/documents/student_allowlist/$(request.resource.data.studentId)).data.sliitEmail == request.auth.token.email
-        && getAfter(/databases/$(database)/documents/student_claims/$(request.resource.data.studentId)).data.uid == uid;
+      // New student profiles are created only by POST /api/activate-account.
+      allow create: if false;
       allow update: if isAdmin() || (approvedStudent(uid)
         && request.resource.data.role == resource.data.role
         && request.resource.data.studentId == resource.data.studentId

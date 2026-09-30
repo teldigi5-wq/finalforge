@@ -1,0 +1,295 @@
+/* FinalForge Premium Comfort v1 — final visual override for eye comfort, clarity and reliable hit targets. */
+:root{
+  --ffc-bg:#08111e;
+  --ffc-bg-2:#0a1626;
+  --ffc-panel:#0e1b2d;
+  --ffc-panel-2:#112238;
+  --ffc-panel-soft:rgba(15,31,51,.84);
+  --ffc-line:rgba(139,176,226,.14);
+  --ffc-line-strong:rgba(112,164,235,.28);
+  --ffc-text:#edf4fd;
+  --ffc-text-soft:#b8c9dc;
+  --ffc-muted:#8298b1;
+  --ffc-blue:#75aff7;
+  --ffc-cyan:#67d0c7;
+  --ffc-violet:#9386e8;
+  --ffc-green:#67cfa8;
+  --ffc-danger:#ef8998;
+  --ffc-shadow:0 18px 52px rgba(0,0,0,.22);
+  --ffc-shadow-soft:0 10px 28px rgba(0,0,0,.14);
+}
+
+html.ff-premium-ui-v2 body.ff-authenticated{
+  background:
+    radial-gradient(900px 520px at 10% -8%,rgba(72,126,202,.12),transparent 68%),
+    radial-gradient(760px 480px at 95% 2%,rgba(125,104,210,.08),transparent 68%),
+    linear-gradient(145deg,#07101c 0%,#081321 48%,#091625 100%)!important;
+  color:var(--ffc-text)!important;
+}
+
+/* Decorative layers must never block interaction. */
+html.ff-premium-ui-v2 body.ff-authenticated .card::before,
+html.ff-premium-ui-v2 body.ff-authenticated .card::after,
+html.ff-premium-ui-v2 body.ff-authenticated .hero-main::before,
+html.ff-premium-ui-v2 body.ff-authenticated .hero-main::after,
+html.ff-premium-ui-v2 body.ff-authenticated .hero-side::before,
+html.ff-premium-ui-v2 body.ff-authenticated .hero-side::after,
+html.ff-premium-ui-v2 body.ff-authenticated .practice-hero::before,
+html.ff-premium-ui-v2 body.ff-authenticated .practice-hero::after,
+html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-action-card::before,
+html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-action-card::after,
+html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-paper-card::before,
+html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-paper-card::after{
+  pointer-events:none!important;
+}
+
+/* Interactive controls always sit above decorative surfaces. */
+html.ff-premium-ui-v2 body.ff-authenticated button:not(:disabled),
+html.ff-premium-ui-v2 body.ff-authenticated a,
+html.ff-premium-ui-v2 body.ff-authenticated input,
+html.ff-premium-ui-v2 body.ff-authenticated textarea,
+html.ff-premium-ui-v2 body.ff-authenticated select,
+html.ff-premium-ui-v2 body.ff-authenticated label{
+  position:relative;
+  z-index:2;
+}
+html.ff-premium-ui-v2 body.ff-authenticated button:not(:disabled),
+html.ff-premium-ui-v2 body.ff-authenticated a[href],
+html.ff-premium-ui-v2 body.ff-authenticated label:has(input){pointer-events:auto!important}
+html.ff-premium-ui-v2 body.ff-authenticated button:disabled{cursor:not-allowed!important;opacity:.48!important}
+
+/* Calm typography — warm white instead of stark white. */
+html.ff-premium-ui-v2 body.ff-authenticated,
+html.ff-premium-ui-v2 body.ff-authenticated button,
+html.ff-premium-ui-v2 body.ff-authenticated input,
+html.ff-premium-ui-v2 body.ff-authenticated textarea,
+html.ff-premium-ui-v2 body.ff-authenticated select{
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+html.ff-premium-ui-v2 body.ff-authenticated h1,
+html.ff-premium-ui-v2 body.ff-authenticated h2,
+html.ff-premium-ui-v2 body.ff-authenticated h3,
+html.ff-premium-ui-v2 body.ff-authenticated h4{color:var(--ffc-text)!important}
+html.ff-premium-ui-v2 body.ff-authenticated .muted,
+html.ff-premium-ui-v2 body.ff-authenticated p,
+html.ff-premium-ui-v2 body.ff-authenticated small{color:var(--ffc-text-soft)}
+html.ff-premium-ui-v2 body.ff-authenticated .kicker{color:#86b6ee!important}
+
+/* Reduce visual fatigue: softer surfaces, less neon, more separation. */
+html.ff-premium-ui-v2 body.ff-authenticated .card,
+html.ff-premium-ui-v2 body.ff-authenticated .hero-side,
+html.ff-premium-ui-v2 body.ff-authenticated .practice-hero,
+html.ff-premium-ui-v2 body.ff-authenticated .planner-card,
+html.ff-premium-ui-v2 body.ff-authenticated .exam-card,
+html.ff-premium-ui-v2 body.ff-authenticated .admin-panel{
+  border-color:var(--ffc-line)!important;
+  background:linear-gradient(155deg,rgba(15,30,49,.96),rgba(10,22,37,.97))!important;
+  box-shadow:var(--ffc-shadow-soft)!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .card:hover{border-color:rgba(126,171,230,.22)!important}
+
+html.ff-premium-ui-v2 body.ff-authenticated .sidebar{
+  background:linear-gradient(180deg,rgba(6,14,25,.985),rgba(8,18,31,.97))!important;
+  border-right-color:rgba(132,166,211,.11)!important;
+  box-shadow:14px 0 40px rgba(0,0,0,.12)!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .nav button{
+  min-height:48px!important;
+  border-radius:13px!important;
+  color:#94a9c0!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .nav button:hover{
+  background:rgba(93,132,187,.07)!important;
+  color:#dfeaf6!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .nav button.active{
+  background:linear-gradient(90deg,rgba(73,121,190,.15),rgba(89,78,170,.055))!important;
+  border-color:rgba(107,154,217,.22)!important;
+  color:#edf4fd!important;
+  box-shadow:none!important;
+}
+
+html.ff-premium-ui-v2 body.ff-authenticated .topbar{
+  background:rgba(9,20,35,.94)!important;
+  border-color:rgba(136,171,219,.12)!important;
+  box-shadow:0 10px 34px rgba(0,0,0,.14)!important;
+  backdrop-filter:blur(10px)!important;
+}
+
+/* Buttons: high-quality but restrained. */
+html.ff-premium-ui-v2 body.ff-authenticated .btn,
+html.ff-premium-ui-v2 body.ff-authenticated button.btn{
+  min-height:44px;
+  border-radius:13px!important;
+  border-color:rgba(132,169,220,.16)!important;
+  color:#e5eef9!important;
+  background:rgba(19,36,58,.82)!important;
+  box-shadow:none!important;
+  transition:transform .14s ease,border-color .14s ease,background-color .14s ease,box-shadow .14s ease!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .btn:hover:not(:disabled){
+  transform:translateY(-1px)!important;
+  border-color:rgba(126,177,240,.28)!important;
+  background:rgba(24,45,72,.9)!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .btn.primary{
+  color:#fff!important;
+  background:linear-gradient(112deg,#4f88dc,#5798e7 58%,#746bd1)!important;
+  border-color:rgba(131,177,239,.30)!important;
+  box-shadow:0 9px 23px rgba(50,93,170,.20)!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .btn.primary:hover:not(:disabled){
+  background:linear-gradient(112deg,#588fe0,#62a0e9 58%,#7a72d5)!important;
+  box-shadow:0 12px 28px rgba(50,93,170,.24)!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .btn:focus-visible,
+html.ff-premium-ui-v2 body.ff-authenticated button:focus-visible,
+html.ff-premium-ui-v2 body.ff-authenticated a:focus-visible,
+html.ff-premium-ui-v2 body.ff-authenticated input:focus-visible,
+html.ff-premium-ui-v2 body.ff-authenticated textarea:focus-visible{
+  outline:2px solid rgba(117,175,247,.72)!important;
+  outline-offset:3px!important;
+}
+
+/* Home — less glare, better reading hierarchy. */
+html.ff-premium-ui-v2 body.ff-authenticated #home .hero-main{
+  border-color:rgba(125,167,221,.17)!important;
+  box-shadow:var(--ffc-shadow)!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated #home .gradient-text{
+  background:linear-gradient(95deg,#8db8ea,#6dc9c1 48%,#9b90df 92%)!important;
+  -webkit-background-clip:text!important;background-clip:text!important;color:transparent!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated #home .hero-copy>p{color:#a9bbcd!important;line-height:1.72!important}
+html.ff-premium-ui-v2 body.ff-authenticated .timebox,
+html.ff-premium-ui-v2 body.ff-authenticated .quick-dock>button{
+  border-color:rgba(132,170,221,.12)!important;
+  background:linear-gradient(150deg,rgba(16,32,52,.94),rgba(10,23,39,.95))!important;
+  box-shadow:var(--ffc-shadow-soft)!important;
+}
+
+/* Resource library readability. */
+html.ff-premium-ui-v2 body.ff-authenticated .resource.ff-resource-row{
+  min-height:86px!important;
+  border-color:rgba(134,171,221,.12)!important;
+  background:linear-gradient(145deg,rgba(14,29,48,.95),rgba(10,22,37,.97))!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .resource.ff-resource-row:hover{
+  transform:none!important;
+  border-color:rgba(120,170,231,.24)!important;
+  background:linear-gradient(145deg,rgba(17,34,56,.97),rgba(11,24,41,.98))!important;
+}
+
+/* Exam Studio: wide, calm reading surface. */
+html.ff-premium-ui-v2 body.ff-authenticated #practice .practice-hero{
+  border-color:rgba(121,168,226,.16)!important;
+  background:
+    radial-gradient(500px 260px at 10% 0%,rgba(68,125,196,.09),transparent 72%),
+    linear-gradient(145deg,rgba(14,30,50,.97),rgba(9,21,36,.98))!important;
+  box-shadow:var(--ffc-shadow)!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated #practice .practice-tab.active::after{box-shadow:none!important;opacity:.72}
+html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-pattern-card::before{box-shadow:none!important;opacity:.65}
+html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-exam-app{
+  background:linear-gradient(150deg,#0b192a,#081421)!important;
+  border-color:rgba(131,170,221,.14)!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.22)!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-exam-question{
+  background:linear-gradient(180deg,rgba(11,25,42,.55),rgba(9,21,36,.35));
+}
+html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-exam-question>h2{
+  max-width:940px!important;
+  color:#edf4fd!important;
+  line-height:1.18!important;
+  letter-spacing:-.03em!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-options label{
+  min-height:76px!important;
+  color:#dce7f4!important;
+  border-color:rgba(136,174,225,.13)!important;
+  background:rgba(16,32,52,.72)!important;
+  box-shadow:none!important;
+  cursor:pointer!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-options label:hover{
+  transform:none!important;
+  border-color:rgba(121,171,235,.26)!important;
+  background:rgba(20,39,63,.84)!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-options label.selected{
+  border-color:rgba(103,164,235,.40)!important;
+  background:linear-gradient(100deg,rgba(65,121,196,.17),rgba(69,164,156,.05))!important;
+  box-shadow:inset 0 0 0 1px rgba(105,163,232,.06)!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-code-trace pre,
+html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-native-code{
+  background:#07111d!important;
+  border-color:rgba(127,166,217,.14)!important;
+  color:#dceafa!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-sticky-actions{
+  z-index:25!important;
+  pointer-events:auto!important;
+  background:linear-gradient(180deg,rgba(8,18,31,.72),rgba(8,18,31,.97))!important;
+  border-top-color:rgba(135,171,218,.13)!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-sticky-actions .btn{pointer-events:auto!important;z-index:26!important}
+html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-exam-rail .exam-nav button{cursor:pointer!important;pointer-events:auto!important}
+
+/* Inputs and editors. */
+html.ff-premium-ui-v2 body.ff-authenticated input,
+html.ff-premium-ui-v2 body.ff-authenticated textarea,
+html.ff-premium-ui-v2 body.ff-authenticated select,
+html.ff-premium-ui-v2 body.ff-authenticated .search{
+  background:rgba(7,17,29,.88)!important;
+  color:#e5eef8!important;
+  border-color:rgba(128,163,211,.16)!important;
+  box-shadow:none!important;
+}
+html.ff-premium-ui-v2 body.ff-authenticated input:focus,
+html.ff-premium-ui-v2 body.ff-authenticated textarea:focus,
+html.ff-premium-ui-v2 body.ff-authenticated select:focus,
+html.ff-premium-ui-v2 body.ff-authenticated .search:focus{
+  border-color:rgba(116,169,236,.48)!important;
+  box-shadow:0 0 0 3px rgba(79,136,220,.11)!important;
+}
+
+/* Light theme stays soft rather than pure white. */
+html[data-theme="light"].ff-premium-ui-v2 body.ff-authenticated{
+  background:linear-gradient(145deg,#eef4fa,#f7faff)!important;
+  color:#20344b!important;
+}
+html[data-theme="light"].ff-premium-ui-v2 body.ff-authenticated .card,
+html[data-theme="light"].ff-premium-ui-v2 body.ff-authenticated .hero-side,
+html[data-theme="light"].ff-premium-ui-v2 body.ff-authenticated .practice-hero{
+  background:linear-gradient(155deg,#fbfdff,#f4f8fc)!important;
+  border-color:rgba(70,103,145,.13)!important;
+  box-shadow:0 12px 34px rgba(46,70,101,.09)!important;
+}
+html[data-theme="light"].ff-premium-ui-v2 body.ff-authenticated h1,
+html[data-theme="light"].ff-premium-ui-v2 body.ff-authenticated h2,
+html[data-theme="light"].ff-premium-ui-v2 body.ff-authenticated h3{color:#20344b!important}
+html[data-theme="light"].ff-premium-ui-v2 body.ff-authenticated .muted,
+html[data-theme="light"].ff-premium-ui-v2 body.ff-authenticated p{color:#5e7289!important}
+
+/* Comfortable scrollbars. */
+html.ff-premium-ui-v2 body.ff-authenticated *{scrollbar-width:thin;scrollbar-color:rgba(105,143,193,.42) rgba(7,16,28,.18)}
+html.ff-premium-ui-v2 body.ff-authenticated *::-webkit-scrollbar{width:10px;height:10px}
+html.ff-premium-ui-v2 body.ff-authenticated *::-webkit-scrollbar-track{background:rgba(7,16,28,.18)}
+html.ff-premium-ui-v2 body.ff-authenticated *::-webkit-scrollbar-thumb{background:rgba(105,143,193,.42);border-radius:999px;border:2px solid rgba(7,16,28,.26)}
+
+@media(max-width:900px){
+  html.ff-premium-ui-v2 body.ff-authenticated .topbar{backdrop-filter:none!important}
+  html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-sticky-actions{position:sticky!important;bottom:0!important;padding-bottom:max(12px,env(safe-area-inset-bottom))!important}
+}
+@media(max-width:620px){
+  html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-sticky-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+  html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-sticky-actions .flag{grid-column:1/-1;grid-row:1!important}
+  html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-sticky-actions .btn{min-height:48px!important;width:100%!important}
+  html.ff-premium-ui-v2 body.ff-authenticated .ff-v5-exam-question{padding:20px 14px 110px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html.ff-premium-ui-v2 body.ff-authenticated *,html.ff-premium-ui-v2 body.ff-authenticated *::before,html.ff-premium-ui-v2 body.ff-authenticated *::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+}

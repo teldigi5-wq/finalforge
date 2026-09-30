@@ -1,0 +1,83 @@
+name: Reference UI Premium Gate
+
+on:
+  push:
+    branches:
+      - fix/private-resource-delivery-v1
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - fix/private-resource-delivery-v1
+
+jobs:
+  certify-reference-ui-v77:
+    runs-on: ubuntu-latest
+    name: Premium public/auth reference and boundary checks
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+
+      - name: Verify premium runtime syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check assets/reference-ui-v77.js
+          node --check assets/past-papers-v1.js
+          node --check assets/mobile-scroll-recovery-v1.js
+          node --check sw.js
+
+      - name: Verify premium landing login signup surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s assets/reference-ui-v77.css
+          test -s assets/reference-ui-v77.js
+          grep -Fq "premium-public-auth" assets/reference-ui-v77.js
+          grep -Fq "ff-v77-public-landing" assets/reference-ui-v77.css
+          grep -Fq 'data-ff-public-mode="login"' assets/reference-ui-v77.css
+          grep -Fq 'data-ff-public-mode="signup"' assets/reference-ui-v77.css
+          grep -Fq "ffPublicLanding" assets/reference-ui-v77.js
+          grep -Fq 'Forge Your<br>Academic <em>Edge.</em>' assets/reference-ui-v77.js
+          grep -Fq "Continue your academic journey" assets/reference-ui-v77.js || grep -Fq "Secure access to your FinalForge study workspace" assets/reference-ui-v77.js
+          grep -Fq "Create your account" assets/reference-ui-v77.js
+          grep -Fq "Verify Email" assets/reference-ui-v77.js
+          grep -Fq "ff-v77-trust-row" assets/reference-ui-v77.js
+          grep -Fq "Keep me signed in" assets/reference-ui-v77.js
+          grep -Fq "rememberInput.checked=false" assets/reference-ui-v77.js
+          grep -Fq 'data-v77-level="empty"' assets/reference-ui-v77.css
+          grep -Fq "#resetForm>h2" assets/reference-ui-v77.css
+
+      - name: Verify public visual ownership and cache boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq "reference-ui-v76.css?v=reference-ui-v76" assets/mobile-scroll-recovery-v1.js
+          grep -Fq "reference-ui-v77.css?v=reference-ui-v77" assets/mobile-scroll-recovery-v1.js
+          grep -Fq "reference-ui-v77.js?v=reference-ui-v77" assets/mobile-scroll-recovery-v1.js
+          grep -Fq "ff-reference-ui-v77" assets/mobile-scroll-recovery-v1.js
+          grep -Fq "finalforge-v78-premium-polish" sw.js
+          grep -Fq "./assets/reference-ui-v77.css" sw.js
+          grep -Fq "./assets/reference-ui-v77.js" sw.js
+          grep -Fq "./assets/campus-banner.webp" sw.js
+
+      - name: Preserve auth ownership and private-resource boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq "window.showAuthView" assets/reference-ui-v77.js
+          ! grep -Eq "fetch\(|XMLHttpRequest|firebase\.(auth|firestore)|localStorage\.setItem|sessionStorage\.setItem" assets/reference-ui-v77.js
+          grep -Fq "pathname.startsWith('/api/')||pathname.startsWith('/resource/')" sw.js
+          grep -Fq "fetch(event.request,{cache:'no-store'})" sw.js
+
+      - name: Verify responsive accessibility and copy quality
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq "@media(max-width:900px)" assets/reference-ui-v77.css
+          grep -Fq "@media(max-width:620px)" assets/reference-ui-v77.css
+          grep -Fq "@media(max-height:720px)" assets/reference-ui-v77.css
+          grep -Fq "prefers-reduced-motion" assets/reference-ui-v77.css
+          grep -Fq "focus-visible" assets/reference-ui-v77.css
+          grep -Fq "font-size:16px" assets/reference-ui-v77.css
+          grep -Fq "View external source ↗" assets/past-papers-v1.js
+          ! grep -Fq "Open source ↗" assets/past-papers-v1.js

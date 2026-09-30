@@ -1,0 +1,19 @@
+NOTICE - IP Final Exam
+IP Final Exam Structure
+Computer-based via NetExam
+Duration : 2 hours + 10 mins (to upload the Java source code files to NetExam and submit)
+Part 1 - 50% weightage - MCQ
+25 MCQ questions
+Each question 4 or 5 answer options
+Only 1 correct answer
+Each MCQ question carries equal marks
+No minus marks deducted for wrong MCQ answers
+Part 2 - 50% weightage - Write Java Programs
+2 questions, hence separate Java source code files needed to be uploaded
+Each question carries equal marks (25% weightage each)
+NO Internet access allowed
+ONLY allowed to access: Notepad , Notepad++ , Microsoft Calculator and Command Prompt (to compile Java codes)
+Student MUST UPLOAD .java source code files into NetExam
+Upload option provided for each question separately in NetExam
+NO .java source code file uploaded into NetExam = ZERO marks
+Content from Lecture 1 to 10

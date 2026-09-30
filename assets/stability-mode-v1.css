@@ -1,0 +1,42 @@
+/* FinalForge Stability Mode v1 — prioritize responsiveness over decorative motion. */
+html.ff-stability-mode{scroll-behavior:auto!important}
+html.ff-stability-mode body.ff-authenticated .app *,
+html.ff-stability-mode body.auth-pending #authGate *{
+  animation:none!important;
+  transition:none!important;
+  scroll-behavior:auto!important;
+  will-change:auto!important;
+}
+html.ff-stability-mode body.ff-authenticated .app *,
+html.ff-stability-mode body.auth-pending #authGate *{
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+html.ff-stability-mode body.ff-authenticated .section:not(.active){
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+html.ff-stability-mode body.ff-authenticated .section.active{
+  visibility:visible!important;
+  pointer-events:auto!important;
+}
+html.ff-stability-mode .ff-enter,
+html.ff-stability-mode .ff-entered{
+  opacity:1!important;
+  transform:none!important;
+}
+html.ff-stability-mode .ff-nav-indicator,
+html.ff-stability-mode .ff-hero-atmosphere,
+html.ff-stability-mode .ff-auth-depth{
+  display:none!important;
+}
+html.ff-stability-mode body.ff-authenticated .hero-v3,
+html.ff-stability-mode body.ff-authenticated .card,
+html.ff-stability-mode body.ff-authenticated .topbar,
+html.ff-stability-mode body.ff-authenticated .sidebar{
+  transform:none!important;
+}
+@media (prefers-reduced-motion:reduce){
+  html.ff-stability-mode *{animation:none!important;transition:none!important}
+}

@@ -1,4 +1,4 @@
-/* FinalForge Account Storage v1 — UID-scoped study state with shared-browser isolation. */
+/* FinalForge Account Storage v1 — UID-scoped study state with explicit auth ownership and deferred UI hydration. */
 (() => {
   'use strict';
 
@@ -8,8 +8,10 @@
   const DEVICE_KEYS=new Set(['finalforge_theme_v1','finalforge_platform_rated']);
   const storage=window.localStorage;
   const transient=window.sessionStorage;
+
   let activeUid=null;
-  let authWrapped=false;
+  let refreshScheduled=false;
+  let refreshQueue=[];
 
   const native={
     get:storage.getItem.bind(storage),
@@ -89,7 +91,7 @@
   }
 
   function setItem(key,value,{silent=false}={}){
-    key=str(key);value=str(value);
+    key=str(key); value=str(value);
     if(isTransientKey(key)){
       session?.set(key,value);
       native.remove(key);
@@ -109,7 +111,7 @@
   function removeItem(key,{silent=false}={}){
     key=str(key);
     if(isTransientKey(key)){
-      session?.remove(key);native.remove(key);
+      session?.remove(key); native.remove(key);
       if(!silent)notify('change',key);
       return;
     }
@@ -123,14 +125,34 @@
     if(!silent&&isFinalForgeKey(key))notify('device-change',key);
   }
 
-  function refreshViews(){
-    for(const name of ['renderModules','renderHome','renderPlanner','renderPractice']){
-      try{if(typeof window[name]==='function')window[name]()}catch{}
-    }
+  function scheduleFrame(fn){
+    if(typeof window.requestAnimationFrame==='function')return window.requestAnimationFrame(fn);
+    if(typeof window.setTimeout==='function')return window.setTimeout(fn,0);
+    return 0;
+  }
+
+  function queueRefreshViews(){
+    if(refreshScheduled)return;
+    refreshScheduled=true;
+    refreshQueue=['renderModules','renderHome','renderPlanner','renderPractice'];
+
+    const step=()=>{
+      const name=refreshQueue.shift();
+      if(name){
+        try{if(typeof window[name]==='function')window[name]()}catch{}
+      }
+      if(refreshQueue.length){
+        scheduleFrame(step);
+      }else{
+        refreshScheduled=false;
+      }
+    };
+
+    if(!scheduleFrame(step))refreshScheduled=false;
   }
 
   function notify(type,key=null,{refresh=false}={}){
-    if(refresh)refreshViews();
+    if(refresh)queueRefreshViews();
     try{
       window.dispatchEvent(new CustomEvent(`finalforge-account-storage-${type}`,{detail:{uid:activeUid,key}}));
     }catch{}
@@ -151,56 +173,12 @@
     notify('unbound',null,{refresh:true});
   }
 
-  function wrapAuth(auth){
-    if(!auth||auth.__ffAccountStorageWrapped)return;
-    auth.__ffAccountStorageWrapped=true;
-
-    if(typeof auth.signInWithEmailAndPassword==='function'){
-      const signIn=auth.signInWithEmailAndPassword.bind(auth);
-      auth.signInWithEmailAndPassword=async(...args)=>{
-        const credential=await signIn(...args);
-        if(credential?.user?.uid)bind(credential.user.uid);
-        return credential;
-      };
-    }
-
-    if(typeof auth.signOut==='function'){
-      const signOut=auth.signOut.bind(auth);
-      auth.signOut=async(...args)=>{
-        const result=await signOut(...args);
-        unbind();
-        return result;
-      };
-    }
-
-    if(typeof auth.onAuthStateChanged==='function'){
-      auth.onAuthStateChanged(user=>{
-        if(user?.uid)bind(user.uid);else unbind();
-      });
-    }
-  }
-
-  function attachFirebase(){
-    const firebase=window.firebase;
-    if(!firebase||authWrapped)return;
-    if(typeof firebase.initializeApp!=='function')return;
-    const initialize=firebase.initializeApp.bind(firebase);
-    firebase.initializeApp=function(...args){
-      const app=initialize(...args);
-      try{wrapAuth(firebase.auth())}catch{}
-      return app;
-    };
-    authWrapped=true;
-    try{if(firebase.apps?.length)wrapAuth(firebase.auth())}catch{}
-  }
-
   storage.getItem=getItem;
   storage.setItem=(key,value)=>setItem(key,value);
   storage.removeItem=key=>removeItem(key);
   storage.key=index=>virtualKeys()[Number(index)]??null;
 
   quarantineLegacy();
-  attachFirebase();
 
   window.addEventListener?.('storage',event=>{
     if(!activeUid||!event?.key)return;
@@ -212,7 +190,8 @@
   });
 
   window.finalforgeAccountStorage={
-    version:1,
+    version:2,
+    authBinding:'explicit',
     bind,
     unbind,
     currentUid:()=>activeUid,
@@ -223,6 +202,7 @@
     isDeviceKey,
     isTransientKey,
     physicalKey:(key,uid=activeUid)=>uid?physicalKey(uid,str(key)):null,
-    attachFirebase
+    /* Compatibility no-op: Auth Runtime v2 is the only owner of Firebase auth. */
+    attachFirebase:()=>false
   };
 })();

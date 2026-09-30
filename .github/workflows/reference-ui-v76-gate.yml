@@ -1,0 +1,57 @@
+name: Reference UI v76 Gate
+
+on:
+  push:
+    branches:
+      - fix/private-resource-delivery-v1
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - fix/private-resource-delivery-v1
+
+jobs:
+  certify-reference-ui:
+    runs-on: ubuntu-latest
+    name: Reference UI wiring and boundary checks
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+
+      - name: Verify v76 runtime syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check assets/reference-ui-v76.js
+          node --check assets/mobile-scroll-recovery-v1.js
+          node --check sw.js
+
+      - name: Verify v76 visual assets and final-owner wiring
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s assets/reference-ui-v76.css
+          test -s assets/reference-ui-v76.js
+          grep -Fq "ff-reference-ui-v76" assets/reference-ui-v76.css
+          grep -Fq "reference-ui-v76.css?v=reference-ui-v76" assets/mobile-scroll-recovery-v1.js
+          grep -Fq "reference-ui-v76.js?v=reference-ui-v76" assets/mobile-scroll-recovery-v1.js
+          grep -Fq "finalforge-v76-reference-ui" sw.js
+          grep -Fq "./assets/reference-ui-v76.css" sw.js
+          grep -Fq "./assets/reference-ui-v76.js" sw.js
+
+      - name: Preserve private-resource cache boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq "pathname.startsWith('/api/')||pathname.startsWith('/resource/')" sw.js
+          grep -Fq "fetch(event.request,{cache:'no-store'})" sw.js
+
+      - name: Verify reference surfaces remain responsive
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq "@media(max-width:900px)" assets/reference-ui-v76.css
+          grep -Fq "@media(max-width:620px)" assets/reference-ui-v76.css
+          grep -Fq "prefers-reduced-motion" assets/reference-ui-v76.css
+          grep -Fq "ff-v5-exam-app" assets/reference-ui-v76.css
+          grep -Fq "resource.ff-resource-row" assets/reference-ui-v76.css
+          grep -Fq "auth-shell" assets/reference-ui-v76.css
