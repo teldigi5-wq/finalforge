@@ -242,6 +242,9 @@
       root.classList.add('ff-v77-public-auth');
       if(landing)landing.hidden=true;
       if(shell)shell.removeAttribute('aria-hidden');
+    }else if(mode==='signup'&&root.classList.contains('ff-v77-public-auth')){
+      if(landing)landing.hidden=false;
+      if(shell)shell.removeAttribute('aria-hidden');
     }
     tuneCopy();
   }
@@ -265,7 +268,7 @@
     root.classList.add('ff-v77-public-auth');
     const landing=$('#ffPublicLanding');
     const shell=$('#authGate .auth-shell');
-    if(landing)landing.hidden=true;
+    if(landing)landing.hidden=mode!=='signup';
     if(shell)shell.removeAttribute('aria-hidden');
     if(typeof window.showAuthView==='function')window.showAuthView(mode);
     tuneCopy();

@@ -183,6 +183,29 @@ html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="login"] #loginF
 html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="login"] #authGate .ff-auth-security{margin-top:24px!important;padding-top:15px!important;border-top:1px solid rgba(107,151,204,.08)!important;color:#667b91!important;font-size:.58rem!important;text-align:center!important}
 
 /* Signup */
+@media(min-width:1280px){
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #authGate.auth-gate{
+    position:fixed!important;inset:0!important;z-index:70!important;display:grid!important;grid-template-columns:minmax(500px,46%) minmax(700px,54%)!important;
+    gap:8px!important;min-height:100dvh!important;padding:8px!important;overflow:auto!important;background:#030710!important;
+  }
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #ffPublicLanding{
+    display:block!important;grid-column:1!important;min-width:0!important;min-height:calc(100dvh - 16px)!important;padding:0!important;
+  }
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #ffPublicLanding .ff-v77-landing-shell{min-height:calc(100dvh - 16px)!important;height:100%!important}
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #ffPublicLanding .ff-v77-public-nav{grid-template-columns:1fr auto!important;padding:0 clamp(22px,2.5vw,42px)!important}
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #ffPublicLanding .ff-v77-public-nav nav,
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #ffPublicLanding .ff-v77-public-actions .ff-v77-primary{display:none!important}
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #ffPublicLanding .ff-v77-hero{min-height:calc(100dvh - 92px)!important;padding:clamp(48px,7vh,76px) clamp(30px,4vw,64px) 34px!important}
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #ffPublicLanding .ff-v77-hero-copy{width:100%!important;max-width:660px!important}
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #ffPublicLanding .ff-v77-hero h1{font-size:clamp(3.2rem,4.7vw,5.7rem)!important}
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #ffPublicLanding .ff-v77-feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;max-width:610px!important}
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #ffPublicLanding .ff-v77-hero-actions .ff-v77-primary{display:none!important}
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #ffPublicLanding .ff-v77-stats{width:min(610px,calc(100% - 60px))!important;grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #ffPublicLanding blockquote{display:none!important}
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #authGate>.auth-shell{
+    grid-column:2!important;align-self:stretch!important;width:100%!important;min-width:0!important;min-height:calc(100dvh - 16px)!important;margin:0!important;
+  }
+}
 html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #authGate .auth-shell{width:min(1180px,calc(100vw - 28px))!important;min-height:min(690px,calc(100dvh - 28px))!important;height:auto!important;grid-template-columns:1fr!important;border:1px solid rgba(125,162,207,.20)!important;border-radius:18px!important;overflow:hidden!important;background:#07131f!important;box-shadow:var(--v77-shadow)!important}
 html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #authGate .auth-brand-panel{display:none!important}
 html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #authGate .auth-card{position:relative!important;display:block!important;width:100%!important;min-height:690px!important;padding:34px 48px 38px!important;overflow:visible!important;background:radial-gradient(circle at 96% 0%,rgba(35,84,151,.11),transparent 29%),linear-gradient(180deg,#071522,#081522)!important;border:0!important;box-shadow:none!important}
@@ -217,6 +240,22 @@ html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #signu
 html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] .auth-submit{width:100%!important;margin-top:2px!important}
 .ff-v77-signup-note{display:flex;align-items:flex-start;gap:7px;margin-top:11px;color:#64798f;font-size:.56rem;line-height:1.45}.ff-v77-signup-note svg{width:13px;height:13px;flex:0 0 auto;margin-top:1px;fill:none;stroke:#7097c6;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #authGate .ff-auth-security{display:none!important}
+
+@media(min-width:1280px){
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #authGate>.auth-shell{
+    width:100%!important;min-width:0!important;min-height:calc(100dvh - 16px)!important;height:auto!important;margin:0!important;
+  }
+}
+
+@media(min-width:1280px) and (max-width:1540px){
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #authGate .auth-card{padding:30px 34px 36px!important}
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #signupForm.active{grid-template-columns:1fr!important;gap:18px!important}
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #signupForm>.auth-stepper{grid-column:1!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;margin:0!important}
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #signupForm>.auth-stepper span{min-height:66px!important;padding:37px 6px 0!important;text-align:center!important}
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #signupForm>.auth-stepper span::before{left:50%!important;top:0!important;transform:translateX(-50%)!important}
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] #signupForm>.auth-stepper span:not(:last-child)::after{left:calc(50% + 16px)!important;top:15px!important;width:calc(100% - 32px)!important;height:1px!important}
+  html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="signup"] .ff-v77-signup-fields{grid-column:1!important;padding:22px 24px!important}
+}
 
 /* Reset + verification */
 html.ff-reference-ui-v77.ff-v77-public-auth[data-ff-public-mode="reset"] #authGate .auth-brand-panel,
