@@ -1,4 +1,27 @@
 /* FinalForge Mobile Scroll Recovery v3 — one Android document scroller + feature-safe positioning. */
+
+/* v76 visual bootstrap. Keep this here because this runtime is loaded after all
+   legacy visual layers; the reference stylesheet must be the final CSS owner. */
+(()=>{
+  if(window.__FINALFORGE_REFERENCE_UI_V76_BOOTSTRAP)return;
+  window.__FINALFORGE_REFERENCE_UI_V76_BOOTSTRAP=true;
+  document.documentElement.classList.add('ff-reference-ui-v76');
+  if(!document.querySelector('link[data-ff-reference-ui-v76]')){
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='assets/reference-ui-v76.css?v=reference-ui-v76';
+    link.dataset.ffReferenceUiV76='1';
+    document.head.appendChild(link);
+  }
+  if(!document.querySelector('script[data-ff-reference-ui-v76]')){
+    const script=document.createElement('script');
+    script.src='assets/reference-ui-v76.js?v=reference-ui-v76';
+    script.async=true;
+    script.dataset.ffReferenceUiV76='1';
+    document.body.appendChild(script);
+  }
+})();
+
 (()=>{
   'use strict';
 
