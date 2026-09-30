@@ -1,0 +1,50 @@
+name: Dependency Security Gate
+
+on:
+  push:
+    branches:
+      - fix/private-resource-delivery-v1
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - fix/private-resource-delivery-v1
+
+permissions:
+  contents: read
+
+jobs:
+  dependency_security_gate:
+    runs-on: ubuntu-latest
+    name: Locked dependency and API alias security gate
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            azure-api/package-lock.json
+
+      - name: Install root dependencies from lockfile
+        shell: bash
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Audit root runtime dependencies
+        shell: bash
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Install Azure API dependencies from lockfile
+        shell: bash
+        run: npm --prefix azure-api ci --ignore-scripts --no-audit --no-fund
+
+      - name: Audit Azure API runtime dependencies
+        shell: bash
+        run: npm --prefix azure-api audit --omit=dev --audit-level=high
+
+      - name: Verify neutral admin API alias syntax
+        shell: bash
+        run: node --check api/question-studio-admin.js
