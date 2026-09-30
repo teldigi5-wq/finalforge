@@ -35,7 +35,7 @@ jobs:
           grep -Fq 'data-ff-public-mode="login"' assets/reference-ui-v77.css
           grep -Fq 'data-ff-public-mode="signup"' assets/reference-ui-v77.css
           grep -Fq "ffPublicLanding" assets/reference-ui-v77.js
-          grep -Fq "Forge Your Academic Edge." assets/reference-ui-v77.js
+          grep -Fq 'Forge Your<br>Academic <em>Edge.</em>' assets/reference-ui-v77.js
           grep -Fq "Continue your academic journey" assets/reference-ui-v77.js
           grep -Fq "Create your account" assets/reference-ui-v77.js
           grep -Fq "Verify Email" assets/reference-ui-v77.js
