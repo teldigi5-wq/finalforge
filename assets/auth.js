@@ -27,7 +27,14 @@
     const secondary=preview?'Auth not connected':profile?.role==='admin'?(user?.email||'Admin'):(profile?.sliitEmail||user?.email||'');
     $('#accountPrimary').textContent=primary; $('#accountSecondary').textContent=secondary;
     $('#accountChip .account-avatar').textContent=(primary[0]||'S').toUpperCase();
-    $('#accountMenuBody').innerHTML=preview?`<div class="account-menu-head"><b>Local preview</b><span>Configure Firebase before public launch.</span></div>`:`<div class="account-menu-head"><b>${primary}</b><span>${secondary}</span></div><button class="account-menu-btn" onclick="go('home');toggleAccountMenu()">🏠 Dashboard</button>${profile?.role==='admin'?`<button class="account-menu-btn" onclick="go('admin');toggleAccountMenu()">🛡️ Admin console</button>`:''}<button class="account-menu-btn" onclick="forceCloudSync()">☁️ Sync now</button><button class="account-menu-btn danger" onclick="finalforgeSignOut()">↪ Sign out</button>`;
+    $('#accountMenuBody').innerHTML=preview?`<div class="account-menu-head"><b>Local preview</b><span>Configure Firebase before public launch.</span></div>`:`<div class="account-menu-head"><b data-account-primary></b><span data-account-secondary></span></div><button class="account-menu-btn" onclick="go('home');toggleAccountMenu()">🏠 Dashboard</button>${profile?.role==='admin'?`<button class="account-menu-btn" onclick="go('admin');toggleAccountMenu()">🛡️ Admin console</button>`:''}<button class="account-menu-btn" onclick="forceCloudSync()">☁️ Sync now</button><button class="account-menu-btn danger" onclick="finalforgeSignOut()">↪ Sign out</button>`;
+    if(!preview){
+      const menuHead = $('#accountMenuBody')?.querySelector('.account-menu-head');
+      const nameNode = menuHead?.querySelector('[data-account-primary]');
+      const emailNode = menuHead?.querySelector('[data-account-secondary]');
+      if(nameNode) nameNode.textContent = primary;
+      if(emailNode) emailNode.textContent = secondary;
+    }
     if(profile?.role==='admin') ensureAdminNav();
     if(window.finalforgeRefreshEffects) setTimeout(window.finalforgeRefreshEffects,60);
   }
