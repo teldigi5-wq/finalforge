@@ -21,8 +21,10 @@ function services() {
 
 export async function registerStudent({ studentId, sliitEmail, password, ip }, { auth, db }) {
   const id = String(studentId || '').trim().toUpperCase();
-  const email = String(sliitEmail || '').trim().toLowerCase();
   const expectedEmail = /^IT\d{8}$/.test(id) ? `${id.toLowerCase()}@my.sliit.lk` : '';
+  // Client sends Student ID + password only; never trust a client-supplied email.
+  const suppliedEmail = sliitEmail == null ? expectedEmail : String(sliitEmail).trim().toLowerCase();
+  const email = suppliedEmail;
 
   if (!/^IT\d{8}$/.test(id) || typeof password !== 'string' || password.length < 8 || password.length > 128)
     return { status: 400, message: 'Invalid Student ID or password.' };

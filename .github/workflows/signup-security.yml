@@ -1,0 +1,27 @@
+name: FinalForge signup security checks
+on:
+  pull_request:
+  push:
+    branches:
+      - security/signup-contract-reliability-20261021
+permissions:
+  contents: read
+jobs:
+  signup-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: node --check api/signup.js
+      - run: node --test tests/signup.test.js tests/signup-fix-v2.test.js
+      - name: Verify client uses server-side signup
+        run: |
+          grep -F "fetch('/api/signup'" assets/auth.js
+          ! grep -F 'createUserWithEmailAndPassword(' assets/auth.js
