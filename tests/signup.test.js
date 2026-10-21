@@ -53,3 +53,22 @@ test('an already claimed Student ID cannot create another account', async () => 
   assert.equal(result.status, 409);
   assert.equal(deps.created.length, 0);
 });
+
+test('explicit forged SLIIT email is rejected before account creation', async () => {
+  const deps = backend(true);
+  const result = await registerStudent({
+    studentId: 'IT26111111', sliitEmail: 'attacker@example.com',
+    password: 'test-password-123', ip: 'test'
+  }, deps);
+  assert.equal(result.status, 400);
+  assert.equal(deps.created.length, 0);
+});
+
+test('signup without email uses the exact derived SLIIT address', async () => {
+  const deps = backend(true);
+  const result = await registerStudent({
+    studentId: 'IT26111111', password: 'test-password-123', ip: 'test'
+  }, deps);
+  assert.equal(result.status, 201);
+  assert.equal(deps.created[0].email, 'it26111111@my.sliit.lk');
+});
