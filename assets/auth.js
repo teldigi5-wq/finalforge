@@ -11,6 +11,10 @@
   const normalizeStudentId = v => String(v||'').trim().toUpperCase().replace(/\s+/g,'');
   const validStudentId = id => /^IT\d{8}$/.test(normalizeStudentId(id));
   const studentEmail = id => `${normalizeStudentId(id).toLowerCase()}@my.sliit.lk`;
+  function escapeUserHtml(value) {
+    const entities = { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' };
+    return String(value ?? '').replace(/[&<>"']/g, ch => entities[ch]);
+  }
   const setAlert=(msg,type='error')=>{const a=$('#authAlert'); if(!a)return; a.hidden=!msg; a.className=`auth-alert ${type}`; a.textContent=msg||'';};
   const busy=(form,on)=>form?.querySelectorAll('button,input').forEach(el=>el.disabled=!!on);
   const fmtDate=v=>{try{const d=v?.toDate?v.toDate():new Date(v);return isNaN(d)?'—':new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeStyle:'short'}).format(d)}catch{return '—'}};
@@ -153,7 +157,7 @@
   async function adminRows(){const q=await db.collection('profiles').where('role','==','student').limit(500).get();return q.docs.map(d=>({uid:d.id,...d.data()})).sort((a,b)=>(a.studentId||'').localeCompare(b.studentId||''));}
   let adminCache=[];
   window.refreshAdminDashboard=async()=>{if(currentProfile?.role!=='admin')return;const body=$('#adminUsersBody');body.innerHTML='<tr><td colspan="4">Loading…</td></tr>';try{adminCache=await adminRows();renderAdminRows();const disabled=adminCache.filter(x=>x.disabled).length;$('#adminStats').innerHTML=`<div class="card stat"><span class="muted small">Registered students</span><strong>${adminCache.length}</strong><span class="muted small">Firebase profiles</span></div><div class="card stat"><span class="muted small">Active</span><strong>${adminCache.length-disabled}</strong><span class="muted small">Can sign in</span></div><div class="card stat"><span class="muted small">Disabled</span><strong>${disabled}</strong><span class="muted small">Blocked in app</span></div><div class="card stat"><span class="muted small">Verification</span><strong>Email</strong><span class="muted small">SLIIT mailbox only</span></div>`}catch(e){body.innerHTML=`<tr><td colspan="4">${humanError(e)}</td></tr>`}};
-  function renderAdminRows(){const term=($('#adminSearch')?.value||'').toLowerCase(),rows=adminCache.filter(x=>!term||`${x.studentId} ${x.sliitEmail}`.toLowerCase().includes(term));$('#adminUsersBody').innerHTML=rows.map(x=>`<tr><td><b>${x.studentId||'—'}</b></td><td>${x.sliitEmail||'—'}</td><td><span class="pill ${x.emailVerified?'status-active':'status-disabled'}">${x.emailVerified?'Verified':'Pending'}</span></td><td>${fmtDate(x.lastLoginAt)}</td></tr>`).join('')||'<tr><td colspan="4">No matching students.</td></tr>'}
+  function renderAdminRows(){const term=($('#adminSearch')?.value||'').toLowerCase(),rows=adminCache.filter(x=>!term||`${x.studentId} ${x.sliitEmail}`.toLowerCase().includes(term));$('#adminUsersBody').innerHTML=rows.map(x=>`<tr><td><b>${escapeUserHtml(x.studentId||'—')}</b></td><td>${escapeUserHtml(x.sliitEmail||'—')}</td><td><span class="pill ${x.emailVerified?'status-active':'status-disabled'}">${x.emailVerified?'Verified':'Pending'}</span></td><td>${fmtDate(x.lastLoginAt)}</td></tr>`).join('')||'<tr><td colspan="4">No matching students.</td></tr>'}
   $('#adminSearch')?.addEventListener('input',renderAdminRows);
   const oldGo=window.go;window.go=function(id){oldGo(id);if(id==='admin')refreshAdminDashboard()};
 
