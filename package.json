@@ -1,0 +1,12 @@
+{
+  "name": "finalforge",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check:security": "node --check api/signup.js && node --check assets/auth.js",
+    "test:security": "node --test tests/signup.test.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0"
+  }
+}
