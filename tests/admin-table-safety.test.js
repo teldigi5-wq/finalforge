@@ -12,3 +12,8 @@ test('stored student profile fields are escaped before admin HTML templating',()
   assert.ok(source.includes("escapeUserHtml(x.sliitEmail||'—')"));
   assert.ok(!source.includes("<b>${x.studentId||'—'}</b>"));
 });
+
+test('admin dashboard escapes provider errors before inserting into HTML',()=>{
+  assert.ok(source.includes('escapeUserHtml(humanError(e))'));
+  assert.ok(!source.includes('${humanError(e)}</td></tr>'));
+});
