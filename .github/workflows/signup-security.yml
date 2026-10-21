@@ -22,6 +22,7 @@ jobs:
       - run: npm run check:security
       - run: npm run test:security
       - run: node --test tests/firestore-rules-policy.test.js
+      - run: node --test tests/auth-dom-safety.test.js
       - name: Enforce server-only account creation
         run: |
           grep -F "fetch('/api/signup'" assets/auth.js
