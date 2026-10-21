@@ -113,9 +113,18 @@
     if(pw!==pw2)return setAlert('Passwords do not match.');
     busy(e.currentTarget,true);
     try{
-      const cred=await auth.createUserWithEmailAndPassword(studentEmail(id),pw);
-      await cred.user.updateProfile({displayName:id});
-      await cred.user.sendEmailVerification({url:location.origin+location.pathname+'?verified=1',handleCodeInApp:false});
+      // The backend validates the student allowlist before creating any Auth account.
+      // Never create Firebase Auth users directly from the browser.
+      const response=await fetch('/api/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({studentId:id,password:pw}),cache:'no-store'});
+      const payload=await response.json().catch(()=>({}));
+      if(!response.ok)throw new Error(payload.error||'Student registration is temporarily unavailable.');
+      const cred=await auth.signInWithEmailAndPassword(studentEmail(id),pw);
+      try{
+        await cred.user.sendEmailVerification({url:location.origin+location.pathname+'?verified=1',handleCodeInApp:false});
+      }catch(mailError){
+        if(mailError?.code==='auth/unauthorized-continue-uri')await cred.user.sendEmailVerification();
+        else throw mailError;
+      }
       localStorage.setItem('finalforge_pending_student',id);
       showVerification(cred.user);
       setAlert(`Verification email sent to ${studentEmail(id)}. Open that SLIIT mailbox and verify the account.`, 'success');
