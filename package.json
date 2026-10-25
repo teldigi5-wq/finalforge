@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "check:security": "node --check api/signup.js && node --check assets/auth.js",
-    "test:security": "node --test tests/signup.test.js"
+    "test:security": "node --test tests/signup.test.js",
+    "benchmark:offline": "node --expose-gc scripts/benchmark-signup.mjs"
   },
   "dependencies": {
     "firebase-admin": "^13.0.0"
