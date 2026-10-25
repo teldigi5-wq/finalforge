@@ -67,3 +67,23 @@ test('real admin table renderer HTML-encodes Firestore student identity fields',
   assert.ok(!table.innerHTML.includes('<img'));
   assert.ok(!table.innerHTML.includes('<svg'));
 });
+
+test('real admin error renderer escapes untrusted exception messages', async () => {
+  const start=source.indexOf('window.refreshAdminDashboard=async()=>');
+  const end=source.indexOf('\n  function renderAdminRows()',start);
+  assert.ok(start >= 0 && end > start, 'Expected admin refresh function');
+
+  const table={innerHTML:''}, stats={innerHTML:''};
+  const $=selector=>selector==='#adminUsersBody'?table:selector==='#adminStats'?stats:null;
+  const win={toast() {}};
+  const hostile='<img src=x onerror=alert(7)><svg onload=alert(8)>';
+  const refresh=new Function(
+    'window','currentProfile','$','adminRows','renderAdminRows','escapeUserHtml','humanError',
+    `let adminCache=[]; ${source.slice(start,end)}; return window.refreshAdminDashboard;`
+  )(win,{role:'admin'},$,async()=>{throw Error(hostile)},()=>{},escapeUserHtml,error=>error.message);
+  await refresh();
+  assert.ok(table.innerHTML.includes('&lt;img src=x onerror=alert(7)&gt;'));
+  assert.ok(table.innerHTML.includes('&lt;svg onload=alert(8)&gt;'));
+  assert.ok(!table.innerHTML.includes('<img'));
+  assert.ok(!table.innerHTML.includes('<svg'));
+});
