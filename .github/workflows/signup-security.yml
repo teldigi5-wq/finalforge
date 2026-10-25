@@ -20,7 +20,7 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: node --check api/signup.js
-      - run: node --test tests/signup.test.js tests/signup-fix-v2.test.js tests/auth-output-safety.test.js
+      - run: node --test tests/signup.test.js tests/signup-fix-v2.test.js tests/auth-output-safety.test.js tests/auth-render-runtime.test.js
       - name: Verify client uses server-side signup
         run: |
           grep -F "fetch('/api/signup'" assets/auth.js
