@@ -65,3 +65,10 @@ Active mock exams autosave answers, selected options and timing state in the bro
 Private roster and admin provisioning material must never be placed in public browser assets. The public repository intentionally excludes `students.json`, Firebase service-account credentials, admin provisioning values and real `.env` files.
 
 > **Security boundary:** public client code should never be treated as a secure place for private roster data, administrative secrets or backend credentials.
+
+
+---
+
+## AI recovery and active milestones — 9 November 2026
+
+Read [the GitHub-verified point-in-time project handoff](docs/AI_HANDOFF_2026-11-09.md) before any AI/developer resumes. It records main SHA `a705b282ecdd`, open review constraints and next distinct work. These documentation changes do not certify production or merge existing security PRs.
